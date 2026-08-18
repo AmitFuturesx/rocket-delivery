@@ -759,7 +759,9 @@ body.is-locked { overflow: hidden; }
 .opt-grid { display: grid; gap: 10px; margin-block-start: 8px; }
 .opt-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .opt-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 560px) { .opt-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* the reference keeps every choice row on ONE line at 375px; two rows of two
+   cost 110px of height and made the block read as a scroll */
+@media (max-width: 560px) { .opt-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .opt { position: relative; display: block; cursor: pointer; }
 .opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
@@ -936,13 +938,46 @@ body.is-locked { overflow: hidden; }
 .js .calc-fallback { display: none; }
 .no-js .calc-live { display: none; }
 
+/* Phones get ONE tidy block, not four stacked cards. Four bordered cards
+   with their own padding and gaps spent ~150px on chrome alone and made the
+   thing read as a scroll. Here the card chrome moves to the form and the
+   groups inside are separated by hairlines — the reference's own look. */
 @media (max-width: 560px) {
-  .calc-sec { padding: 18px 14px; }
-  .calc-sec__title { font-size: 22px; }
-  .opt__body { padding: 12px 6px 10px; }
-  .opt input:checked + .opt__body { padding: 11px 5px 9px; }
-  .opt__ic { inline-size: 52px; block-size: 52px; margin-block-end: 8px; }
-  .opt__ic svg { inline-size: 28px; block-size: 28px; }
+  .calc-live > form {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px 14px;
+  }
+  .calc-sec { border: 0; border-radius: 0; padding: 0; margin-block-end: 0; }
+  .calc-sec + .calc-sec {
+    margin-block-start: 14px;
+    padding-block-start: 14px;
+    border-block-start: 1px solid var(--line);
+  }
+  .calc-sec__title { font-size: 20px; margin-block-end: 0.8rem; }
+  .calc-sec__head { margin-block-end: 8px; }
+  .field { margin-block-end: 10px; }
+  .field__hint { display: none; }        /* the placeholders already say it */
+
+  .opt-grid { gap: 8px; }
+  .opt__body { padding: 10px 4px 8px; }
+  .opt input:checked + .opt__body { padding: 9px 3px 7px; }
+  .opt__ic { inline-size: 46px; block-size: 46px; border-radius: 12px; margin-block-end: 6px; }
+  .opt__ic svg { inline-size: 26px; block-size: 26px; }
+  .opt__body b { font-size: 12px; }
+  .opt__body > span:last-child { font-size: 9.5px; }
+
+  .check { padding: 10px 12px; }
+  .check:has(input:checked) { padding: 9px 11px; }
+  .check b { font-size: 13px; }
+  .check > span > span { display: none; }   /* the title already carries it */
+
+  .calc-submit { margin-block-start: 14px; }
+  .result { margin-block-start: 12px; }
+  .result__placeholder { padding: 14px 16px; }
+  .result__promise { gap: 6px; }
+  .result__promise li { font-size: 11px; }
   .price { padding: 20px 16px; }
 }
 
