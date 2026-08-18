@@ -633,8 +633,29 @@ body.is-locked { overflow: hidden; }
   line-height: 1.65;
 }
 
-/* their --gdl-form-width */
+/* their --gdl-form-width — the single-column width, which is what a phone gets */
 .calc { max-inline-size: 560px; margin-inline: auto; }
+
+/* On a wide screen one 560px column is a long ribbon with dead space either
+   side. Their own layout solves it: .gdl-layout is 60fr / 40fr with a STICKY
+   sidebar. Ours does the same — the form fills the main column and the price
+   rides along beside it instead of waiting 1200px further down. */
+@media (min-width: 980px) {
+  .calc { max-inline-size: 1000px; }
+  .calc-live {
+    display: grid;
+    grid-template-columns: minmax(0, 60fr) minmax(0, 40fr);
+    gap: 24px;
+  }
+  .calc-live > form { min-inline-size: 0; }
+  /* .result is left to STRETCH to the row height on purpose: a sticky element
+     needs travel inside its container, and align-items:start would give the
+     cell exactly the box height, so it would stick for zero pixels. The box
+     itself sticks, not the cell. */
+  .result { margin-block-start: 0; }
+  .result__placeholder, .result__body { position: sticky; inset-block-start: 24px; }
+  .calc-submit { margin-block-start: 14px; }
+}
 
 /* ── a section card ─────────────────────────────────────────────────────── */
 .calc-sec {
