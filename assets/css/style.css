@@ -1,0 +1,3131 @@
+/* ==========================================================================
+   ROCKET DELIVERY — style.css
+   Hebrew RTL landing page. Mobile-first. Logical properties only.
+   --------------------------------------------------------------------------
+   TABLE OF CONTENTS
+   01. Fonts
+   02. Design tokens
+   03. Reset & base
+   04. Layout primitives
+   05. Typography & the orange marker
+   06. Buttons & links
+   07. Motion utilities (reveal, count-up, route line)
+   08. Header + mobile nav
+   09. Hero
+   10. Calculator
+   11. Audiences
+   12. Legal delivery timeline
+   13. Fleet
+   14. Coverage
+   15. Social proof
+   16. How it works
+   17. FAQ
+   18. Final CTA + callback form
+   19. Footer
+   20. Floating WhatsApp + cookie banner
+   21. Privacy page
+   22. Reduced motion & print
+   ========================================================================== */
+
+
+/* 01. FONTS =============================================================== */
+/* Self-hosted Google Sans. No CDN for the display font. */
+@font-face {
+  font-family: 'Google Sans';
+  src: url('../fonts/gs-book.woff2') format('woff2');
+  font-weight: 400 450;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Google Sans';
+  src: url('../fonts/gs-med.woff2') format('woff2');
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Google Sans';
+  src: url('../fonts/gs-bold.woff2') format('woff2');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* 02. DESIGN TOKENS ======================================================= */
+:root {
+  /* -- Brand colours (locked, extracted from the logo) -------------------- */
+  --navy-950: #070A14;
+  --navy-900: #0B1023;
+  --navy-800: #111834;
+  --navy-700: #1A2244;
+  --orange-600: #F04800;
+  --orange-500: #F06000;
+  /* The locked brand orange scores 3.7:1 against white — fine for large type
+     and solid shapes, short of AA for button labels and small links. These two
+     are the same hue darkened just enough to clear 4.5:1; use them ONLY where
+     text sits on or in the orange. Everything decorative stays --orange-600. */
+  --orange-ink: #D64000;    /* 4.6:1 vs white — CTA fills, orange text on light */
+  --orange-ink-hover: #BF3800;
+  --white: #FFFFFF;
+  --off-white: #F6F7FB;
+  --ink: #0B1023;
+  --muted: #5A6178;
+  --whatsapp: #25D366;
+  --whatsapp-dark: #1EBE5A;
+
+  /* Derived surfaces — never introduce a new hue, only these mixes. */
+  --line: #E4E7F0;
+  --line-dark: rgba(255, 255, 255, 0.10);
+  --tint-orange: rgba(240, 72, 0, 0.08);
+  --danger: #C81E1E;
+
+  /* -- Corner-radius rule (follow everywhere, no exceptions) -------------- */
+  --r-card: 20px;   /* cards, panels, media frames larger than a thumbnail   */
+  --r-input: 12px;  /* inputs, selects, small chips                          */
+  --r-img: 16px;    /* images and image masks                               */
+  --r-pill: 999px;  /* every button is a full pill                          */
+
+  /* -- Shadows: tinted to navy, never pure black ------------------------- */
+  --sh-1: 0 1px 2px rgba(11, 16, 35, 0.05), 0 3px 10px rgba(11, 16, 35, 0.05);
+  --sh-2: 0 6px 16px rgba(11, 16, 35, 0.08), 0 18px 40px rgba(11, 16, 35, 0.08);
+  --sh-3: 0 12px 28px rgba(11, 16, 35, 0.12), 0 34px 80px rgba(11, 16, 35, 0.18);
+  --sh-orange: 0 8px 22px rgba(240, 72, 0, 0.30);
+  --sh-wa: 0 8px 22px rgba(37, 211, 102, 0.32);
+
+  /* -- Rhythm ------------------------------------------------------------- */
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-y: clamp(3.75rem, 8vw, 7rem);
+  --maxw: 1200px;
+  --header-h: 72px;
+
+  /* -- Motion ------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --t-fast: 0.18s;
+  --t-base: 0.32s;
+  --t-slow: 0.55s;
+}
+
+
+/* 03. RESET & BASE ======================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-block-start: calc(var(--header-h) + 24px);
+}
+/* Lenis owns the scroll — native smooth scrolling must yield, or the two
+   animate against each other in an endless correction loop. */
+html.lenis, html.lenis body { scroll-behavior: auto !important; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Google Sans', 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-weight: 450;
+  font-size: 1.0625rem;      /* 17px */
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;   /* Hebrew hates tracking; stay under 0.02em */
+  text-wrap: balance;
+}
+
+p, figure, blockquote, dl, dd, fieldset { margin: 0; }
+fieldset { padding: 0; border: 0; min-inline-size: 0; }
+legend { padding: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+img, picture, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+
+a { color: inherit; text-decoration: none; }
+
+/* Component display rules out-specify the UA's [hidden] rule, so restate it. */
+[hidden] { display: none !important; }
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--orange-600);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.on-navy :focus-visible,
+.section--navy :focus-visible { outline-color: var(--white); }
+
+::selection { background: var(--orange-600); color: var(--white); }
+
+.skip-link {
+  position: absolute;
+  inset-block-start: -100%;
+  inset-inline-start: 1rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  background: var(--orange-ink);
+  color: var(--white);
+  border-radius: var(--r-pill);
+  font-weight: 700;
+}
+.skip-link:focus { inset-block-start: 1rem; }
+
+/* Hebrew line-breaking will split a phone number at its hyphen. */
+.nowrap { white-space: nowrap; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+
+/* 04. LAYOUT PRIMITIVES =================================================== */
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--wide { max-width: 1340px; }
+
+.section { padding-block: var(--section-y); position: relative; }
+.section--light { background: var(--white); }
+.section--off { background: var(--off-white); }
+.section--navy { background: var(--navy-900); color: var(--white); }
+.section--navy p { color: rgba(255, 255, 255, 0.72); }
+
+.section-head { max-width: 62ch; margin-block-end: clamp(2rem, 4vw, 3.25rem); }
+.section-head p {
+  margin-block-start: 0.9rem;
+  color: var(--muted);
+  max-width: 58ch;
+}
+.section--navy .section-head p { color: rgba(255, 255, 255, 0.7); }
+
+.section-head--split {
+  max-width: none;
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+@media (min-width: 900px) {
+  .section-head--split {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2.5rem;
+  }
+}
+
+/* The single decorative flourish: a dashed "delivery route" line. */
+.route-line {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--line);
+  pointer-events: none;
+}
+.route-line path {
+  stroke-dasharray: 10 12;
+  transition: stroke-dashoffset 1.6s var(--ease-out);
+}
+.js .route-line path { stroke-dashoffset: 600; }
+.js .route-line.in path { stroke-dashoffset: 0; }
+
+
+/* 05. TYPOGRAPHY & THE ORANGE MARKER ====================================== */
+/* Sized so the headline holds two lines at every breakpoint, per the brief. */
+.h1 { font-size: clamp(1.78rem, 4.6vw, 3.35rem); }
+.h2 { font-size: clamp(1.6rem, 4.2vw, 2.65rem); }
+.h3 { font-size: clamp(1.1rem, 2.1vw, 1.35rem); }
+.lead {
+  font-size: clamp(1.02rem, 1.7vw, 1.2rem);
+  line-height: 1.6;
+  max-width: 60ch;
+}
+.small { font-size: 0.875rem; line-height: 1.6; }
+.muted { color: var(--muted); }
+.section--navy .muted { color: rgba(255, 255, 255, 0.62); }
+
+/* Signature move: one word per major headline sits on an orange marker.
+   The marker draws itself from the right (RTL reading direction). */
+.mark {
+  position: relative;
+  z-index: 0;
+  color: var(--white);
+  white-space: nowrap;
+  padding-inline: 0.12em;
+}
+.mark::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-block: 0.02em -0.08em;
+  inset-inline: -0.14em;
+  background: var(--orange-600);
+  border-radius: 10px;
+  transform: rotate(-1deg) scaleX(1);
+  transform-origin: 100% 50%;   /* RTL: grows right → left */
+  transition: transform 0.75s var(--ease-out) 0.15s;
+}
+/* Only collapse the marker when JS can re-draw it — otherwise the white
+   headline word would sit on no background at all. */
+.js .mark::before { transform: rotate(-1deg) scaleX(0); }
+.js .mark.in::before { transform: rotate(-1deg) scaleX(1); }
+
+/* Eyebrow — allowed at most once per three sections (see §8 of the brief). */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--orange-ink);
+  margin-block-end: 0.85rem;
+}
+.eyebrow::before {
+  content: '';
+  inline-size: 22px;
+  block-size: 2px;
+  background: var(--orange-600);
+  border-radius: 2px;
+}
+
+
+/* 06. BUTTONS & LINKS ===================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-block-size: 48px;
+  padding: 0.75rem 1.5rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: center;
+  transition: transform var(--t-fast) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              background-color var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out),
+              color var(--t-base) var(--ease-out);
+}
+.btn svg { flex: none; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--orange-ink);
+  color: var(--white);
+  box-shadow: var(--sh-orange);
+}
+.btn--primary:hover {
+  background: var(--orange-ink-hover);
+  box-shadow: 0 12px 30px rgba(240, 72, 0, 0.42);
+}
+
+.btn--wa {
+  background: var(--whatsapp);
+  color: #04310F;               /* AA contrast on green — never white */
+  box-shadow: var(--sh-wa);
+}
+.btn--wa:hover { background: var(--whatsapp-dark); }
+
+.btn--ghost {
+  border-color: var(--line);
+  color: var(--ink);
+  background: var(--white);
+}
+.btn--ghost:hover { border-color: var(--ink); }
+
+.btn--ghost-light {
+  border-color: rgba(255, 255, 255, 0.30);
+  color: var(--white);
+}
+.btn--ghost-light:hover {
+  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn--lg { min-block-size: 56px; padding: 0.9rem 1.9rem; font-size: 1.05rem; }
+.btn--block { inline-size: 100%; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: var(--orange-ink);
+}
+.link-arrow svg { transition: transform var(--t-base) var(--ease-out); }
+.link-arrow:hover svg { transform: translateX(-4px); }  /* RTL: forward = left */
+
+
+/* 07. MOTION UTILITIES ==================================================== */
+/* Entrance states are scoped to `.js`: with JavaScript off nothing ever adds
+   `.in`, so the content must start visible — Google and no-JS visitors read
+   the full page either way. */
+.js .reveal { opacity: 0; transform: translateY(24px); }
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    transition: opacity var(--t-slow) var(--ease-out),
+                transform var(--t-slow) var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+}
+.js .reveal.in { opacity: 1; transform: none; }
+
+
+/* 08. HEADER + MOBILE NAV ================================================= */
+/* Part of the hero, not a floating sticker: absolute at the top of the page,
+   so it scrolls away with the first section instead of following the reader. */
+.header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 100;
+  padding-block: 1rem;
+}
+.header__bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  block-size: var(--header-h);
+  background: transparent;      /* it sits ON the hero, it is not a card */
+  border: 0;
+  box-shadow: none;
+}
+
+.logo { display: flex; align-items: center; gap: 0.55rem; flex: none; }
+.logo__mark { inline-size: 38px; block-size: 38px; }
+.logo__type { display: flex; flex-direction: column; line-height: 1; }
+.logo__type b {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+.logo__type span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: var(--orange-500);
+  margin-block-start: 2px;
+}
+.logo--light .logo__type b { color: var(--white); }
+.logo--light .logo__type span { color: var(--orange-500); }   /* lighter shade reads better on navy */
+
+.nav { display: none; }
+@media (min-width: 1024px) {
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.4vw, 1.35rem);
+    margin-inline-start: auto;
+  }
+  .nav a {
+    position: relative;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--navy-700);
+    padding-block: 0.66rem;      /* keeps the hit area ≥ 44px on touch laptops */
+    white-space: nowrap;
+    transition: color var(--t-base);
+  }
+  .nav a:hover, .nav a.is-active { color: var(--orange-ink); }
+  .nav a::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    block-size: 2px;
+    background: var(--orange-600);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+    transition: transform var(--t-base) var(--ease-out);
+  }
+  .nav a:hover::after, .nav a.is-active::after { transform: scaleX(1); }
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-inline-start: auto;
+}
+@media (min-width: 1024px) { .header__actions { margin-inline-start: 0.75rem; } }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 46px;
+  block-size: 46px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(11, 16, 35, 0.16);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  color: var(--navy-900);
+  cursor: pointer;
+  transition: border-color var(--t-base), background-color var(--t-base), transform var(--t-fast);
+}
+.icon-btn:hover {
+  border-color: var(--orange-ink);
+  color: var(--orange-ink);
+  background: var(--white);
+  transform: translateY(-2px);
+}
+
+.header .btn--primary, .header .btn--pill-light { display: none; }
+@media (min-width: 768px) {
+  .header .btn--primary { display: inline-flex; padding: 0.7rem 1.25rem; min-block-size: 46px; font-size: 0.95rem; }
+}
+/* the secondary "call me back" pill, white on the navy bar */
+@media (min-width: 1200px) {
+  .header .btn--pill-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.25rem;
+    min-block-size: 46px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: var(--r-pill);
+    background: var(--white);
+    color: var(--navy-900);
+    transition: transform var(--t-fast), box-shadow var(--t-base);
+  }
+  .header .btn--pill-light:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 255, 255, 0.18); }
+}
+.nav-toggle { display: inline-flex; }
+@media (min-width: 1024px) { .nav-toggle { display: none; } }
+.no-js .nav-toggle { display: none; }   /* the panel needs JS to open */
+
+/* Mobile panel */
+/* A light drawer that matches the hero rather than a dark overlay panel. */
+.mobile-nav {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: min(84vw, 360px);
+  z-index: 110;
+  background: var(--white);
+  color: var(--ink);
+  border-inline-end: 1px solid var(--line);
+  box-shadow: -30px 0 70px rgba(11, 16, 35, 0.16);
+  padding: 1.25rem var(--gutter) 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  translate: 100% 0;
+  visibility: hidden;
+  transition: translate var(--t-slow) var(--ease-out), visibility var(--t-slow);
+  overflow-y: auto;
+}
+.mobile-nav.is-open { translate: 0 0; visibility: visible; }
+/* the page behind is dimmed, not blurred — blur through a drawer read messy */
+.mobile-nav::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  inset-inline-start: 100%;
+  background: rgba(11, 16, 35, 0.42);
+  opacity: 0;
+  transition: opacity var(--t-slow);
+  pointer-events: none;
+}
+.mobile-nav.is-open::before { opacity: 1; }
+
+.mobile-nav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--line);
+}
+.mobile-nav__top .icon-btn {
+  inline-size: 40px;
+  block-size: 40px;
+  background: var(--off-white);
+  border-color: var(--line);
+  color: var(--navy-900);
+}
+.mobile-nav__top .logo__type b { color: var(--ink); }
+.mobile-nav__top .logo__type span { color: var(--orange-ink); }
+
+.mobile-nav ul { display: flex; flex-direction: column; margin-block-start: 0.25rem; }
+.mobile-nav ul a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.95rem;
+  font-size: 1.08rem;      /* quieter than the old 1.35rem shout */
+  font-weight: 600;
+  color: var(--navy-900);
+  border-block-end: 1px solid var(--line);
+  transition: color var(--t-base), padding-inline-start var(--t-base);
+}
+/* a thin orange marker slides in on press instead of a heavy hover slab */
+.mobile-nav ul a::after {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--orange-600);
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+.mobile-nav ul a:hover,
+.mobile-nav ul a:focus-visible { color: var(--orange-ink); }
+.mobile-nav ul a:hover::after,
+.mobile-nav ul a:focus-visible::after { opacity: 1; }
+
+.mobile-nav__cta { display: grid; gap: 0.6rem; margin-block-start: auto; padding-block-start: 1.25rem; }
+body.is-locked { overflow: hidden; }
+
+
+/* 09. HERO — injected below (§09N) */
+
+
+/* 10. CALCULATOR ========================================================== */
+/* The navy top band is gone: it existed to continue the OLD navy hero so the
+   card looked like it straddled navy → light. With a light hero it was just an
+   orphan blue stripe. This is now a normal light section with its own heading,
+   matching the fleet / coverage / how-it-works language. */
+.calc-section {
+  background:
+    radial-gradient(80% 60% at 78% 0%, rgba(240, 96, 0, 0.07), transparent 60%),
+    var(--off-white);
+  overflow: clip;
+}
+
+.calc-head { margin-block-end: clamp(1.6rem, 3.4vw, 2.6rem); }
+.calc-title {
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.calc-l1, .calc-l2 { display: inline; }
+.calc-title { white-space: nowrap; }
+@media (max-width: 560px) { .calc-title { white-space: normal; } }
+.calc-l1, .calc-l2 { display: inline; }
+.calc-title em { font-style: normal; color: var(--orange-600); }
+.calc-sub {
+  margin-block-start: 1rem;
+  max-inline-size: 44rem;
+  color: var(--muted);
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+  line-height: 1.7;
+}
+
+.calc-card {
+  background: var(--navy-800);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--r-card);
+  box-shadow: var(--sh-3);
+  padding: clamp(1.35rem, 3.4vw, 2.75rem);
+  overflow: hidden;
+}
+
+.calc-grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+@media (min-width: 980px) {
+  .calc-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: start; }
+}
+
+.field { margin-block-end: 1.5rem; }
+.field > .field__label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-block-end: 0.7rem;
+  color: var(--white);
+}
+.field__hint { font-size: 0.82rem; color: rgba(255, 255, 255, 0.55); font-weight: 450; }
+
+/* Selectable cards (radio behaviour) */
+.opt-grid { display: grid; gap: 0.6rem; }
+@media (min-width: 560px) { .opt-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1180px) { .opt-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 560px) { .opt-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.opt {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  border-radius: var(--r-input);
+}
+.opt input {
+  position: absolute;
+  opacity: 0;
+  inline-size: 1px; block-size: 1px;
+}
+.opt__body {
+  display: block;
+  block-size: 100%;
+  min-block-size: 56px;
+  padding: 0.85rem 0.95rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-input);
+  background: rgba(255, 255, 255, 0.035);
+  transition: border-color var(--t-base) var(--ease-out),
+              background-color var(--t-base) var(--ease-out),
+              transform var(--t-base) var(--ease-spring);
+}
+.opt__body b { display: block; font-size: 0.98rem; font-weight: 700; }
+.opt__body span {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+  margin-block-start: 0.2rem;
+}
+.opt:hover .opt__body { border-color: rgba(255, 255, 255, 0.3); }
+.opt input:checked + .opt__body {
+  border-color: var(--orange-600);
+  background: rgba(240, 72, 0, 0.14);
+  transform: scale(1);
+  animation: optPop 0.32s var(--ease-spring);
+}
+.opt input:checked + .opt__body span { color: rgba(255, 255, 255, 0.78); }
+.opt input:focus-visible + .opt__body { outline: 3px solid var(--white); outline-offset: 2px; }
+@keyframes optPop { from { transform: scale(0.97); } to { transform: scale(1); } }
+
+/* Text inputs */
+.input-row { display: grid; gap: 1rem; }
+@media (min-width: 700px) { .input-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.input-wrap { position: relative; }
+.input {
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-input);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  transition: border-color var(--t-base), background-color var(--t-base);
+}
+.input::placeholder { color: rgba(255, 255, 255, 0.52); }
+/* Phone numbers are an LTR run; `end` keeps them flush with the RTL column. */
+.input[type="tel"] { direction: ltr; text-align: end; }
+.input:hover { border-color: rgba(255, 255, 255, 0.3); }
+.input:focus { border-color: var(--orange-600); background: rgba(255, 255, 255, 0.08); outline: none; }
+.input:focus-visible { outline: 3px solid var(--white); outline-offset: 2px; }
+.input[aria-invalid="true"] { border-color: #FF6B6B; }
+
+.error-text {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-start: 0.45rem;
+  color: #FF8A8A;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.error-text.is-shown { display: flex; }
+
+/* Address suggestions */
+.suggest {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  inset-block-start: calc(100% + 6px);
+  background: var(--white);
+  color: var(--ink);
+  border-radius: var(--r-input);
+  box-shadow: var(--sh-3);
+  padding: 0.35rem;
+  max-block-size: 244px;
+  overflow-y: auto;
+  display: none;
+}
+.suggest.is-open { display: block; }
+.suggest li {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.suggest li:hover, .suggest li[aria-selected="true"] { background: var(--tint-orange); color: var(--orange-ink); }
+
+/* Checkbox */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-input);
+  background: rgba(255, 255, 255, 0.035);
+  cursor: pointer;
+  transition: border-color var(--t-base), background-color var(--t-base);
+}
+.check:hover { border-color: rgba(255, 255, 255, 0.3); }
+.check input { inline-size: 22px; block-size: 22px; accent-color: var(--orange-600); margin-block-start: 2px; flex: none; }
+.check b { display: block; font-size: 0.95rem; }
+.check span { display: block; font-size: 0.82rem; color: rgba(255, 255, 255, 0.6); }
+
+.calc-submit { margin-block-start: 1.75rem; }
+.btn.is-loading { pointer-events: none; position: relative; color: transparent; }
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.18) 25%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0.18) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 0.9s linear infinite;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Result panel */
+.result {
+  border-radius: var(--r-card);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  padding: clamp(1.15rem, 2.4vw, 1.6rem);
+  position: relative;
+}
+@media (min-width: 980px) { .result { position: sticky; inset-block-start: calc(var(--header-h) + 24px); } }
+
+.result__placeholder { text-align: center; padding-block: 1.5rem; }
+.result__placeholder svg { margin-inline: auto; color: rgba(255, 255, 255, 0.28); margin-block-end: 0.85rem; }
+.result__placeholder p { color: rgba(255, 255, 255, 0.62); font-size: 0.92rem; }
+.result__promise {
+  display: grid;
+  gap: 0.7rem;
+  margin-block-start: 1.5rem;
+  padding-block-start: 1.35rem;
+  border-block-start: 1px dashed rgba(255, 255, 255, 0.14);
+  text-align: start;
+}
+.result__promise li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+.result__promise svg { color: var(--orange-500); flex: none; margin: 2px 0 0; }
+
+.result__body { display: none; }
+.result.is-open .result__body { display: block; }
+.result.is-open .result__placeholder { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .result.is-open .result__body { animation: resultIn 0.5s var(--ease-out); }
+}
+@keyframes resultIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.quote-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.6rem;
+  border-block-end: 1px dashed rgba(255, 255, 255, 0.12);
+  font-size: 0.92rem;
+}
+.quote-line dt { color: rgba(255, 255, 255, 0.68); }
+.quote-line dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.quote-line--sum { border-block-end: none; padding-block-start: 0.85rem; }
+.quote-line--note dd { color: var(--orange-500); }
+
+.result__total {
+  margin-block-start: 1rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--r-input);
+  background: rgba(240, 72, 0, 0.12);
+  border: 1px solid rgba(240, 72, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.result__total span { font-weight: 700; font-size: 0.95rem; }
+.result__total strong {
+  font-size: clamp(1.9rem, 5vw, 2.5rem);
+  color: var(--orange-500);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.result__note {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+  margin-block-start: 0.9rem;
+}
+.result__actions { display: grid; gap: 0.6rem; margin-block-start: 1.1rem; }
+
+.calc-fallback {
+  border-radius: var(--r-card);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  padding: 1.5rem;
+  text-align: center;
+}
+.calc-fallback p { color: rgba(255, 255, 255, 0.7); margin-block-end: 1rem; }
+.calc-fallback .btn { margin-inline: 0.25rem; }
+.js .calc-fallback { display: none; }
+.no-js .calc-live { display: none; }
+
+
+/* 11. AUDIENCES — replaced by the .svc card system (§16F) */
+
+
+/* 12. LEGAL DELIVERY — the circular route ================================= */
+/* A pinned stage where a ring fills as you scroll and one step at a time sits
+   in its centre. Reference: enigma.jetdomains.co.il — they pin with GSAP over
+   2000px and stretch an SVG dash. We pin with CSS sticky instead (a GSAP pin
+   shifts this RTL page by the scrollbar width) and drive the same dash. */
+.lg { position: relative; background: var(--off-white); overflow: clip; --lg-ring: min(84vw, 360px); }
+.lg__stick { position: relative; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .lg { block-size: 330svh; padding-block: 0; }
+  .js .lg__stick {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: clip;
+  }
+}
+/* Below the two-column breakpoint the copy (416px) and the ring (315px) run
+   ~770px together — taller than a 100svh stage, so centring them inside it
+   clipped the headline off the top and the circle off the bottom. Here the
+   copy simply scrolls and only the RING pins, so the circle gets a whole
+   screen to itself and nothing is cut. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1079px) {
+  .js .lg { block-size: 320svh; }
+  .js .lg__stick {
+    position: static;
+    display: block;
+    block-size: 100%;
+    overflow: visible;
+  }
+  .js .lg__stick > .container { block-size: 100%; }
+  .js .lg__grid {
+    block-size: 100%;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+  .js .lg__copy { padding-block-start: clamp(2rem, 7svh, 4rem); }
+  .js .lg__ring {
+    position: sticky;
+    inset-block-start: max(1.25rem, calc((100svh - var(--lg-ring)) / 2));
+  }
+}
+
+.lg__grid {
+  display: grid;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  inline-size: 100%;
+}
+@media (min-width: 1080px) {
+  .lg__grid { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); }
+}
+
+/* -- copy ---------------------------------------------------------------- */
+.lg__title {
+  font-weight: 700;
+  font-size: clamp(2.3rem, 4.4vw, 4.1rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.lg__l1, .lg__l2 { display: block; }
+.lg__title em { font-style: normal; color: var(--orange-600); }
+.lg__sub {
+  margin-block-start: 1.1rem;
+  max-inline-size: 34rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.7;
+}
+.lg__points { margin-block: 1.4rem; display: grid; gap: 0.65rem; list-style: none; }
+.lg__points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--navy-800);
+}
+.lg__points li svg { color: var(--orange-600); flex: none; margin-block-start: 3px; }
+
+/* -- the ring ------------------------------------------------------------ */
+.lg__ring {
+  position: relative;
+  justify-self: center;
+  inline-size: min(92vw, 560px);
+  aspect-ratio: 1;
+}
+.lg__svg { inline-size: 100%; block-size: 100%; max-inline-size: none; overflow: visible; }
+
+.lg__track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 6;
+}
+/* the progress arc — JS stretches the first dash from 0 to the full length,
+   exactly the trick the reference uses */
+.lg__arc {
+  fill: none;
+  stroke: var(--orange-600);
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px rgba(240, 72, 0, 0.35));
+}
+
+.lg__dot {
+  fill: var(--white);
+  stroke: var(--line);
+  stroke-width: 3;
+  transition: fill 0.4s var(--ease-out), stroke 0.4s var(--ease-out), r 0.4s var(--ease-out);
+}
+.lg__dot.is-done { fill: var(--orange-600); stroke: var(--orange-600); }
+.lg__dot.is-active {
+  fill: var(--orange-600);
+  stroke: var(--white);
+  stroke-width: 5;
+  r: 13;
+  filter: drop-shadow(0 4px 14px rgba(240, 72, 0, 0.5));
+}
+
+/* -- the step in the middle ---------------------------------------------- */
+.lg__stage {
+  position: absolute;
+  inset: 18%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+.lg__panel {
+  grid-area: 1 / 1;          /* all panels stack; only one is shown */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  /* visibility is deliberately NOT transitioned — under a fast scrub it got
+     stuck mid-state and the step appeared to break */
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+.lg__panel.is-on { opacity: 1; transform: none; }
+.lg__stage { position: absolute; }
+.lg__ghost {
+  position: absolute;
+  inset-block-start: 0;          /* fixed slot on the STAGE, not on the panel */
+  inset-inline: 0;
+  display: block;
+  font-size: clamp(5rem, 11vw, 9rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(240, 72, 0, 0.09);
+  pointer-events: none;
+}
+/* the panels are centred as a block below the fixed numeral */
+.lg__panel { padding-block-start: clamp(3.2rem, 7vw, 5.2rem); }
+.lg__stage > .lg__ghost { z-index: 0; }
+.lg__panel { position: relative; z-index: 1; }
+.lg__eyebrow {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--orange-ink);
+}
+.lg__panel h3 {
+  margin-block-start: 0.45rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.95rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+.lg__panel p {
+  margin-block-start: 0.7rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* -- below the pinned breakpoint: a plain readable list ------------------- */
+@media (max-width: 1079px) {
+  .lg__ring { inline-size: var(--lg-ring); margin-block-start: 0.5rem; }
+  .lg__stage { inset: 13%; }
+  .lg__panel h3 { font-size: 1.15rem; }
+  .lg__panel p { font-size: 0.85rem; line-height: 1.5; }
+  .lg__ghost { font-size: clamp(4rem, 20vw, 6rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg__panel { opacity: 1; visibility: visible; transform: none; position: relative; }
+  .lg__stage { position: relative; inset: auto; gap: 1.5rem; }
+  .lg__stage .lg__panel { grid-area: auto; }
+}
+
+
+/* 13. FLEET — vehicle podium ============================================= */
+.fleet2 { overflow: clip; background: linear-gradient(180deg, var(--white) 0%, #FFF3EC 130%); }
+@media (min-width: 760px) { .fleet2 { padding-block-start: calc(var(--section-y) * 0.55); } }
+
+.fleet2__head { text-align: center; position: relative; z-index: 0; }
+.fleet2__title {
+  font-weight: 700;
+  font-size: clamp(2.9rem, 8.2vw, 7.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.fleet2__l1, .fleet2__l2 { display: block; }
+.fleet2__title em { font-style: normal; color: var(--orange-600); }
+.fleet2__sub {
+  max-inline-size: 34rem;
+  margin-inline: auto;
+  margin-block-start: 1.1rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+}
+
+/* -- podium stage (desktop) --------------------------------------------- */
+.fleet2__stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  align-items: end;
+  margin-block-start: clamp(1.4rem, 3vw, 2.2rem);
+}
+@media (min-width: 760px) {
+  .fleet2__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.22fr) minmax(0, 1fr);
+    margin-block-start: clamp(1rem, 2vw, 1.6rem);
+  }
+}
+
+.fv {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-decoration: none;
+  color: var(--white);
+  outline-offset: 4px;
+}
+.fv__media {
+  display: block;
+  position: relative;
+  z-index: 2;
+  margin-block-end: -0.35rem;      /* wheels sit ON the podium block */
+  padding-inline: clamp(0.4rem, 1.4vw, 1.2rem);
+}
+/* the hover lift and the scrubbed parallax both live on the image, never on
+   .fv__media — a CSS transform transition on the same element GSAP writes to
+   every frame lags the scrub and drops the vehicle onto the card title */
+.fv__media img {
+  inline-size: 100%;
+  block-size: auto;
+  display: block;
+  transition: translate 0.45s var(--ease-out);
+}
+/* podium heights: 01 centre, 02/03 at the sides */
+@media (min-width: 760px) {
+  .fv--truck .fv__media { padding-inline: 0; }
+  .fv--scooter .fv__media { padding-inline: clamp(0.8rem, 2.4vw, 2.2rem); }
+  .fv:hover .fv__media img, .fv:focus-visible .fv__media img { translate: 0 -10px; }
+}
+
+.fv__badge {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: clamp(0.2rem, 1vw, 0.8rem);
+  inset-inline-start: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.32rem 0.75rem;
+  box-shadow: 0 6px 18px rgba(11, 16, 35, 0.10);
+}
+
+.fv__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--navy-900);
+  border-radius: 22px 22px var(--r-card) var(--r-card);
+  padding: clamp(1.2rem, 2.2vw, 1.7rem);
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease, transform 0.45s var(--ease-out);
+}
+/* the podium: centre block is the tall one */
+@media (min-width: 760px) {
+  .fv__panel { min-block-size: 15rem; }
+  .fv--truck .fv__panel { min-block-size: 18.5rem; background: var(--navy-800); }
+  .fv:hover .fv__panel, .fv:focus-visible .fv__panel { border-color: rgba(240, 96, 0, 0.55); }
+}
+.fv__name { font-size: clamp(1.5rem, 2.2vw, 1.9rem); font-weight: 700; line-height: 1.1; }
+
+.fv__table { display: flex; flex-direction: column; }
+.fv__row {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding-block: 0.55rem;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.fv__k { color: rgba(255, 255, 255, 0.55); font-weight: 500; }
+.fv__v { color: rgba(255, 255, 255, 0.92); }
+
+.fv__cta {
+  margin-block-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--orange-500);
+}
+.fv__cta svg { transition: transform 0.3s var(--ease-out); }
+.fv:hover .fv__cta svg, .fv:focus-visible .fv__cta svg { transform: translateX(-5px); }
+
+/* -- mobile: 3D side-scroll carousel ------------------------------------ */
+.fleet2__nav { display: none; }
+@media (max-width: 759px) {
+  .js .fleet2__stage {
+    display: block;
+    block-size: min(152vw, 560px);
+    touch-action: pan-y;
+  }
+  .js .fleet2__stage .fv {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    margin-inline: auto;
+    inline-size: min(88%, 380px);
+    transform-origin: 50% 18%;
+    transition:
+      transform 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, filter, opacity;
+  }
+  .js .fleet2__stage .fv .fv__panel { transition: opacity 0.5s ease 0.12s; }
+  .js .fleet2__stage .fv.is-center { z-index: 6; transform: none; }
+  .js .fleet2__stage .fv.is-right,
+  .js .fleet2__stage .fv.is-left {
+    z-index: 4;
+    filter: blur(2.5px);
+    opacity: 0.55;
+    pointer-events: auto;
+  }
+  .js .fleet2__stage .fv.is-right { transform: translateX(72%) scale(0.42); }
+  .js .fleet2__stage .fv.is-left  { transform: translateX(-72%) scale(0.42); }
+  .js .fleet2__stage .fv.is-right .fv__panel,
+  .js .fleet2__stage .fv.is-left  .fv__panel { opacity: 0; transition-delay: 0s; }
+  .js .fleet2__stage .fv.is-right .fv__badge,
+  .js .fleet2__stage .fv.is-left  .fv__badge { opacity: 0; }
+  .fv__badge { transition: opacity 0.4s ease; }
+
+  .js .fleet2__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    margin-block-start: 1.2rem;
+  }
+  .fleet2__arrow {
+    inline-size: 46px;
+    block-size: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-dark, #C9CDD8);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .fleet2__arrow:active { transform: scale(0.94); }
+  .fleet2__dots { display: inline-flex; gap: 0.45rem; direction: ltr; }
+  .fleet2__dots i {
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 50%;
+    background: var(--line);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  .fleet2__dots i.on { background: var(--orange-600); transform: scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .fleet2__stage .fv, .fv__media img, .fv__panel, .fv__cta svg { transition: none !important; }
+}
+
+
+/* 14. COVERAGE — giant type + the live national map ======================= */
+.cov { overflow: clip; }
+.cov__grid {
+  display: grid;
+  gap: clamp(1.8rem, 4vw, 3.5rem);
+  align-items: center;
+}
+/* copy on the RTL start (right), map on the left */
+@media (min-width: 940px) {
+  .cov__grid { grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr); }
+}
+
+.cov__title {
+  font-weight: 700;
+  font-size: clamp(2.6rem, 5.6vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.cov__l1, .cov__l2 { display: block; }
+.cov__title em { font-style: normal; color: var(--orange-600); }
+.cov__sub {
+  margin-block-start: 1.2rem;
+  max-inline-size: 32rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.7;
+}
+.cov__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-block-start: 1.8rem;
+  max-inline-size: 26rem;
+}
+.cov__stat {
+  padding: 1rem 0.95rem;
+  border-radius: var(--r-input);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+.cov__stat b { display: block; font-size: clamp(1.5rem, 3.4vw, 2.1rem); color: var(--orange-ink); line-height: 1.1; }
+.cov__stat span { display: block; font-size: 0.82rem; color: var(--muted); margin-block-start: 0.2rem; }
+.cov__cities { margin-block-start: 1.6rem; }
+
+/* -- the map ------------------------------------------------------------- */
+.cov__map {
+  position: relative;
+  justify-self: center;
+  inline-size: 100%;
+  max-inline-size: min(92vw, 520px);
+  aspect-ratio: 300 / 925;
+  block-size: min(86svh, 820px);
+}
+/* a warm bloom behind the country so the dots read on the off-white panel */
+.cov__glow {
+  position: absolute;
+  inset: -12% -30%;
+  background: radial-gradient(60% 45% at 50% 45%, rgba(240, 96, 0, 0.13), transparent 70%);
+  pointer-events: none;
+}
+.ilmap {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  color: #A9B6D0;              /* the land: soft navy-grey on light */
+  overflow: visible;
+}
+.ilmap__dots circle { opacity: 0.9; }
+.ilmap__arcs path {
+  stroke: var(--orange-600);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 5px rgba(240, 72, 0, 0.45));
+}
+.ilmap__pin .pin-dot { fill: var(--orange-600); }
+.ilmap__pin .pin-ring { fill: none; stroke: var(--orange-600); stroke-width: 1.4; opacity: 0.55; }
+@media (prefers-reduced-motion: no-preference) {
+  .ilmap__pin .pin-ring { animation: pinRing 2.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  .ilmap__pin:nth-child(2) .pin-ring { animation-delay: 0.6s; }
+  .ilmap__pin:nth-child(3) .pin-ring { animation-delay: 1.1s; }
+  .ilmap__pin:nth-child(4) .pin-ring { animation-delay: 1.7s; }
+  .ilmap__pin:nth-child(5) .pin-ring { animation-delay: 0.9s; }
+  .ilmap__pin:nth-child(6) .pin-ring { animation-delay: 2.2s; }
+}
+@keyframes pinRing {
+  0%   { transform: scale(0.6); opacity: 0.75; }
+  75%, 100% { transform: scale(3.4); opacity: 0; }
+}
+.pin-label {
+  fill: var(--navy-900);
+  font-family: 'Google Sans', 'Heebo', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  direction: rtl;
+  paint-order: stroke;
+  stroke: var(--off-white);
+  stroke-width: 4px;
+}
+/* comet dots riding the arcs (positioned by MotionPathPlugin) */
+.ilmap__comet { fill: var(--orange-500); filter: drop-shadow(0 0 5px rgba(240, 96, 0, 0.95)); }
+
+/* live dispatch chips popping over the pins */
+.cov__events { position: absolute; inset: 0; pointer-events: none; }
+.cov__event {
+  position: absolute;
+  transform: translate(50%, -50%);
+  white-space: nowrap;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.3rem 0.7rem;
+  box-shadow: 0 8px 22px rgba(11, 16, 35, 0.12);
+  opacity: 0;
+}
+.cov__event i {
+  display: inline-block;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: #14A44D;
+  margin-inline-end: 0.4rem;
+}
+.cov__event--pick i { background: var(--orange-600); }
+
+@media (max-width: 939px) {
+  .cov__map { max-inline-size: min(88vw, 360px); block-size: min(78svh, 620px); }
+  .pin-label { font-size: 26px; stroke-width: 6px; }
+  .ilmap__pin .pin-dot { r: 4.6; }
+  .ilmap__pin .pin-ring { stroke-width: 2; }
+  .ilmap__arcs path { stroke-width: 2.6; }
+  /* the chips are wider than the narrow phone map and spill past its edge —
+     the routes and pulsing pins carry the section on small screens */
+  .cov__events { display: none; }
+}
+
+.city-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-block-start: 1.5rem;
+}
+.city-links a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--navy-900);
+  transition: border-color var(--t-base), color var(--t-base);
+}
+.city-links a:hover { border-color: var(--orange-ink); color: var(--orange-ink); }
+
+
+/* 15. SOCIAL PROOF — floating Google reviews ============================= */
+.proof2 { overflow: clip; }
+
+.proof2__grid {
+  display: grid;
+  gap: clamp(1.6rem, 3.5vw, 3rem);
+  align-items: center;
+}
+@media (min-width: 940px) {
+  .proof2__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+}
+
+.proof2__title {
+  font-weight: 700;
+  font-size: clamp(2.7rem, 5.2vw, 5.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.proof2__l1, .proof2__l2 { display: block; }
+.proof2__title em { font-style: normal; color: var(--orange-600); }
+.proof2__sub {
+  max-inline-size: 30rem;
+  margin-block-start: 1.2rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+}
+@media (max-width: 939px) {
+  .proof2__copy { text-align: center; }
+  .proof2__sub { margin-inline: auto; }
+}
+
+.proof2__score {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-block-start: 1.7rem;
+}
+.proof2__num { font-size: clamp(2.6rem, 4vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
+.proof2__scoremeta { display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-start; }
+.proof2__scoremeta .stars { display: flex; gap: 2px; color: #F5A623; }
+.proof2__scoremeta > span:last-child { font-size: 0.88rem; color: var(--muted); }
+@media (max-width: 939px) { .proof2__score { margin-block-start: 1.3rem; } }
+
+.proof2__link {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  inline-size: fit-content;
+  margin-block-start: 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--orange-ink);
+}
+.proof2__link svg { transition: transform 0.3s var(--ease-out); }
+.proof2__link:hover svg { transform: translateX(-5px); }
+@media (max-width: 939px) { .proof2__link { margin-inline: auto; } }
+
+/* -- the floating stream: two columns drifting in opposite directions ---- */
+.proof2__stream {
+  position: relative;
+  display: flex;
+  gap: 1.1rem;
+  block-size: clamp(400px, 58vh, 540px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+.proof2__col { flex: 1; min-inline-size: 0; }
+.proof2__col--b { padding-block-start: 4.5rem; }   /* stagger the second lane */
+.proof2__track {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  will-change: transform;
+}
+.proof2__track--up   { animation: rvFloat 17s linear infinite; }
+.proof2__track--down { animation: rvFloat 22s linear infinite reverse; }
+.proof2__stream:hover .proof2__track { animation-play-state: paused; }
+@keyframes rvFloat {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(-50% - 0.55rem)); }  /* one full set + half the gap */
+}
+
+.rv {
+  margin: 0;
+  inline-size: 100%;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: 0 18px 40px rgba(11, 16, 35, 0.08);
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.rv__head { display: flex; align-items: center; gap: 0.7rem; }
+.rv__av {
+  flex: none;
+  inline-size: 40px;
+  block-size: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.rv__av--a { background: var(--orange-ink); }
+.rv__av--b { background: var(--navy-700); }
+.rv__av--c { background: #B7791F; }
+.rv__who b { display: block; font-size: 0.95rem; color: var(--ink); }
+.rv__who > span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.rv__g { flex: none; }
+.rv__stars { display: flex; gap: 2px; color: #F5A623; }
+.rv blockquote { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--ink); }
+
+@media (max-width: 939px) {
+  .proof2__stream { block-size: min(96vw, 420px); }
+  .proof2__col--b { display: none; }   /* one readable lane on small screens */
+  .proof2__col { max-inline-size: 420px; margin-inline: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proof2__track { animation: none; }
+  .proof2__track .rv[aria-hidden="true"] { display: none; }
+  .proof2__col--b { display: none; }
+  .proof2__stream {
+    block-size: auto;
+    overflow: visible;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+}
+
+
+/* 16. HOW IT WORKS — pinned horizontal route =============================== */
+.hw { position: relative; background: var(--white); }
+.hw__stick { position: relative; padding-block: var(--section-y); }
+
+/* the pinned stage: CSS sticky, never a GSAP pin (that shifts RTL by the
+   scrollbar width — same rule as the hero) */
+@media (prefers-reduced-motion: no-preference) and (min-width: 1080px) {
+  .js .hw { block-size: 300svh; padding-block: 0; }
+  .js .hw__stick {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: clip;
+    /* clear the fixed header — the stage starts flush with the viewport top */
+    padding-block: clamp(96px, 13vh, 140px) clamp(1.5rem, 4vh, 3rem);
+  }
+}
+
+.hw__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-block-end: clamp(2rem, 4vw, 3.4rem);
+}
+.hw__title {
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+/* one line: the two spans stay as separate elements for the wipe, but they
+   sit inline and never break — the whitespace between them is the word gap */
+.hw__l1, .hw__l2 { display: inline; }
+.hw__title { white-space: nowrap; }
+@media (max-width: 520px) { .hw__title { white-space: normal; } }
+.hw__title em { font-style: normal; color: var(--orange-600); }
+.hw__sub {
+  margin-block-start: 0.9rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  max-inline-size: 30rem;
+}
+/* the step counter — reads like a film slate */
+.hw__count { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.hw__count b { font-size: clamp(2.2rem, 3.4vw, 3.2rem); color: var(--orange-600); line-height: 1; }
+.hw__count span { font-size: 1.1rem; color: var(--muted); margin-inline-start: 0.3rem; }
+
+/* -- the moving track ---------------------------------------------------- */
+.hw__viewport { overflow: clip; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+.hw__track { position: relative; inline-size: max-content; max-inline-size: 100%; }
+
+/* the rail the nodes sit on: faint dashed track + an orange line that fills */
+.hw__rail {
+  position: absolute;
+  inset-block-start: 31px;
+  inset-inline: 0;
+  block-size: 3px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(to left, var(--line) 0 10px, transparent 10px 23px);
+}
+.hw__rail-live {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: repeating-linear-gradient(to left, var(--orange-600) 0 10px, transparent 10px 23px);
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+}
+
+.hw__steps {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(1.5rem, 3.4vw, 3.4rem);
+  inline-size: max-content;
+}
+@media (min-width: 1080px) {
+  /* sized against the viewport so the track always overflows by a meaningful
+     amount — otherwise on very wide screens all four fit and the pin has
+     nothing left to travel */
+  .hw__step { inline-size: clamp(300px, 33vw, 540px); }
+}
+
+.hw__node {
+  inline-size: 64px;
+  block-size: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--line);
+  color: var(--muted);
+  margin-block-end: 1.4rem;
+  transition: border-color 0.45s var(--ease-out), color 0.45s var(--ease-out),
+              background-color 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out);
+}
+.hw__n {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  transition: color 0.45s var(--ease-out);
+}
+.hw__step h3 {
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  line-height: 1.15;
+  margin-block-start: 0.3rem;
+  color: var(--ink);
+}
+.hw__step p {
+  margin-block-start: 0.7rem;
+  color: var(--muted);
+  font-size: clamp(0.92rem, 1.2vw, 1rem);
+  line-height: 1.65;
+}
+
+/* focus: only the step in the spotlight is fully lit */
+@media (prefers-reduced-motion: no-preference) and (min-width: 1080px) {
+  .js .hw__step { opacity: 0.32; transition: opacity 0.5s var(--ease-out); }
+  .js .hw__step.is-on { opacity: 1; }
+  /* the closing CTA never dims — it is the one thing that must stay inviting */
+  .js .hw__step--cta { opacity: 1; }
+  .js .hw__step.is-on .hw__node {
+    background: var(--orange-600);
+    border-color: var(--orange-600);
+    color: var(--white);
+    box-shadow: 0 10px 30px rgba(240, 72, 0, 0.32);
+  }
+  .js .hw__step.is-on .hw__n { color: var(--orange-ink); }
+}
+
+/* the last car on the train: the conversion card */
+.hw__step--cta h3 { color: var(--ink); }
+.hw__node--cta { border-color: var(--orange-600); color: var(--orange-600); }
+.hw__cta { margin-block-start: 1.3rem; }
+@media (max-width: 1079px) { .hw__cta { margin-block-start: 1rem; } }
+
+/* -- below the pinned breakpoint: a plain vertical timeline --------------- */
+.hw__vline { display: none; }
+@media (max-width: 1079px) {
+  .hw__viewport { overflow: visible; margin-inline: 0; padding-inline: 0; }
+  .hw__track { inline-size: auto; }
+  .hw__rail { display: none; }
+  .hw__steps { flex-direction: column; inline-size: auto; gap: 1.7rem; padding-inline-start: 0; }
+  .hw__step {
+    position: relative;
+    inline-size: auto;
+    padding-inline-start: 4.4rem;   /* the gutter the node lives in */
+    min-block-size: 52px;
+  }
+  .hw__node {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    inline-size: 52px;
+    block-size: 52px;
+    margin: 0;
+  }
+  /* the node the scroll has reached lights up here too — no dimming though,
+     every step must stay readable on a phone */
+  .js .hw__step.is-on .hw__node {
+    background: var(--orange-600);
+    border-color: var(--orange-600);
+    color: var(--white);
+    box-shadow: 0 8px 22px rgba(240, 72, 0, 0.3);
+  }
+  .js .hw__step.is-on .hw__n { color: var(--orange-ink); }
+  .hw__vline {
+    display: block;
+    position: absolute;
+    inset-block: 1.6rem 2rem;
+    inset-inline-start: 24.5px;
+    inline-size: 3px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(to bottom, var(--orange-600) 0 10px, transparent 10px 23px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hw__step, .hw__node, .hw__n { transition: none; }
+  .hw__rail-live { transform: none; }
+}
+
+
+/* 16b. SCRUBBED TITLE WIPE ===============================================
+   Major H2s wipe in with the scroll (clip-path scrubbed in JS). Static and
+   reduced-motion visitors just see the title. */
+@media (prefers-reduced-motion: no-preference) {
+  /* RTL reading direction: reveal from the right, so the LEFT inset closes */
+  .js .wipe { clip-path: inset(-5% -3% -8% calc((1 - var(--wipe, 1)) * 103%)); }
+}
+
+
+/* 16c. RIDE RAIL (page progress as a delivery) ============================ */
+.ride-rail { display: none; }
+@media (min-width: 1280px) and (prefers-reduced-motion: no-preference) {
+  .js .ride-rail {
+    position: fixed;
+    z-index: 80;
+    inset-inline-end: 1.4rem;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out);
+    pointer-events: none;
+  }
+  .js .ride-rail.is-shown { opacity: 1; }
+  .ride-rail__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .ride-rail__track {
+    position: relative;
+    inline-size: 2px;
+    block-size: 148px;
+    background: repeating-linear-gradient(180deg, var(--line) 0 6px, transparent 6px 12px);
+    border-radius: 2px;
+  }
+  .ride-rail__track::before,
+  .ride-rail__track::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: -3px;
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 50%;
+  }
+  .ride-rail__track::before { inset-block-start: -4px; background: var(--navy-900); }
+  .ride-rail__track::after { inset-block-end: -4px; background: var(--orange-600); }
+  .ride-rail__box {
+    position: absolute;
+    inset-inline-start: -6px;
+    inset-block-start: 0;
+    inline-size: 14px;
+    block-size: 14px;
+    border-radius: 4px;
+    background: var(--orange-600);
+    box-shadow: 0 2px 8px rgba(240, 72, 0, 0.45);
+    will-change: transform;
+  }
+}
+
+
+/* 16d. CITY MARQUEE ======================================================= */
+.city-marquee {
+  overflow: hidden;
+  margin-block-start: 1.5rem;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.city-marquee__track { display: flex; inline-size: max-content; }
+.city-marquee__group {
+  display: flex;
+  gap: 0.45rem;
+  padding-inline-end: 0.45rem;
+  flex: none;
+}
+.city-marquee__group a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--navy-900);
+  white-space: nowrap;
+  transition: border-color var(--t-base), color var(--t-base);
+}
+.city-marquee__group a:hover { border-color: var(--orange-ink); color: var(--orange-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .city-marquee__track { animation: cityMarq 36s linear infinite; }
+  .city-marquee:hover .city-marquee__track { animation-play-state: paused; }
+}
+@keyframes cityMarq { to { transform: translateX(50%); } }
+
+
+/* 17. FAQ ================================================================= */
+.faq2 { background: var(--off-white); }
+
+.faq2__head { text-align: center; margin-block-end: clamp(2.2rem, 5vw, 3.8rem); }
+.faq2__title {
+  font-weight: 700;
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.faq2__title em { font-style: normal; color: var(--orange-600); }
+.faq2__sub {
+  margin: 1rem auto 0;
+  max-inline-size: 44rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.7;
+}
+.faq2__cta { margin-block-start: 1.5rem; }
+
+/* -- desktop: two columns of bare rows, hairline dividers, no cards ------- */
+.faq2__grid { display: grid; gap: 0 clamp(2rem, 5vw, 5rem); }
+@media (min-width: 940px) {
+  .faq2__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+.fq {
+  border-block-end: 1px solid var(--line);
+  transition: border-color var(--t-base);
+}
+.fq[open] { border-block-end-color: rgba(240, 72, 0, 0.35); }
+
+.fq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: clamp(1.05rem, 2vw, 1.45rem);
+  min-block-size: 56px;          /* stays a comfortable touch target */
+  font-weight: 600;
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  line-height: 1.35;
+  color: var(--navy-900);
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--t-base);
+}
+.fq summary::-webkit-details-marker { display: none; }
+.faq2 .fq summary:hover { color: var(--orange-ink); }
+.faq2 .fq[open] summary { color: var(--orange-ink); }
+
+/* the chevron sits at the inline END (left in RTL), like the reference */
+.fq summary::after {
+  content: '';
+  flex: none;
+  inline-size: 11px;
+  block-size: 11px;
+  border-inline-start: 2px solid var(--orange-600);
+  border-block-end: 2px solid var(--orange-600);
+  transform: rotate(45deg);
+  margin-block-end: 5px;
+  transition: transform var(--t-base) var(--ease-out);
+}
+.fq[open] summary::after { transform: rotate(-135deg); margin-block: 5px 0; }
+
+.faq__answer { padding-block-end: 1.35rem; }
+.faq__answer p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-inline-size: 46ch;
+}
+.faq__answer p + p { margin-block-start: 0.7rem; }
+/* details content is display:none until open, so a transition never runs —
+   an animation on the revealed panel does */
+@media (prefers-reduced-motion: no-preference) {
+  .fq[open] .faq__answer { animation: fqOpen 0.4s var(--ease-out); }
+}
+@keyframes fqOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* -- phones: one crafted card, rows divided inside it -------------------- */
+@media (max-width: 939px) {
+  .faq2__head { text-align: start; }
+  .faq2__sub { margin-inline: 0; }
+  .faq2__grid {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    box-shadow: 0 18px 40px rgba(11, 16, 35, 0.06);
+    padding-inline: 1.15rem;
+    gap: 0;
+  }
+  .fq:last-child { border-block-end: 0; }
+  .fq summary { font-size: 1rem; padding-block: 1.15rem; gap: 0.9rem; }
+  /* a round +/− reads as a control, where a bare chevron read as decoration */
+  .fq summary::after {
+    inline-size: 30px;
+    block-size: 30px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    margin: 0;
+    transform: none;
+    background:
+      linear-gradient(var(--orange-600) 0 0) center / 11px 2px no-repeat,
+      linear-gradient(var(--orange-600) 0 0) center / 2px 11px no-repeat;
+    transition: background-size var(--t-base) var(--ease-out),
+                border-color var(--t-base), background-color var(--t-base);
+  }
+  .fq[open] summary::after {
+    transform: none;
+    border-color: var(--orange-600);
+    background:
+      linear-gradient(var(--orange-600) 0 0) center / 11px 2px no-repeat,
+      linear-gradient(var(--orange-600) 0 0) center / 0 11px no-repeat;   /* − */
+  }
+  .faq__answer { padding-block-end: 1.2rem; }
+  .faq__answer p { font-size: 0.92rem; max-inline-size: none; }
+}
+
+
+/* 18. KNOWLEDGE CENTRE =================================================== */
+.blog { background: var(--off-white); }
+
+.blog__head { text-align: center; margin-block-end: clamp(2rem, 4.5vw, 3.4rem); }
+.blog__title {
+  font-weight: 700;
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.blog__sub {
+  margin: 1rem auto 0;
+  max-inline-size: 46rem;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.7;
+}
+
+.blog__grid {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px)  { .blog__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1080px) { .blog__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.post {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(11, 16, 35, 0.05);
+  transition: transform var(--t-base) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              border-color var(--t-base);
+}
+@media (hover: hover) {
+  .post:hover {
+    transform: translateY(-4px);
+    border-color: rgba(240, 96, 0, 0.3);
+    box-shadow: 0 22px 48px rgba(11, 16, 35, 0.10);
+  }
+}
+
+.post__media { position: relative; overflow: hidden; }
+.post__media img {
+  inline-size: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s var(--ease-out);
+}
+@media (hover: hover) { .post:hover .post__media img { transform: scale(1.05); } }
+
+.post__tag {
+  position: absolute;
+  inset-block-end: 0.75rem;
+  inset-inline-start: 0.75rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--r-pill);
+  padding: 0.32rem 0.75rem;
+  box-shadow: 0 4px 14px rgba(11, 16, 35, 0.14);
+}
+
+.post__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1.05rem, 2vw, 1.4rem);
+  flex: 1;
+}
+.post__body h3 {
+  font-size: clamp(1.08rem, 1.5vw, 1.28rem);
+  line-height: 1.25;
+  color: var(--ink);
+}
+.post__body p {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.post__meta {
+  margin-block-start: auto;
+  padding-block-start: 0.7rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--orange-ink);
+}
+
+
+/* 19. FOOTER ============================================================== */
+.footer {
+  background: var(--navy-950);
+  color: rgba(255, 255, 255, 0.7);
+  padding-block: clamp(2.5rem, 5vw, 4rem) 0;
+}
+.footer h2, .footer h3 { color: var(--white); }
+.footer a { color: rgba(255, 255, 255, 0.7); transition: color var(--t-base); }
+.footer a:hover { color: var(--white); }
+
+/* -- the closing call to action ------------------------------------------ */
+.footer__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding-block-end: clamp(2rem, 4vw, 3rem);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer__cta-title {
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.footer__cta > div:first-child p {
+  margin-block-start: 0.6rem;
+  font-size: 0.95rem;
+  max-inline-size: 38ch;
+}
+.footer__cta-btns { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+/* -- brand · reach · nav -------------------------------------------------- */
+.footer__grid {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+@media (min-width: 780px)  { .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+
+.footer__about {
+  margin-block-start: 1rem;
+  max-inline-size: 34ch;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.footer h3 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-block-end: 1rem;
+}
+
+.footer__contact { display: grid; gap: 0.75rem; }
+.footer__contact a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--white);
+}
+.footer__contact svg { color: var(--orange-500); flex: none; }
+.footer__contact a:hover { color: var(--orange-500); }
+
+.footer__nav { display: grid; gap: 0.6rem; }
+.footer__nav a { font-size: 0.93rem; }
+
+.socials { display: flex; gap: 0.55rem; margin-block-start: 1.35rem; }
+.socials a {
+  inline-size: 38px;
+  block-size: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.8);
+  transition: border-color var(--t-base), color var(--t-base), transform var(--t-fast);
+}
+.socials a:hover { border-color: var(--orange-500); color: var(--orange-500); transform: translateY(-2px); }
+
+/* -- service areas: internal linking, kept deliberately quiet ------------- */
+.footer__areas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.9rem;
+  padding-block: 1.15rem;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer__areas-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  flex: none;
+}
+.areas { display: flex; flex-wrap: wrap; gap: 0.35rem 0.85rem; }
+.areas a { font-size: 0.83rem; color: rgba(255, 255, 255, 0.55); }
+.areas a:hover { color: var(--orange-500); }
+
+/* -- legal line ----------------------------------------------------------- */
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-block: 1.15rem;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.footer__bottom a { color: rgba(255, 255, 255, 0.62); }
+@media (max-width: 560px) {
+  .footer__cta-btns .btn { inline-size: 100%; }
+  .footer__bottom { justify-content: flex-start; }
+}
+
+
+/* 20. FLOATING WHATSAPP + COOKIE BANNER =================================== */
+.wa-float {
+  position: fixed;
+  z-index: 90;
+  inset-block-end: 1.15rem;
+  /* PHYSICAL right: on this RTL page inset-inline-end resolves to the LEFT,
+     which is what parked the button on the wrong side */
+  right: 1.15rem;
+  left: auto;
+  inline-size: 58px;
+  block-size: 58px;
+  border-radius: 50%;
+  background: var(--orange-600);
+  color: var(--white);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 22px rgba(240, 72, 0, 0.34);   /* --sh-wa is green-tinted */
+  transition: transform var(--t-base) var(--ease-out);
+}
+.wa-float:hover { transform: scale(1.06); }
+@media (prefers-reduced-motion: no-preference) {
+  .wa-float.is-pulsing { animation: waPulse 1.6s var(--ease-out); }
+}
+@keyframes waPulse {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+  70% { transform: scale(1); }
+}
+
+.cookie {
+  position: fixed;
+  z-index: 95;
+  inset-block-end: 0;
+  inset-inline: 0;
+  padding: var(--gutter);
+  display: none;
+}
+.cookie.is-shown { display: block; }
+.cookie__inner {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  background: var(--navy-900);
+  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--r-card);
+  box-shadow: var(--sh-3);
+  padding: 1.15rem 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+}
+@media (min-width: 800px) {
+  .cookie__inner { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.5rem; }
+}
+.cookie p { font-size: 0.88rem; }
+.cookie__actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.cookie .btn { min-block-size: 44px; padding-inline: 1.25rem; font-size: 0.92rem; }
+
+
+/* 21. PRIVACY PAGE ======================================================== */
+.doc { padding-block: calc(var(--header-h) + 4rem) var(--section-y); }
+.doc__inner { max-width: 74ch; }
+.doc h1 { margin-block-end: 0.75rem; }
+.doc h2 { font-size: 1.3rem; margin-block: 2.25rem 0.75rem; }
+.doc p, .doc li { color: var(--muted); }
+.doc ul { list-style: disc; padding-inline-start: 1.35rem; display: grid; gap: 0.4rem; margin-block-start: 0.75rem; }
+.doc p + p { margin-block-start: 0.85rem; }
+
+
+/* 22. REDUCED MOTION & PRINT ============================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Must out-specify the `.js`-scoped entrance states above, or nothing
+     would ever be shown to a visitor who asked for no motion. */
+  .js .reveal, .reveal { opacity: 1; transform: none; }
+  .js .mark::before, .mark::before { transform: rotate(-1deg) scaleX(1); }
+  .js .route-line path, .route-line path { stroke-dashoffset: 0; }
+  .btn:hover, .sector:hover, .step:hover, .icon-btn:hover { transform: none; }
+}
+
+@media print {
+  .header, .wa-float, .cookie, .mobile-nav, .hero__media { display: none !important; }
+  body { color: #000; background: #fff; }
+  .section--navy, .hero, .calc-card, .form-card { background: #fff !important; color: #000 !important; }
+}
+
+
+/* ==========================================================================
+   09N. HERO — the isometric open road (clean, no video)
+   Copy on the RTL start (right); on the left a diagonal road the branded car
+   drives down for ever. The road band is rotated; the cars are NOT — they are
+   pre-rendered at the matching isometric angle and simply translated along
+   the band's axis, which keeps their perspective correct.
+   ========================================================================== */
+.hero {
+  position: relative;
+  background:
+    radial-gradient(90% 70% at 82% 6%, rgba(240, 96, 0, 0.10), transparent 60%),
+    linear-gradient(180deg, var(--white) 0%, var(--off-white) 70%, #EEF2F9 100%);
+  color: var(--ink);
+  overflow: clip;
+  isolation: isolate;
+}
+.hero__stick { position: relative; }
+/* scroll room for the scrubbed descent — CSS sticky, never a GSAP pin (that
+   shifts by the scrollbar width on RTL pages) */
+/* One plain screen, no sticky stage: the scroll scrub is gone, so the extra
+   scroll room it needed would only have added dead space. */
+@media (min-width: 900px) {
+  .hero__stick {
+    min-block-size: 100svh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* -- ticker -------------------------------------------------------------- */
+/* the live strip closes the hero instead of fighting the header for the top */
+.ticker {
+  position: relative;
+  z-index: 4;
+  flex: none;
+  margin-block-start: auto;
+  padding-block: 0.8rem;
+  border-block-start: 1px solid var(--line);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+}
+.ticker__track { display: flex; inline-size: max-content; }
+.ticker__group { display: flex; flex: none; align-items: center; }
+.ticker__group span {
+  display: flex;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding-inline: 1.5rem;
+  white-space: nowrap;
+}
+.ticker__group span::after {
+  content: '';
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background: var(--orange-600);
+  margin-inline-start: 1.5rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ticker__track { animation: tickerRun 34s linear infinite; }
+}
+@keyframes tickerRun { to { transform: translateX(50%); } }
+
+/* -- copy ---------------------------------------------------------------- */
+.hero__grid {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  /* clears the header, which now overlays the hero rather than floating */
+  padding-block: calc(var(--header-h) + 1.5rem) clamp(1.5rem, 4vh, 3rem);
+}
+.hero__copy { max-inline-size: 41rem; }
+@media (min-width: 900px) { .hero__copy { max-inline-size: 46%; } }
+
+.hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--navy-700);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.4rem 0.9rem;
+  box-shadow: 0 6px 18px rgba(11, 16, 35, 0.06);
+}
+.hero__live {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: #14A44D;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero__live { animation: livePulse 2.2s ease-out infinite; }
+}
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(20, 164, 77, 0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(20, 164, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(20, 164, 77, 0); }
+}
+
+/* the loudest type on the page */
+.hero__title {
+  margin-block-start: 1.1rem;
+  font-weight: 700;
+  font-size: clamp(2.9rem, 6.6vw, 6.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.hero__l1, .hero__l2 { display: block; }
+.hero__title em { font-style: normal; color: var(--orange-600); }
+
+.hero__sub {
+  margin-block-start: 1.3rem;
+  max-inline-size: 30rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.65;
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block-start: 1.8rem; }
+@media (max-width: 419px) { .hero__cta .btn { inline-size: 100%; } }
+
+.hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.3rem;
+  margin-block-start: 1.8rem;
+  padding-block-start: 1.3rem;
+  border-block-start: 1px solid var(--line);
+  max-inline-size: 32rem;
+  list-style: none;
+}
+.hero__trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--navy-700);
+}
+.hero__trust svg { color: var(--orange-600); flex: none; }
+
+/* -- the isometric road -------------------------------------------------- */
+/* PHYSICAL left/top on purpose: this is a rotated band with cars pre-rendered
+   at a fixed isometric angle, so the whole scene lives in screen coordinates.
+   Logical props flip it to the right under RTL and the cars clip away. */
+.road {
+  /* lane maths in one place: --lane is the perpendicular distance from the
+     road's centre line to a lane centre, and .485/.875 is the unit vector
+     perpendicular to a -29deg road. Guessed pixel offsets put the cars on
+     the grass; deriving them keeps every car inside the asphalt. */
+  --lane: 130px;
+  --far: 165px;
+  --perp-x: 0.485;
+  --perp-y: 0.875;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
+  width: 58%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: clip;
+  -webkit-mask-image: linear-gradient(to right, #000 72%, transparent 99%);
+          mask-image: linear-gradient(to right, #000 72%, transparent 99%);
+}
+@media (max-width: 899px) {
+  /* on a phone the scene stops being a backdrop and becomes its own block
+     under the copy — as an overlay it sat behind the CTAs and vanished */
+  .road {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    block-size: clamp(195px, 30vh, 260px);
+    margin-block-start: auto;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%);
+            mask-image: linear-gradient(to bottom, transparent, #000 16%);
+  }
+  .hero__grid { flex: none; }
+}
+
+/* the band itself: rotated so it runs from upper-right down to lower-left */
+.road__band {
+  position: absolute;
+  left: -55%;
+  right: -55%;
+  top: 58%;
+  block-size: clamp(300px, 43vw, 600px);
+  translate: 0 -50%;
+  rotate: -29deg;
+  background: linear-gradient(180deg, #E4E9F2 0%, #D8DFEC 100%);
+  box-shadow: 0 30px 60px rgba(11, 16, 35, 0.10);
+}
+/* kerbs */
+.road__band::before,
+.road__band::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  block-size: 10px;
+  background: #C3CBDC;
+}
+.road__band::before { top: 0; }
+.road__band::after  { bottom: 0; }
+
+/* the dashes — one repeating tile slid by exactly one tile length, so the
+   loop has no visible seam. They travel up-road because the camera rides
+   with our car. */
+.road__dash {
+  position: absolute;
+  left: -200px;
+  right: -200px;
+  top: 50%;
+  block-size: 7px;
+  translate: 0 -50%;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.95) 0 64px,
+    transparent 64px 128px
+  );
+}
+@media (prefers-reduced-motion: no-preference) {
+  .road__dash { animation: laneRun 0.85s linear infinite; }
+}
+@keyframes laneRun {
+  from { background-position-x: 0; }
+  to   { background-position-x: 128px; }
+}
+
+/* -- the cars ------------------------------------------------------------ */
+/* Rendered at the road's isometric angle already, so they are never rotated;
+   they only translate along the band's axis (-29deg => x:-0.875, y:+0.485). */
+.road__car,
+.road__traffic {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  inline-size: clamp(190px, 26vw, 380px);
+}
+.road__car img,
+.road__traffic img { inline-size: 100%; block-size: auto; display: block; }
+
+/* our car holds the centre of the frame — the world moves past it */
+.road__car {
+  z-index: 3;
+  top: 58%;
+  inline-size: clamp(155px, 16.5vw, 240px);
+  translate: calc(-34% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .road__car { animation: carBob 2.9s ease-in-out infinite; }
+}
+@keyframes carBob {
+  0%, 100% { translate: calc(-34% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y)); }
+  50%      { translate: calc(-34% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y) - 4px); }
+}
+
+.road__traffic { z-index: 2; opacity: 0.95; top: 58%; }
+.road__traffic--a { inline-size: clamp(100px, 11.5vw, 175px); }
+.road__traffic--b { inline-size: clamp(95px, 11vw, 165px); }
+
+/* being overtaken: drifts backwards up the road (to the upper right) */
+@media (prefers-reduced-motion: no-preference) {
+  .road__traffic--a { animation: trafficBackA 11s linear infinite; }
+  .road__traffic--b { animation: trafficBackB 11s linear infinite; }
+}
+@keyframes trafficBackA {
+  from { translate: calc(-50% - 660px - var(--far) * var(--perp-x)) calc(-50% + 366px - var(--far) * var(--perp-y)); }
+  to   { translate: calc(-50% + 660px - var(--far) * var(--perp-x)) calc(-50% - 366px - var(--far) * var(--perp-y)); }
+}
+@keyframes trafficBackB {
+  from { translate: calc(-50% - 1320px - var(--far) * var(--perp-x)) calc(-50% + 732px - var(--far) * var(--perp-y)); }
+  to   { translate: calc(-50% + 0px - var(--far) * var(--perp-x)) calc(-50% - 0px - var(--far) * var(--perp-y)); }
+}
+
+@media (max-width: 899px) {
+  /* tighten the copy so the road scene actually lands above the fold */
+  .hero__kicker { display: none; }      /* reads as clutter on a phone */
+  .hero__grid { padding-block: calc(var(--header-h) + 0.4rem) 0.5rem; }
+  .hero__sub { margin-block-start: 0.85rem; }
+  .hero__cta { margin-block-start: 1.15rem; }
+  .hero__trust {
+    margin-block-start: 1.1rem;
+    padding-block-start: 0.95rem;
+    gap: 0.5rem 1rem;
+  }
+  .hero__trust li { font-size: 0.82rem; }
+  .road { --lane: 44px; --far: 72px; --perp-x: 0.375; --perp-y: 0.927; }   /* -22deg road */
+  .road__band { block-size: clamp(185px, 52vw, 280px); rotate: -22deg; top: 56%; }
+  .road__car {
+    inline-size: clamp(150px, 40vw, 225px);
+    top: 56%;
+    translate: calc(-40% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y));
+  }
+  .road__traffic { top: 56%; }
+  .road__traffic--a { inline-size: clamp(105px, 27vw, 150px); }
+  .road__traffic--b { inline-size: clamp(95px, 25vw, 140px); }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 899px) {
+  @keyframes carBob {
+    0%, 100% { translate: calc(-40% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y)); }
+    50%      { translate: calc(-40% + var(--lane) * var(--perp-x)) calc(-46% + var(--lane) * var(--perp-y) - 3px); }
+  }
+  @keyframes trafficBackA {
+    from { translate: calc(-50% - 380px - var(--far) * var(--perp-x)) calc(-50% + 153px - var(--far) * var(--perp-y)); }
+    to   { translate: calc(-50% + 380px - var(--far) * var(--perp-x)) calc(-50% - 153px - var(--far) * var(--perp-y)); }
+  }
+  @keyframes trafficBackB {
+    from { translate: calc(-50% - 760px - var(--far) * var(--perp-x)) calc(-50% + 306px - var(--far) * var(--perp-y)); }
+    to   { translate: calc(-50% + 0px - var(--far) * var(--perp-x)) calc(-50% - 0px - var(--far) * var(--perp-y)); }
+  }
+}
+
+
+/* ==========================================================================
+   09S. ST2 — the promise, in giant numbers (UC-style)
+   A full-bleed giant two-tone statement, then a readable intro paragraph
+   beside huge counting stats.
+   ========================================================================== */
+.st2 { background: var(--white); padding-block: clamp(4.5rem, 10vw, 9rem); }
+
+/* the giant statement — the loudest type on the page */
+.st2__statement {
+  font-size: clamp(2.9rem, 8.6vw, 8.4rem);
+  line-height: 0.99;
+  letter-spacing: -0.025em;
+  margin-block-end: clamp(3rem, 8vw, 6.5rem);
+  text-wrap: balance;
+}
+.st2__line { display: block; }
+.st2__line--ghost { color: #C2C8D8; }
+
+.st2__grid { display: grid; gap: clamp(2.5rem, 6vw, 6rem); }
+@media (min-width: 900px) {
+  .st2__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .st2__lead { position: sticky; inset-block-start: calc(var(--header-h) + 3rem); }
+}
+
+/* the paragraph reads clearly from the start; the scrub only deepens it */
+.st2__para {
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  line-height: 1.5;
+  font-weight: 500;
+  max-inline-size: 34ch;
+}
+.st2__para .w { color: var(--muted); }
+.no-js .st2__para .w { color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .st2__para .w { color: var(--ink); } }
+
+.st2__label {
+  padding-block-end: 0.9rem;
+  border-block-end: 1px solid var(--line);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.st2__stat {
+  padding-block: clamp(2rem, 7vh, 4.5rem) clamp(1.5rem, 4vh, 2.5rem);
+  border-block-end: 1px solid var(--line);
+}
+.st2__stat:last-child { border-block-end: none; }
+.st2__stat b {
+  display: block;
+  font-size: clamp(4.2rem, 10vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.st2__stat span {
+  display: block;
+  margin-block-start: 0.7rem;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   16D. DRV — the two-angle drive (UC 1:1)
+   Part A: side view — white strip, ghost mega-text, services glide beneath.
+   Part B: top view — L-shaped road, sweeping turn, camera follows the truck.
+   Static / no-JS fallback: Part A fully readable, Part B shows the road.
+   ========================================================================== */
+.drv { position: relative; background: var(--white); overflow: clip; }
+.drv__stage { position: relative; min-block-size: 100svh; overflow: clip; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .drv { block-size: 780svh; }
+  .js .drv__stage {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: 100svh;
+    min-block-size: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 899px) {
+  .js .drv { block-size: 560svh; }
+}
+
+.drv__speed {
+  position: absolute;
+  z-index: 6;
+  inset-block-start: calc(var(--header-h) + 1.6rem);
+  inset-inline-start: var(--gutter);
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: var(--muted);
+  opacity: 0;
+}
+.drv__speed b {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  min-inline-size: 2ch;
+  text-align: center;
+}
+.drv__speed span { font-size: 0.85rem; }
+.no-js .drv__speed { display: none; }
+
+/* ── Part A: side view ─────────────────────────────────────────────────── */
+.drv__side {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+.drv__ghost {
+  position: absolute;
+  inset-block-start: 6svh;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  font-size: clamp(5rem, 19vw, 17rem);
+  font-weight: 700;
+  line-height: 1.6;
+  color: #EFF1F6;
+  white-space: nowrap;
+  text-align: center;
+  z-index: 0;
+  user-select: none;
+}
+.drv__strip {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 44svh;
+  display: flex;
+  align-items: flex-end;
+  border-block-end: 3px solid var(--navy-950);
+}
+.drv__truck-side {
+  inline-size: clamp(330px, 40vw, 560px);
+  margin-block-end: -2px;
+  will-change: transform;
+}
+.drv__truck-side img { inline-size: 100%; }
+
+/* the black services panel below the strip */
+.drv__panel {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  background: #0C0F16;
+  color: var(--white);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.drv__panel-head,
+.drv__panel-svcs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-inline: clamp(1.5rem, 6vw, 6rem);
+}
+.drv__panel { position: relative; }
+.drv__panel-head { flex-direction: column; align-items: flex-start; justify-content: center; }
+.drv__panel-svcs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+.drv__panel-item { max-inline-size: 430px; }
+.drv__headline {
+  font-size: clamp(1.7rem, 3.4vw, 3rem);
+  line-height: 1.12;
+  color: var(--white);
+}
+.drv__headline span { display: block; }
+.drv__headline-ghost { color: rgba(255, 255, 255, 0.34); }
+.drv__panel-para {
+  margin-block-start: 1.1rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.98rem;
+  max-inline-size: 46ch;
+}
+.drv__panel-ic {
+  display: grid;
+  place-items: center;
+  inline-size: 58px;
+  block-size: 58px;
+  border-radius: 14px;
+  background: rgba(240, 72, 0, 0.14);
+  color: var(--orange-500);
+  margin-block-end: 1rem;
+}
+.drv__panel-item h3 {
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.18;
+  color: var(--white);
+}
+.drv__panel-svcs p {
+  margin-block-start: 0.6rem;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.6);
+  max-inline-size: 34ch;
+}
+
+/* ── Part B: top view ──────────────────────────────────────────────────── */
+.drv__top { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.no-js .drv__top, .static .drv__top { opacity: 1; position: relative; min-block-size: 100svh; }
+@media (prefers-reduced-motion: reduce) {
+  .drv__top { opacity: 1; position: relative; min-block-size: 90svh; }
+  .drv__side { position: relative; min-block-size: 90svh; }
+}
+
+.drv__sheet {
+  position: absolute;
+  top: 0;
+  left: 0;      /* physical: the follow-cam math works in screen coordinates */
+  will-change: transform;
+}
+.drv__map {
+  display: block;
+  inline-size: 176vw;
+  max-inline-size: none;
+  height: auto;
+}
+@media (max-width: 899px) { .drv__map { inline-size: 420vw; } }
+
+/* vertical-phase copy (revealed after the turn) */
+.drv__copy {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 20svh;
+  inset-inline-start: var(--gutter);
+  inline-size: min(34vw, 470px);
+  opacity: 0;
+}
+.drv__copy-title {
+  font-size: clamp(2rem, 4.4vw, 3.9rem);
+  line-height: 1.08;
+}
+.drv__copy-title span { display: block; }
+.drv__t-ghost { color: #C7CDDC; }
+.drv__copy-para {
+  margin-block-start: clamp(1.25rem, 6svh, 3.5rem);
+  max-inline-size: 38ch;
+  color: var(--muted);
+}
+.drv__feats {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 18svh;
+  inset-inline-end: var(--gutter);
+  inline-size: min(28vw, 390px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 7svh, 4rem);
+}
+.drv__feat { opacity: 0; }
+.drv__feat-ic {
+  display: grid;
+  place-items: center;
+  inline-size: 54px;
+  block-size: 54px;
+  border-radius: 14px;
+  background: var(--tint-orange);
+  color: var(--orange-ink);
+  margin-block-end: 0.8rem;
+}
+.drv__feat h4 { font-size: clamp(1.1rem, 1.7vw, 1.45rem); line-height: 1.2; }
+.drv__feat p {
+  margin-block-start: 0.45rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+  max-inline-size: 32ch;
+}
+
+@media (max-width: 899px) {
+  .drv__strip { flex-basis: 36svh; }
+  .drv__truck-side { inline-size: clamp(280px, 74vw, 420px); }
+  /* the three services stack, each keeping its description — a title alone
+     told the visitor nothing, which is why they read as bare icons */
+  /* all three share ONE slot and hand over to each other, so each gets the
+     full width and its own moment instead of stacking into a list */
+  .drv__panel-svcs {
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-content: center;
+    padding-inline: clamp(1.25rem, 6vw, 2rem);
+  }
+  .drv__panel-item {
+    grid-area: 1 / 1;
+    max-inline-size: none;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.95rem;
+    align-items: start;
+  }
+  .drv__panel-ic { inline-size: 52px; block-size: 52px; border-radius: 12px; margin-block-end: 0; grid-row: span 2; }
+  .drv__panel-item h3 { font-size: 1.22rem; align-self: center; }
+  .drv__panel-svcs p {
+    margin-block-start: 0.45rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-inline-size: none;
+    grid-column: 2;
+  }
+  /* On a phone the map runs 420vw wide, so the asphalt covers the WHOLE
+     viewport and this copy sits on top of the road. It is therefore styled for
+     a dark ground — navy-on-navy made the headline vanish and the description
+     was hidden outright, which left a single readable word. */
+  .drv__copy {
+    inset-block-start: calc(var(--header-h) + 0.9rem);
+    inset-inline: var(--gutter);
+    inline-size: auto;
+    max-inline-size: min(90vw, 470px);
+  }
+  .drv__copy-title { font-size: clamp(1.85rem, 8.6vw, 2.7rem); color: #FFFFFF; }
+  .drv__copy-para {
+    display: block;
+    margin-block-start: 0.75rem;
+    max-inline-size: 34ch;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.76);
+  }
+  /* ONE card at a time in a single slot: three stacked cards do not leave room
+     for their descriptions on a 667px screen, and a bare title says nothing */
+  .drv__feats {
+    inset-block-start: auto;
+    inset-block-end: 3.5svh;
+    inset-inline: var(--gutter);
+    inline-size: auto;
+    display: grid;
+    gap: 0;
+  }
+  .drv__feat {
+    grid-area: 1 / 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.9rem;
+    align-items: start;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    padding: 1rem 1.05rem;
+    box-shadow: var(--sh-2);
+  }
+  .drv__feat-ic { inline-size: 46px; block-size: 46px; margin-block-end: 0; grid-row: span 2; }
+  .drv__feat h4 { font-size: 1.05rem; align-self: center; }
+  .drv__feat p {
+    display: block;
+    grid-column: 2;
+    margin-block-start: 0.4rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    max-inline-size: none;
+  }
+}
+
+/* ==========================================================================
+   16F. SVC — animated service cards (notch-tab style)
+   ========================================================================== */
+.svc__layout { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
+/* this section runs wider than the page container so the cards read big */
+.svc > .container { max-width: 1640px; }
+@media (min-width: 1000px) {
+  .svc__layout { grid-template-columns: minmax(0, 0.44fr) minmax(0, 1.56fr); align-items: start; }
+  .svc__head { position: sticky; inset-block-start: calc(var(--header-h) + 2rem); }
+}
+/* giant stacked heading — the reference sets the type this large */
+.svc__title {
+  font-size: clamp(2.5rem, 4.4vw, 4.4rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+}
+.svc__title .tl { display: block; }
+.svc__head p {
+  margin-block-start: 1.5rem;
+  color: var(--muted);
+  max-width: 34ch;
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.65;
+}
+
+/* scroll-typed headings: each character fades in as you scroll */
+.type-scrub .wd { display: inline-block; white-space: nowrap; }
+.type-scrub .ch { display: inline-block; }
+.svc__head .btn { margin-block-start: 1.5rem; }
+
+.svc__grid {
+  display: grid;
+  gap: clamp(1.1rem, 2vw, 1.9rem);
+}
+@media (min-width: 640px) { .svc__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1240px) { .svc__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.svc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: clamp(300px, 26vw, 400px);
+  border-radius: 30px;
+  background: var(--off-white);
+  border: 1px solid var(--line);
+  padding: 4.6rem 1.9rem 2.6rem;
+  text-align: center;
+  margin-block-start: 3.4rem;           /* room for the tab */
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+.svc-card:hover { transform: translateY(-5px); box-shadow: var(--sh-2); }
+.svc-card--navy { background: var(--navy-900); border-color: var(--navy-800); color: var(--white); }
+
+/* the white notch tab that holds the icon */
+.svc-card__tab {
+  position: absolute;
+  inset-block-start: -3.4rem;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: clamp(104px, 8vw, 132px);
+  block-size: clamp(104px, 8vw, 132px);
+  border-radius: 26px 26px 32px 32px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-1);
+  display: grid;
+  place-items: center;
+  padding: clamp(18px, 1.6vw, 24px);
+}
+.svc-card--navy .svc-card__tab { border-color: var(--navy-800); }
+.svc-card__tab svg { inline-size: 100%; block-size: 100%; overflow: visible; }
+
+.svc-card h3 { font-size: clamp(1.5rem, 2.1vw, 2.05rem); line-height: 1.2; }
+.svc-card h3 b { color: var(--orange-ink); }
+.svc-card--navy h3 b { color: var(--orange-500); }
+.svc-card p {
+  margin-block-start: 0.9rem;
+  font-size: clamp(0.98rem, 1.15vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--muted);
+  max-inline-size: 32ch;
+  margin-inline: auto;
+}
+.svc-card--navy p { color: rgba(255, 255, 255, 0.72); }
+
+/* animated icon parts get their transforms from GSAP; this just fixes origins */
+.ic-pen, .ic-box, .ic-gear, .ic-pkg, .ic-w1, .ic-w2, .ic-b1, .ic-b2 {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+
+/* ── hero life layer: drifting particles ──────────────────────────────── */
+.hero__p {
+  position: absolute;
+  inline-size: 3px;
+  block-size: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+.hero__p--o { background: rgba(240, 96, 0, 0.55); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__cta .btn--primary { animation: ctaGlow 5.5s ease-in-out infinite; }
+}
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 8px 22px rgba(240, 72, 0, 0.30); }
+  50% { box-shadow: 0 10px 34px rgba(240, 72, 0, 0.55); }
+}

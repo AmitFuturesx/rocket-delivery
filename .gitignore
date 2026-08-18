@@ -1,0 +1,11 @@
+# build artifact — regenerate with: node tools/pack.mjs
+dist/
+
+# host + tooling state
+.vercel/
+node_modules/
+*.zip
+
+# OS noise
+Thumbs.db
+desktop.ini

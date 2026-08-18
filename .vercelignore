@@ -1,0 +1,7 @@
+# Internal only — none of this may end up on a public URL.
+CLAUDE.md
+README.md
+tools/
+.claude/
+dist/
+*.zip
