@@ -542,8 +542,30 @@
       mk('.ic-w2',   { opacity: 0.25, scale: 0.86, duration: 0.8, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 0.4 });
       mk('.ic-b1',   { y: -12, opacity: 0, duration: 1.4, repeat: -1, ease: 'power1.out' });
       mk('.ic-b2',   { y: -14, opacity: 0, duration: 1.4, repeat: -1, ease: 'power1.out', delay: 0.7 });
+      /* the calculator's choice tiles use the same living-line language: one
+         moving part per icon, so a plate reads as alive without a library */
+      mk('.ic-c-flap',  { scaleY: 0.55, duration: 1.1, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 0%' });
+      mk('.ic-c-lid',   { y: -4, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      mk('.ic-c-tape',  { opacity: 0.35, duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      mk('.ic-c-top',   { y: -7, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      mk('.ic-c-bolt',  { scale: 1.14, duration: 0.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 50%' });
+      mk('.ic-c-hand',  { rotation: 360, duration: 3.6, repeat: -1, ease: 'none' });
+      mk('.ic-c-check', { scale: 1.16, opacity: 0.55, duration: 0.75, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 50%' });
+      mk('.ic-c-stamp', { y: -6, scale: 1.08, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 50%' });
       // run only while the grid is on screen
       var grid = $('.svc__grid');
+      var calcLoops = loops.splice(loops.length - 8, 8);   // the eight added just above
+      var calcGrid = $('.calc');
+      if (calcGrid && calcLoops.length) {
+        calcLoops.forEach(function (t) { t.pause(); });
+        ScrollTrigger.create({
+          trigger: calcGrid, start: 'top 95%', end: 'bottom top',
+          onEnter:     function () { calcLoops.forEach(function (t) { t.play(); }); },
+          onEnterBack: function () { calcLoops.forEach(function (t) { t.play(); }); },
+          onLeave:     function () { calcLoops.forEach(function (t) { t.pause(); }); },
+          onLeaveBack: function () { calcLoops.forEach(function (t) { t.pause(); }); }
+        });
+      }
       if (grid && loops.length) {
         loops.forEach(function (t) { t.pause(); });
         ScrollTrigger.create({
