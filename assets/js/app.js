@@ -389,6 +389,19 @@
     /* ---- DRV: two-angle drive with a follow-cam (UC 1:1) ----------------- */
     var drv = $('.drv');
     if (drv && window.MotionPathPlugin) {
+    /* The breakpoint must be read PER BUILD, not once at load. The CSS follows
+       the live viewport, so a flag captured at load lets the two disagree:
+       resize a desktop window down and the phone CSS stacks all three service
+       cards into one grid cell while the desktop timeline keeps them all
+       visible — text piled on text. That is also what DevTools device mode
+       does, since it resizes without reloading.
+       gsap.matchMedia() rebuilds this block on every crossing and reverts the
+       previous one, so the JS and the CSS can never disagree again. */
+    gsap.matchMedia().add({
+      phone: '(max-width: 899px)',
+      desk:  '(min-width: 900px)'
+    }, function (mmCtx) {
+      var drvPhone = mmCtx.conditions.phone;
       var drvSpeedo = $('#speedo');
       var drvSpeedWrap = $('.drv__speed');
       var drvSide = $('.drv__side');
@@ -396,7 +409,6 @@
       var drvGhost = $('.drv__ghost');
       var drvHead = $('.drv__panel-head');
       var drvSvcs = $$('.drv__panel-svcs .drv__panel-item');
-      var drvPhone = window.matchMedia('(max-width: 899px)').matches;
       var drvTop = $('.drv__top');
       var drvSheet = $('#drv-sheet');
       var drvMap = $('.drv__map');
@@ -526,6 +538,9 @@
       }
 
       window.addEventListener('resize', drvCam);
+      /* GSAP reverts its own tweens and triggers; this listener is ours */
+      return function () { window.removeEventListener('resize', drvCam); };
+    });
     }
 
     /* ---- SVC cards: living line icons (lottie-style loops) --------------- */
