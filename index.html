@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 
 <script>
 document.documentElement.className = 'js';
@@ -105,7 +105,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         {
           "@type": "Question",
           "name": "כמה עולה משלוח?",
-          "acceptedAnswer": { "@type": "Answer", "text": "המחיר נקבע לפי סוג השירות (מהיום להיום, מהיום למחר, עד 5 ימי עסקים או מסירה משפטית), המרחק בין כתובת האיסוף לכתובת המסירה וגודל החבילה. במחשבון שבאתר תקבלו הערכת מחיר מפורטת כולל מע\"מ תוך פחות מדקה, ולאישור סופי אפשר לשלוח לנו את הפרטים בוואטסאפ." }
+          "acceptedAnswer": { "@type": "Answer", "text": "המחיר נקבע לפי סוג השירות (מהיום להיום או מהיום למחר), המרחק בין כתובת האיסוף לכתובת המסירה וגודל החבילה. במחשבון שבאתר תקבלו הערכת מחיר מפורטת כולל מע\"מ תוך פחות מדקה. מסירה משפטית מתומחרת לגופו של תיק — לכן עליה נחזור אליכם עם הצעה תוך חמש דקות." }
         },
         {
           "@type": "Question",
@@ -465,7 +465,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
               <legend class="calc-sec__label">סוג השירות</legend>
               <span class="calc-sec__sub">מתי צריך להגיע?</span>
             </div>
-            <div class="opt-grid opt-grid--4">
+            <div class="opt-grid opt-grid--3">
               <label class="opt">
                 <input type="radio" name="service" value="sameDay" checked>
                 <span class="opt__body">
@@ -493,19 +493,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
                     </svg>
                   </span>
                   <b>מהיום למחר</b><span>יום העסקים הבא</span>
-                </span>
-              </label>
-              <label class="opt">
-                <input type="radio" name="service" value="upTo5Days">
-                <span class="opt__body">
-                  <span class="opt__ic" aria-hidden="true">
-                    <svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="14" width="46" height="42" rx="5" stroke="var(--ln, #111834)" stroke-width="3"/>
-                      <path d="M9 26h46M21 8v10M43 8v10" stroke="var(--ln, #111834)" stroke-width="3"/>
-                      <path class="ic-c-check" d="m22 40 7 7 14-14" stroke="var(--ac, #F04800)" stroke-width="3"/>
-                    </svg>
-                  </span>
-                  <b>עד 5 ימים</b><span>המחיר המשתלם</span>
                 </span>
               </label>
               <label class="opt">
@@ -553,7 +540,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           </div>
 
           <div class="result__body">
-            <div class="price">
+            <div class="price" id="r-price">
               <div class="price__label">סה"כ לתשלום — כולל מע"מ</div>
               <div class="price__amount" id="r-total">0 ₪</div>
               <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>שליח זמין באזור שלכם</span>
@@ -571,9 +558,18 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
               <p class="result__note">המחיר הוא הערכה על בסיס מרחק הנסיעה. שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.</p>
             </div>
 
+            <!-- Legal delivery is priced per case, so it gets a quote request
+                 instead of a number. -->
+            <div class="price price--legal" id="r-legal" hidden>
+              <div class="price__label">מסירה משפטית</div>
+              <p class="price__legal-lead">מסירה משפטית מתומחרת לגופו של תיק — לפי מספר ההגעות הנדרשות, האזור ולוח הזמנים. לכן היא לא עוברת דרך המחשבון.</p>
+              <p class="price__legal-sub">שלחו לנו את פרטי המסירה ונחזור אליכם עם הצעת מחיר מסודרת.</p>
+              <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>מענה אנושי תוך 5 דקות</span>
+            </div>
+
             <div class="result__actions">
               <a class="btn btn--wa btn--lg" id="r-wa" href="https://wa.me/972537232057" target="_blank" rel="noopener">
-                <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>הזמינו עכשיו בוואטסאפ</a>
+                <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg><span id="r-wa-label">הזמינו עכשיו בוואטסאפ</span></a>
               <a class="btn btn--ghost" href="tel:+972537232057">
                 <svg width="18" height="18" aria-hidden="true"><use href="#i-phone"></use></svg>התקשרו: <span class="nowrap">053-7232057</span></a>
             </div>
@@ -1240,7 +1236,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         <details class="fq">
           <summary>כמה עולה משלוח?</summary>
           <div class="faq__answer">
-            <p>המחיר נקבע לפי סוג השירות (מהיום להיום, מהיום למחר, עד 5 ימי עסקים או מסירה משפטית), המרחק בין כתובת האיסוף לכתובת המסירה וגודל החבילה.</p>
+            <p>המחיר נקבע לפי סוג השירות (מהיום להיום או מהיום למחר), המרחק בין כתובת האיסוף לכתובת המסירה וגודל החבילה. מסירה משפטית מתומחרת לגופו של תיק — לכן עליה נחזור אליכם עם הצעה תוך חמש דקות.</p>
             <p>במחשבון שבאתר תקבלו הערכת מחיר מפורטת כולל מע"מ תוך פחות מדקה, ולאישור סופי אפשר לשלוח לנו את הפרטים בוואטסאפ.</p>
           </div>
         </details>
@@ -1510,6 +1506,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=5" defer></script>
+<script src="assets/js/app.js?v=6" defer></script>
 </body>
 </html>

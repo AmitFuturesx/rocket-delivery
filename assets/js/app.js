@@ -19,8 +19,8 @@
   // ⚠️ PLACEHOLDER RATES — confirm the real price table with the client
   //    before launch. All figures are BEFORE VAT.
   var PRICING = {
-    base:      { sameDay: 60, nextDay: 45, upTo5Days: 35, legal: 120 },
-    perKm:     { sameDay: 1.6, nextDay: 1.2, upTo5Days: 0.9, legal: 1.6 },
+    base:      { sameDay: 60, nextDay: 45 },
+    perKm:     { sameDay: 1.6, nextDay: 1.2 },
     sizeMult:  { small: 1.0, medium: 1.25, large: 1.6 },
     fragileAdd: 25,
     minCharge: 100,
@@ -34,7 +34,6 @@
   var SERVICE_NAMES = {
     sameDay: 'מהיום להיום',
     nextDay: 'מהיום למחר',
-    upTo5Days: 'עד 5 ימי עסקים',
     legal: 'מסירה משפטית'
   };
   var SIZE_NAMES = { small: 'קטן', medium: 'בינוני', large: 'גדול' };
@@ -1019,6 +1018,14 @@
       var size = $('input[name="size"]:checked', form).value;
       var fragile = $('#fragile').checked;
 
+      /* Legal delivery is priced per case — number of attempts, area, urgency —
+         so the calculator must not invent a figure for it. It collects the
+         same details and hands them to a human instead. */
+      if (service === 'legal') {
+        return { legal: true, from: from.text, to: to.text, service: service,
+                 size: size, fragile: fragile };
+      }
+
       var km = haversineKm(from.city, to.city) * ROAD_FACTOR;
       if (km < INTRA_CITY_KM) km = INTRA_CITY_KM;
       km = Math.round(km);
@@ -1045,8 +1052,30 @@
     }
 
     /* -- Render ---------------------------------------------------------- */
+    var priceBox = $('#r-price');
+    var legalBox = $('#r-legal');
+    var waLabel = $('#r-wa-label');
+
     function render(q) {
       lastQuote = q;
+
+      if (q.legal) {
+        if (priceBox) priceBox.hidden = true;
+        if (legalBox) legalBox.hidden = false;
+        if (waLabel) waLabel.textContent = 'שלחו פרטים לקבלת הצעה';
+        /* deliberately formal — this message is read by a law office */
+        var legalMsg = 'שלום, התעניינתי בשירות מסירה משפטית מ-' + q.from +
+          ' ל-' + q.to + '. אשמח לקבל הצעת מחיר ולתאם את פרטי המסירה. תודה.';
+        $('#r-wa').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(legalMsg);
+        resultBox.classList.add('is-open');
+        hasResult = true;
+        return;
+      }
+
+      if (priceBox) priceBox.hidden = false;
+      if (legalBox) legalBox.hidden = true;
+      if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';
+
       $('#r-service-label').textContent = 'שירות — ' + SERVICE_NAMES[q.service];
       $('#r-service').textContent = shekel(q.base);
       $('#r-distance-label').textContent = 'מרחק משוער — ' + q.km + ' ק"מ';
@@ -1108,9 +1137,21 @@
       }, reduceMotion ? 0 : 420);
     });
 
+    /* The button must not promise a price for the one service that has none. */
+    function syncSubmitLabel() {
+      var picked = $('input[name="service"]:checked', form);
+      submitBtn.textContent = (picked && picked.value === 'legal')
+        ? 'קבלו הצעה למסירה משפטית'
+        : 'חשבו מחיר משלוח';
+    }
+    syncSubmitLabel();
+
     // Once a price is on screen, keep it in sync with every change.
     $$('input[name="service"], input[name="size"], #fragile', form).forEach(function (el) {
-      el.addEventListener('change', function () { if (hasResult) recalc(); });
+      el.addEventListener('change', function () {
+        syncSubmitLabel();
+        if (hasResult) recalc();
+      });
     });
     var typeTimer;
     [pickupEl, dropoffEl].forEach(function (el) {

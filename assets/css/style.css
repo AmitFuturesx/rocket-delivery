@@ -757,11 +757,7 @@ body.is-locked { overflow: hidden; }
 
 /* ── choice tiles ───────────────────────────────────────────────────────── */
 .opt-grid { display: grid; gap: 10px; margin-block-start: 8px; }
-.opt-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .opt-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-/* the reference keeps every choice row on ONE line at 375px; two rows of two
-   cost 110px of height and made the block read as a scroll */
-@media (max-width: 560px) { .opt-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .opt { position: relative; display: block; cursor: pointer; }
 .opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
@@ -897,6 +893,21 @@ body.is-locked { overflow: hidden; }
   font-variant-numeric: tabular-nums;
 }
 @media (max-width: 560px) { .price__amount { font-size: 34px; } }
+/* the quote-request panel that stands in for a price on legal deliveries */
+.price--legal[hidden] { display: none; }
+.price__legal-lead {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  margin-block-start: 0.2rem;
+}
+.price__legal-sub {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+  margin-block-start: 0.6rem;
+}
+
 .price__ok {
   display: inline-flex;
   align-items: center;
