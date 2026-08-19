@@ -2979,6 +2979,10 @@ body.is-locked { overflow: hidden; }
 }
 .drv__copy-title span { display: block; }
 .drv__t-ghost { color: #C7CDDC; }
+/* On a phone this headline sits ON the dark asphalt, so its RESTING colour has
+   to be light too. Relying on the tween alone meant that any build where the
+   phone branch did not run left the word invisible against the road. */
+@media (max-width: 899px) { .drv__t-ghost { color: #E6E9F2; } }
 .drv__copy-para {
   margin-block-start: clamp(1.25rem, 6svh, 3.5rem);
   max-inline-size: 38ch;
@@ -3093,6 +3097,16 @@ body.is-locked { overflow: hidden; }
     font-size: 0.92rem;
     line-height: 1.5;
     max-inline-size: none;
+  }
+
+  /* The top inline-start corner belongs to the headline here, so the
+     speedometer moves to the opposite corner and lifts a little. It was
+     overlapping the title box by 76x40px, and only its opacity kept that
+     from showing — geometry is the real fix. */
+  .drv__speed {
+    inset-block-start: calc(var(--header-h) + 0.6rem);
+    inset-inline-start: auto;
+    inset-inline-end: var(--gutter);
   }
 }
 
