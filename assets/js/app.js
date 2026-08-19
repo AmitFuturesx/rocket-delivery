@@ -330,6 +330,16 @@
     gsap.registerPlugin(ScrollTrigger);
     if (window.MotionPathPlugin) gsap.registerPlugin(MotionPathPlugin);
 
+    /* history.scrollRestoration covers a normal reload; the back/forward cache
+       can still hand an offset back on pageshow, so pin the top there too.
+       Guarded on location.hash so /#calculator still lands on the calculator. */
+    function toTopUnlessAnchored() {
+      if (location.hash) return;
+      window.scrollTo(0, 0);
+      if (lenis) lenis.scrollTo(0, { immediate: true });
+    }
+    window.addEventListener('pageshow', toTopUnlessAnchored);
+
     /* Lenis smooth scroll driving ScrollTrigger */
     var lenis = null;
     if (window.Lenis) {

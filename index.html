@@ -31,9 +31,16 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=4">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
 
-<script>document.documentElement.className = 'js';</script>
+<script>
+document.documentElement.className = 'js';
+/* A reload starts at the top. Left to itself the browser restores the old
+   offset BEFORE ScrollTrigger exists, so the scrubbed sections reappear
+   frozen mid-animation. Set here, in the head, so it applies before the
+   restore would happen. An explicit #hash in the URL still wins. */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+</script>
 
 <script type="application/ld+json">
 {
@@ -1503,6 +1510,6 @@
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=4" defer></script>
+<script src="assets/js/app.js?v=5" defer></script>
 </body>
 </html>
