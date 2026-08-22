@@ -16,18 +16,25 @@
 
   /* 01. CONFIG & HELPERS =================================================== */
 
-  // ⚠️ PLACEHOLDER RATES — confirm the real price table with the client
-  //    before launch. All figures are BEFORE VAT.
+  /* Matched to the market on 19 Aug 2026 by reading the competitor's own
+     calculator bundle, not by guessing: a per-km rate by service, a flat price
+     under 12 km, and that flat price acting as the floor on longer trips.
+     Package size only matters through the vehicle it needs, and fragile
+     content upgrades the vehicle rather than adding a fee.
+     Legal delivery is deliberately absent — a human quotes it. */
   var PRICING = {
-    base:      { sameDay: 60, nextDay: 45 },
-    perKm:     { sameDay: 1.6, nextDay: 1.2 },
-    sizeMult:  { small: 1.0, medium: 1.25, large: 1.6 },
-    fragileAdd: 25,
-    minCharge: 100,
-    vatRate: 0.18
+    perKm:       { sameDay: 7, nextDay: 5 },   // ₪ per km, before VAT
+    vehicleBase: { motorcycle: 100, car: 120 },
+    sizeVehicle: { small: 'motorcycle', medium: 'car', large: 'car' },
+    inCityKm:    12,
+    vatRate:     0.18
   };
+  var VEHICLE_NAMES = { motorcycle: 'אופנוע', car: 'רכב' };
 
-  var ROAD_FACTOR = 1.3;      // straight-line km → realistic road distance
+  /* straight-line km → road distance. 1.25 was fitted against ten routes priced
+     by the competitor's own calculator: it lands the long, expensive runs
+     (Eilat) within 1% instead of the 5% that 1.3 gave. */
+  var ROAD_FACTOR = 1.25;
   var INTRA_CITY_KM = 5;      // floor when pickup and drop-off share a locality
   var WA_NUMBER = '972537232057';   // ⚠️ confirm 053-7232057 with the client
 
@@ -1030,23 +1037,28 @@
       if (km < INTRA_CITY_KM) km = INTRA_CITY_KM;
       km = Math.round(km);
 
-      var base = PRICING.base[service];
+      /* fragile content needs a protected vehicle, so it upgrades the van
+         rather than adding a surcharge */
+      var vehicle = fragile ? 'car' : PRICING.sizeVehicle[size];
+      var vehicleBase = PRICING.vehicleBase[vehicle];
+      var inCity = km <= PRICING.inCityKm;
       var distanceCost = km * PRICING.perKm[service];
-      var mult = PRICING.sizeMult[size];
-      var sizeCost = (base + distanceCost) * (mult - 1);
-      var fragileCost = fragile ? PRICING.fragileAdd : 0;
 
-      var net = (base + distanceCost) * mult + fragileCost;
-      var minApplied = net < PRICING.minCharge;
-      if (minApplied) net = PRICING.minCharge;
+      var net, minApplied = false;
+      if (inCity) {
+        net = vehicleBase;                    // one flat price inside a town
+      } else {
+        minApplied = distanceCost < vehicleBase;
+        net = minApplied ? vehicleBase : distanceCost;
+      }
 
       var vat = net * PRICING.vatRate;
 
       return {
         from: from.text, to: to.text,
         service: service, size: size, fragile: fragile,
-        km: km, base: base, distanceCost: distanceCost,
-        sizeCost: sizeCost, fragileCost: fragileCost,
+        km: km, vehicle: vehicle, vehicleBase: vehicleBase, inCity: inCity,
+        distanceCost: distanceCost,
         minApplied: minApplied, net: net, vat: vat, total: net + vat
       };
     }
@@ -1076,29 +1088,33 @@
       if (legalBox) legalBox.hidden = true;
       if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';
 
-      $('#r-service-label').textContent = 'שירות — ' + SERVICE_NAMES[q.service];
-      $('#r-service').textContent = shekel(q.base);
-      $('#r-distance-label').textContent = 'מרחק משוער — ' + q.km + ' ק"מ';
-      $('#r-distance').textContent = shekel(q.distanceCost);
+      var veh = VEHICLE_NAMES[q.vehicle];
 
-      var sizeRow = $('#r-size-row');
-      if (q.sizeCost > 0.5) {
-        sizeRow.hidden = false;
-        $('#r-size-label').textContent = 'גודל חבילה — ' + SIZE_NAMES[q.size];
-        $('#r-size').textContent = '+ ' + shekel(q.sizeCost);
+      if (q.inCity) {
+        /* inside a town it is one flat price, so there is no distance line to show */
+        $('#r-service-label').textContent = 'משלוח פנימי בתוך העיר (' + veh + ')';
+        $('#r-service').textContent = shekel(q.net);
+        $('#r-distance-label').textContent = 'מרחק משוער';
+        $('#r-distance').textContent = q.km + ' ק"מ';
       } else {
-        sizeRow.hidden = false;
-        $('#r-size-label').textContent = 'גודל חבילה — ' + SIZE_NAMES[q.size];
-        $('#r-size').textContent = 'ללא תוספת';
+        $('#r-service-label').textContent = SERVICE_NAMES[q.service] + ' (' + veh + ')';
+        $('#r-service').textContent = shekel(q.distanceCost);
+        $('#r-distance-label').textContent = 'מרחק משוער';
+        $('#r-distance').textContent = q.km + ' ק"מ';
       }
+
+      /* size is not a surcharge — it decides the vehicle, so say that plainly */
+      $('#r-size-row').hidden = false;
+      $('#r-size-label').textContent = 'גודל חבילה — ' + SIZE_NAMES[q.size];
+      $('#r-size').textContent = veh;
 
       var fragileRow = $('#r-fragile-row');
       fragileRow.hidden = !q.fragile;
-      if (q.fragile) $('#r-fragile').textContent = '+ ' + shekel(q.fragileCost);
+      if (q.fragile) $('#r-fragile').textContent = 'רכב מוגן';
 
       var minRow = $('#r-min-row');
       minRow.hidden = !q.minApplied;
-      if (q.minApplied) $('#r-min').textContent = 'הושלם ל-' + shekel(PRICING.minCharge);
+      if (q.minApplied) $('#r-min').textContent = 'הושלם ל-' + shekel(q.vehicleBase);
 
       $('#r-net').textContent = shekel(q.net);
       $('#r-vat').textContent = shekel(q.vat);
