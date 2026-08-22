@@ -53,8 +53,18 @@
       from: ['פתח תקווה', 'גני תקווה', 'ראשון לציון', 'חולון', 'בת ים', 'תל אביב'],
       to:   ['מודיעין', 'שוהם'],
       small: 165, medium: 180, large: 230
+    },
+    {
+      from: ['ראשון לציון', 'תל אביב', 'פתח תקווה', 'חולון', 'בת ים',
+             'באר יעקב', 'נס ציונה'],
+      to:   ['באר שבע'],
+      small: 370, medium: 400, large: 450,
+      nextDayFactor: 1            // "מהיום למחר אותו מחיר"
     }
   ];
+  /* Most blocks price next-day 10% below same-day, but not all — the client
+     charges the same for both on the Beer Sheva run. A block can therefore
+     carry its own `nextDayFactor`; this is only the default. */
   var NEXT_DAY_FACTOR = 0.9;   // "מהיום למחר — 10% פחות"
 
   /* Both directions, by canonical city label. Returns null when the client
@@ -67,7 +77,9 @@
       if (!hit) continue;
       var price = z[size];
       if (typeof price !== 'number') return null;
-      return service === 'nextDay' ? price * NEXT_DAY_FACTOR : price;
+      if (service !== 'nextDay') return price;
+      var f = typeof z.nextDayFactor === 'number' ? z.nextDayFactor : NEXT_DAY_FACTOR;
+      return price * f;
     }
     return null;
   }
@@ -140,6 +152,7 @@
     ['קריית גת', 31.6100, 34.7642, ['קרית גת']],
     ['עפולה', 32.6078, 35.2897],
     ['נס ציונה', 31.9293, 34.7986],
+    ['באר יעקב', 31.9439, 34.8353],
     ['אריאל', 32.1056, 35.1719],
     ['יבנה', 31.8783, 34.7386],
     ['קריית מוצקין', 32.8397, 35.0785, ['קרית מוצקין']],
