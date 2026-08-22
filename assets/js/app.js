@@ -60,6 +60,11 @@
       to:   ['באר שבע'],
       small: 370, medium: 400, large: 450,
       nextDayFactor: 1            // "מהיום למחר אותו מחיר"
+    },
+    {
+      from: ['תל אביב'],
+      to:   ['גני תקווה', 'סביון', 'אור יהודה', 'קריית אונו'],
+      small: 130, medium: 140, large: 180
     }
   ];
   /* Most blocks price next-day 10% below same-day, but not all — the client
