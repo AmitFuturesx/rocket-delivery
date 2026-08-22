@@ -31,6 +31,42 @@
   };
   var VEHICLE_NAMES = { motorcycle: 'אופנוע', car: 'רכב' };
 
+  /* ── The client's own rate card ────────────────────────────────────────
+     He prices by ZONE PAIR, not by distance: a group of pickup towns, a group
+     of delivery towns, and one price per package size. Blocks arrive from him
+     in exactly this shape, so they are stored in exactly this shape — adding
+     the next one is a paste, not a translation, and he can proof-read it.
+
+     Prices are BEFORE VAT and are the SAME-DAY rate.
+     Next-day is 10% below same-day.
+     Matching is symmetric: תל אביב → נתניה costs the same as נתניה → תל אביב.
+
+     Any pair not covered here still falls back to the distance estimate, and
+     the quote says so, so we never present a guess as if it were his price. */
+  var ZONE_RATES = [
+    {
+      from: ['פתח תקווה', 'גבעתיים', 'רמת גן', 'תל אביב'],
+      to:   ['נתניה', 'קדימה', 'כפר יונה'],
+      small: 170, medium: 200, large: 250
+    }
+  ];
+  var NEXT_DAY_FACTOR = 0.9;   // "מהיום למחר — 10% פחות"
+
+  /* Both directions, by canonical city label. Returns null when the client
+     has not priced this pair yet. */
+  function zoneRate(cityA, cityB, size, service) {
+    for (var i = 0; i < ZONE_RATES.length; i++) {
+      var z = ZONE_RATES[i];
+      var hit = (z.from.indexOf(cityA) !== -1 && z.to.indexOf(cityB) !== -1) ||
+                (z.from.indexOf(cityB) !== -1 && z.to.indexOf(cityA) !== -1);
+      if (!hit) continue;
+      var price = z[size];
+      if (typeof price !== 'number') return null;
+      return service === 'nextDay' ? price * NEXT_DAY_FACTOR : price;
+    }
+    return null;
+  }
+
   /* straight-line km → road distance. 1.25 was fitted against ten routes priced
      by the competitor's own calculator: it lands the long, expensive runs
      (Eilat) within 1% instead of the 5% that 1.3 gave. */
@@ -134,7 +170,7 @@
     ['תל מונד', 32.2500, 34.9167],
     ['אבן יהודה', 32.2700, 34.8850],
     ['פרדסיה', 32.3000, 34.9000],
-    ['קדימה', 32.2833, 34.9167, ['קדימה צורן']],
+    ['קדימה', 32.2833, 34.9167, ['קדימה צורן', 'קדימה-צורן', 'צורן']],
     ['גדרה', 31.8133, 34.7794],
     ['מזכרת בתיה', 31.8517, 34.8358],
     ['קריית מלאכי', 31.7286, 34.7481, ['קרית מלאכי']],
@@ -1037,6 +1073,9 @@
       if (km < INTRA_CITY_KM) km = INTRA_CITY_KM;
       km = Math.round(km);
 
+      /* The client's own price for this pair wins over any estimate. */
+      var listed = zoneRate(from.city.label, to.city.label, size, service);
+
       /* fragile content needs a protected vehicle, so it upgrades the van
          rather than adding a surcharge */
       var vehicle = fragile ? 'car' : PRICING.sizeVehicle[size];
@@ -1044,8 +1083,11 @@
       var inCity = km <= PRICING.inCityKm;
       var distanceCost = km * PRICING.perKm[service];
 
-      var net, minApplied = false;
-      if (inCity) {
+      var net, minApplied = false, listedPrice = false;
+      if (listed !== null) {
+        net = listed;                         // his rate card
+        listedPrice = true;
+      } else if (inCity) {
         net = vehicleBase;                    // one flat price inside a town
       } else {
         minApplied = distanceCost < vehicleBase;
@@ -1058,7 +1100,8 @@
         from: from.text, to: to.text,
         service: service, size: size, fragile: fragile,
         km: km, vehicle: vehicle, vehicleBase: vehicleBase, inCity: inCity,
-        distanceCost: distanceCost,
+        distanceCost: distanceCost, listedPrice: listedPrice,
+        fromCity: from.city.label, toCity: to.city.label,
         minApplied: minApplied, net: net, vat: vat, total: net + vat
       };
     }
@@ -1089,8 +1132,19 @@
       if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';
 
       var veh = VEHICLE_NAMES[q.vehicle];
+      var note = $('#r-note');
 
-      if (q.inCity) {
+      if (q.listedPrice) {
+        /* a real price from the client's rate card — say so, and do not dress
+           it up with a distance breakdown it was not derived from */
+        $('#r-service-label').textContent = SERVICE_NAMES[q.service] +
+          ' — ' + q.fromCity + ' ← ' + q.toCity;
+        $('#r-service').textContent = shekel(q.net);
+        $('#r-distance-label').textContent = 'מרחק משוער';
+        $('#r-distance').textContent = q.km + ' ק"מ';
+        if (note) note.textContent = 'המחיר לפי מחירון החברה לאזור הזה, לפני תוספות. ' +
+          'שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו.';
+      } else if (q.inCity) {
         /* inside a town it is one flat price, so there is no distance line to show */
         $('#r-service-label').textContent = 'משלוח פנימי בתוך העיר (' + veh + ')';
         $('#r-service').textContent = shekel(q.net);
@@ -1101,6 +1155,10 @@
         $('#r-service').textContent = shekel(q.distanceCost);
         $('#r-distance-label').textContent = 'מרחק משוער';
         $('#r-distance').textContent = q.km + ' ק"מ';
+      }
+      if (!q.listedPrice && note) {
+        note.textContent = 'המחיר הוא הערכה על בסיס מרחק הנסיעה. שעות לילה, ' +
+          'סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.';
       }
 
       /* size is not a surcharge — it decides the vehicle, so say that plainly */
