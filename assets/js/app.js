@@ -122,6 +122,13 @@
       to:   ['פתח תקווה', 'גבעת שמואל'],
       small: 110, medium: 125, large: 150,
       nextDayFactor: 1            // "מהיום למחר אותו מחיר"
+    },
+    {
+      from: ['רמלה', 'נס ציונה', 'לוד', 'באר יעקב'],
+      to:   ['תל אביב', 'רמת גן', 'גבעתיים', 'פתח תקווה', 'גבעת שמואל',
+             'קריית אונו', 'גני תקווה', 'סביון'],
+      small: 130, medium: 150, large: 180,
+      nextDayFactor: 1            // "מהיום למחר אותו מחיר"
     }
   ];
   /* Most blocks price next-day 10% below same-day, but not all — the client
