@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=11">
+<link rel="stylesheet" href="assets/css/style.css?v=12">
 
 <script>
 document.documentElement.className = 'js';
@@ -558,12 +558,13 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
               <p class="result__note" id="r-note">המחיר הוא הערכה על בסיס מרחק הנסיעה. שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.</p>
             </div>
 
-            <!-- Legal delivery is priced per case, so it gets a quote request
-                 instead of a number. -->
-            <div class="price price--legal" id="r-legal" hidden>
-              <div class="price__label">מסירה משפטית</div>
-              <p class="price__legal-lead">מסירה משפטית מתומחרת לגופו של תיק — לפי מספר ההגעות הנדרשות, האזור ולוח הזמנים. לכן היא לא עוברת דרך המחשבון.</p>
-              <p class="price__legal-sub">שלחו לנו את פרטי המסירה ונחזור אליכם עם הצעת מחיר מסודרת.</p>
+            <!-- Some deliveries are quoted by a person rather than calculated:
+                 legal service, and any pickup and drop-off inside one town.
+                 Both fill this same panel; JS sets the wording. -->
+            <div class="price price--legal" id="r-quote" hidden>
+              <div class="price__label" id="r-quote-title">מסירה משפטית</div>
+              <p class="price__legal-lead" id="r-quote-lead"></p>
+              <p class="price__legal-sub" id="r-quote-sub"></p>
               <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>מענה אנושי תוך 5 דקות</span>
             </div>
 
@@ -1506,6 +1507,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=11" defer></script>
+<script src="assets/js/app.js?v=12" defer></script>
 </body>
 </html>

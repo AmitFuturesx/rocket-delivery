@@ -1088,8 +1088,16 @@
          so the calculator must not invent a figure for it. It collects the
          same details and hands them to a human instead. */
       if (service === 'legal') {
-        return { legal: true, from: from.text, to: to.text, service: service,
+        return { quoteOnly: 'legal', from: from.text, to: to.text, service: service,
                  size: size, fragile: fragile };
+      }
+
+      /* Pickup and drop-off in the SAME town. The client prices these per area
+         and per job, so no package size and no service level produces a
+         figure — it always goes to a person. */
+      if (from.city.label === to.city.label) {
+        return { quoteOnly: 'internal', from: from.text, to: to.text, service: service,
+                 size: size, fragile: fragile, city: from.city.label };
       }
 
       var km = haversineKm(from.city, to.city) * ROAD_FACTOR;
@@ -1131,27 +1139,52 @@
 
     /* -- Render ---------------------------------------------------------- */
     var priceBox = $('#r-price');
-    var legalBox = $('#r-legal');
+    var quoteBox = $('#r-quote');
     var waLabel = $('#r-wa-label');
+
+    /* the two cases a human prices, and the words each one gets */
+    var QUOTE_COPY = {
+      legal: {
+        title: 'מסירה משפטית',
+        lead: 'מסירה משפטית מתומחרת לגופו של תיק — לפי מספר ההגעות הנדרשות, האזור ולוח הזמנים. לכן היא לא עוברת דרך המחשבון.',
+        sub: 'שלחו לנו את פרטי המסירה ונחזור אליכם עם הצעת מחיר מסודרת.',
+        cta: 'שלחו פרטים לקבלת הצעה'
+      },
+      internal: {
+        title: 'משלוח פנימי בתוך העיר',
+        lead: 'משלוח בתוך אותה עיר מתומחר לגופו של אזור — המרחק בין השכונות, הנגישות לחניה וזמן ההמתנה משנים אותו. לכן הוא לא עובר דרך המחשבון.',
+        sub: 'שלחו לנו את הכתובות המדויקות ונחזור אליכם עם מחיר תוך דקות.',
+        cta: 'שלחו כתובות לקבלת מחיר'
+      }
+    };
 
     function render(q) {
       lastQuote = q;
 
-      if (q.legal) {
+      if (q.quoteOnly) {
+        var copy = QUOTE_COPY[q.quoteOnly];
         if (priceBox) priceBox.hidden = true;
-        if (legalBox) legalBox.hidden = false;
-        if (waLabel) waLabel.textContent = 'שלחו פרטים לקבלת הצעה';
-        /* deliberately formal — this message is read by a law office */
-        var legalMsg = 'שלום, התעניינתי בשירות מסירה משפטית מ-' + q.from +
-          ' ל-' + q.to + '. אשמח לקבל הצעת מחיר ולתאם את פרטי המסירה. תודה.';
-        $('#r-wa').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(legalMsg);
+        if (quoteBox) quoteBox.hidden = false;
+        $('#r-quote-title').textContent = copy.title;
+        $('#r-quote-lead').textContent = copy.lead;
+        $('#r-quote-sub').textContent = copy.sub;
+        if (waLabel) waLabel.textContent = copy.cta;
+
+        var msg = q.quoteOnly === 'legal'
+          /* deliberately formal — this one is read by a law office */
+          ? 'שלום, התעניינתי בשירות מסירה משפטית מ-' + q.from +
+            ' ל-' + q.to + '. אשמח לקבל הצעת מחיר ולתאם את פרטי המסירה. תודה.'
+          : 'היי, אשמח למחיר למשלוח פנימי בתוך ' + q.city +
+            ' (' + q.from + ' → ' + q.to + '), חבילה ' + SIZE_NAMES[q.size] +
+            (q.fragile ? ', תכולה שבירה' : '') + '.';
+        $('#r-wa').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
         resultBox.classList.add('is-open');
         hasResult = true;
         return;
       }
 
       if (priceBox) priceBox.hidden = false;
-      if (legalBox) legalBox.hidden = true;
+      if (quoteBox) quoteBox.hidden = true;
       if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';
 
       var veh = VEHICLE_NAMES[q.vehicle];
@@ -1237,8 +1270,14 @@
     /* The button must not promise a price for the one service that has none. */
     function syncSubmitLabel() {
       var picked = $('input[name="service"]:checked', form);
-      submitBtn.textContent = (picked && picked.value === 'legal')
-        ? 'קבלו הצעה למסירה משפטית'
+      if (picked && picked.value === 'legal') {
+        submitBtn.textContent = 'קבלו הצעה למסירה משפטית';
+        return;
+      }
+      /* same town in both fields → this will be a quote, not a calculation */
+      var a = findCity(pickupEl.value), b = findCity(dropoffEl.value);
+      submitBtn.textContent = (a && b && a.label === b.label)
+        ? 'קבלו מחיר למשלוח פנימי'
         : 'חשבו מחיר משלוח';
     }
     syncSubmitLabel();
@@ -1253,6 +1292,7 @@
     var typeTimer;
     [pickupEl, dropoffEl].forEach(function (el) {
       el.addEventListener('input', function () {
+        syncSubmitLabel();
         if (!hasResult) return;
         clearTimeout(typeTimer);
         typeTimer = setTimeout(recalc, 450);
