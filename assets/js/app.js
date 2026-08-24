@@ -72,13 +72,27 @@
      carry its own `nextDayFactor`; this is only the default. */
   var NEXT_DAY_FACTOR = 0.9;   // "מהיום למחר — 10% פחות"
 
-  /* End-to-end runs are quoted by a person, not calculated: the driver has to
-     be positioned for them and availability changes daily. 250 km is where the
-     natural gap sits — it covers every Eilat route (Haifa 450, Afula 426,
-     Tel Aviv 352, Jerusalem 309) while leaving ordinary long trips like
-     Haifa→Beer Sheva (215) on the normal track. A price the client has
-     actually quoted still wins over this. */
-  var LONG_HAUL_KM = 250;
+  /* The far north and the far south are quoted by a person. This is about
+     REGION, not distance — Tiberias→Safed is only 35 km and still counts,
+     because the client has no rates up there yet and a driver has to be
+     positioned for it.
+
+     The lines sit in the gaps between real towns, so nothing lands ambiguously:
+       north 32.60 — takes Afula 32.608, Tiberias and Haifa 32.794, Safed
+                     32.965, up to Kiryat Shmona 33.208. Leaves Zichron 32.571
+                     and Hadera 32.434 on the normal track.
+       south 31.30 — takes Beer Sheva 31.253, Arad, Dimona, Mitzpe Ramon and
+                     Eilat 29.558. Leaves Ofakim 31.312 and Kiryat Gat 31.610.
+
+     A price the client has actually quoted still wins, so his Dan→Beer Sheva
+     block keeps returning 370 ₪ rather than becoming a quote request. */
+  var EDGE_NORTH_LAT = 32.60;
+  var EDGE_SOUTH_LAT = 31.30;
+
+  function isEdgeCity(city) {
+    return !!city && typeof city.lat === 'number' &&
+           (city.lat >= EDGE_NORTH_LAT || city.lat <= EDGE_SOUTH_LAT);
+  }
 
   /* Both directions, by canonical city label. Returns null when the client
      has not priced this pair yet. */
@@ -1122,8 +1136,9 @@
       var inCity = km <= PRICING.inCityKm;
       var distanceCost = km * PRICING.perKm[service];
 
-      /* No price he has quoted → an end-to-end run goes to a person. */
-      if (listed === null && km >= LONG_HAUL_KM) {
+      /* No price he has quoted, and either end sits in the far north or the
+         far south → a person prices it. */
+      if (listed === null && (isEdgeCity(from.city) || isEdgeCity(to.city))) {
         return { quoteOnly: 'longHaul', from: from.text, to: to.text, service: service,
                  size: size, fragile: fragile, km: km,
                  fromCity: from.city.label, toCity: to.city.label };
@@ -1166,9 +1181,9 @@
         cta: 'שלחו פרטים לקבלת הצעה'
       },
       longHaul: {
-        title: 'משלוח מקצה לקצה',
-        lead: 'משלוחים בין קצוות הארץ מתומחרים באופן אישי — המרחק, זמן הנסיעה וזמינות שליח באזור משתנים מיום ליום. לכן מסלולים ארוכים אינם עוברים דרך המחשבון.',
-        sub: 'שלחו לנו את פרטי המשלוח ונחזור אליכם עם הצעת מחיר אישית.',
+        title: 'משלוח לקצוות הארץ',
+        lead: 'משלוחים בצפון הרחוק ובדרום הרחוק מתומחרים באופן אישי — זמינות השליח באזור, זמן הנסיעה ותנאי המסלול משתנים מיום ליום. לכן הם אינם עוברים דרך המחשבון.',
+        sub: 'שלחו לנו את פרטי המשלוח ונחזור אליכם עם הצעת מחיר אישית תוך דקות.',
         cta: 'שלחו פרטים לקבלת הצעה'
       },
       internal: {
