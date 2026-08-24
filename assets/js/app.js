@@ -72,6 +72,14 @@
      carry its own `nextDayFactor`; this is only the default. */
   var NEXT_DAY_FACTOR = 0.9;   // "מהיום למחר — 10% פחות"
 
+  /* End-to-end runs are quoted by a person, not calculated: the driver has to
+     be positioned for them and availability changes daily. 250 km is where the
+     natural gap sits — it covers every Eilat route (Haifa 450, Afula 426,
+     Tel Aviv 352, Jerusalem 309) while leaving ordinary long trips like
+     Haifa→Beer Sheva (215) on the normal track. A price the client has
+     actually quoted still wins over this. */
+  var LONG_HAUL_KM = 250;
+
   /* Both directions, by canonical city label. Returns null when the client
      has not priced this pair yet. */
   function zoneRate(cityA, cityB, size, service) {
@@ -1114,6 +1122,13 @@
       var inCity = km <= PRICING.inCityKm;
       var distanceCost = km * PRICING.perKm[service];
 
+      /* No price he has quoted → an end-to-end run goes to a person. */
+      if (listed === null && km >= LONG_HAUL_KM) {
+        return { quoteOnly: 'longHaul', from: from.text, to: to.text, service: service,
+                 size: size, fragile: fragile, km: km,
+                 fromCity: from.city.label, toCity: to.city.label };
+      }
+
       var net, minApplied = false, listedPrice = false;
       if (listed !== null) {
         net = listed;                         // his rate card
@@ -1150,6 +1165,12 @@
         sub: 'שלחו לנו את פרטי המסירה ונחזור אליכם עם הצעת מחיר מסודרת.',
         cta: 'שלחו פרטים לקבלת הצעה'
       },
+      longHaul: {
+        title: 'משלוח מקצה לקצה',
+        lead: 'משלוחים בין קצוות הארץ מתומחרים באופן אישי — המרחק, זמן הנסיעה וזמינות שליח באזור משתנים מיום ליום. לכן מסלולים ארוכים אינם עוברים דרך המחשבון.',
+        sub: 'שלחו לנו את פרטי המשלוח ונחזור אליכם עם הצעת מחיר אישית.',
+        cta: 'שלחו פרטים לקבלת הצעה'
+      },
       internal: {
         title: 'משלוח פנימי בתוך העיר',
         lead: 'משלוח בתוך אותה עיר מתומחר לגופו של אזור — המרחק בין השכונות, הנגישות לחניה וזמן ההמתנה משנים אותו. לכן הוא לא עובר דרך המחשבון.',
@@ -1174,9 +1195,13 @@
           /* deliberately formal — this one is read by a law office */
           ? 'שלום, התעניינתי בשירות מסירה משפטית מ-' + q.from +
             ' ל-' + q.to + '. אשמח לקבל הצעת מחיר ולתאם את פרטי המסירה. תודה.'
-          : 'היי, אשמח למחיר למשלוח פנימי בתוך ' + q.city +
-            ' (' + q.from + ' → ' + q.to + '), חבילה ' + SIZE_NAMES[q.size] +
-            (q.fragile ? ', תכולה שבירה' : '') + '.';
+          : q.quoteOnly === 'longHaul'
+            ? 'היי, אשמח להצעת מחיר למשלוח מ-' + q.from + ' ל-' + q.to +
+              ' (' + q.km + ' ק"מ), חבילה ' + SIZE_NAMES[q.size] +
+              (q.fragile ? ', תכולה שבירה' : '') + ', ' + SERVICE_NAMES[q.service] + '.'
+            : 'היי, אשמח למחיר למשלוח פנימי בתוך ' + q.city +
+              ' (' + q.from + ' → ' + q.to + '), חבילה ' + SIZE_NAMES[q.size] +
+              (q.fragile ? ', תכולה שבירה' : '') + '.';
         $('#r-wa').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
         resultBox.classList.add('is-open');
         hasResult = true;
