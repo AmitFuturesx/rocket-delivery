@@ -1,4 +1,45 @@
+# רוקט משלוחים — rocket-delivery.co.il
+#
+# One group per crawler. A crawler obeys only the FIRST group that matches it,
+# so there is exactly one "User-agent: *" here and everything it needs is
+# inside it. The 404 page is not disallowed on purpose: it is served with a
+# 404 status and carries meta noindex, and blocking it in robots would stop
+# Google reading that noindex at all.
+
 User-agent: *
+Allow: /
+
+# Assistants that answer questions by reading the web. Being quotable there is
+# worth as much as ranking, so they are named rather than left to the wildcard
+# — several of them ignore "*" by design.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
 Allow: /
 
 Sitemap: https://rocket-delivery.co.il/sitemap.xml

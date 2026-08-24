@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=25">
+<link rel="stylesheet" href="assets/css/style.css?v=26">
 
 <script>
 document.documentElement.className = 'js';
@@ -56,10 +56,46 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       "telephone": "+972537232057",
       "logo": "https://rocket-delivery.co.il/assets/images/brand/logo-clean-white-bg.jpg",
       "image": "https://rocket-delivery.co.il/assets/images/brand/og-cover.jpg",
-      "priceRange": "₪₪",
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "12" },
+      "priceRange": "₪110-₪450",
       "areaServed": { "@type": "Country", "name": "IL" },
       "address": { "@type": "PostalAddress", "addressCountry": "IL" },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "שירותי שליחויות",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "name": "משלוח מהיום להיום",
+            "description": "איסוף ומסירה באותו יום עסקים.",
+            "priceCurrency": "ILS",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "110",
+              "maxPrice": "450",
+              "priceCurrency": "ILS",
+              "valueAddedTaxIncluded": false
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "משלוח מהיום למחר",
+            "description": "איסוף היום, מסירה ביום העסקים הבא.",
+            "priceCurrency": "ILS",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "99",
+              "maxPrice": "450",
+              "priceCurrency": "ILS",
+              "valueAddedTaxIncluded": false
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "מסירה משפטית",
+            "description": "מסירה אישית של כתבי בי-דין עם תיעוד ואישור מסירה. מתומחרת לגופו של תיק."
+          }
+        ]
+      },
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -1507,6 +1543,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=25" defer></script>
+<script src="assets/js/app.js?v=26" defer></script>
 </body>
 </html>
