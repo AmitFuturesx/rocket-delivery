@@ -16,20 +16,26 @@
 
   /* 01. CONFIG & HELPERS =================================================== */
 
-  /* Matched to the market on 19 Aug 2026 by reading the competitor's own
-     calculator bundle, not by guessing: a per-km rate by service, a flat price
-     under 12 km, and that flat price acting as the floor on longer trips.
-     Package size only matters through the vehicle it needs, and fragile
-     content upgrades the vehicle rather than adding a fee.
-     Legal delivery is deliberately absent — a human quotes it. */
+  /* The estimate for pairs the client has NOT priced yet, fitted by least
+     squares to the 35 city pairs his own rate card does cover. Each size gets
+     its own base and they share a distance rate — that is what his numbers
+     actually do, and it fits them better than a size multiplier.
+     Worst case across his quoted routes is 18% (Modiin, which he prices
+     unusually low for the distance); most land inside 3–8%.
+
+     An earlier version of this was derived from a competitor's calculator.
+     That is gone: his prices run roughly half theirs, so it was quoting close
+     to double what he would charge. Everything here is his. */
   var PRICING = {
-    perKm:       { sameDay: 7, nextDay: 5 },   // ₪ per km, before VAT
-    vehicleBase: { motorcycle: 100, car: 120 },
-    sizeVehicle: { small: 'motorcycle', medium: 'car', large: 'car' },
-    inCityKm:    12,
-    vatRate:     0.18
+    size: {
+      small:  { base: 95,  perKm: 2.5 },
+      medium: { base: 110, perKm: 2.7 },
+      large:  { base: 160, perKm: 2.7 }
+    },
+    minCharge:     120,
+    nextDayFactor: 0.9,    // the default across his blocks
+    vatRate:       0.18
   };
-  var VEHICLE_NAMES = { motorcycle: 'אופנוע', car: 'רכב' };
 
   /* ── The client's own rate card ────────────────────────────────────────
      He prices by ZONE PAIR, not by distance: a group of pickup towns, a group
@@ -1129,12 +1135,6 @@
       /* The client's own price for this pair wins over any estimate. */
       var listed = zoneRate(from.city.label, to.city.label, size, service);
 
-      /* fragile content needs a protected vehicle, so it upgrades the van
-         rather than adding a surcharge */
-      var vehicle = fragile ? 'car' : PRICING.sizeVehicle[size];
-      var vehicleBase = PRICING.vehicleBase[vehicle];
-      var inCity = km <= PRICING.inCityKm;
-      var distanceCost = km * PRICING.perKm[service];
 
       /* No price he has quoted, and either end sits in the far north or the
          far south → a person prices it. */
@@ -1144,15 +1144,17 @@
                  fromCity: from.city.label, toCity: to.city.label };
       }
 
+      var rate = PRICING.size[size];
+      var estimate = rate.base + km * rate.perKm;
+      if (service === 'nextDay') estimate *= PRICING.nextDayFactor;
+
       var net, minApplied = false, listedPrice = false;
       if (listed !== null) {
         net = listed;                         // his rate card
         listedPrice = true;
-      } else if (inCity) {
-        net = vehicleBase;                    // one flat price inside a town
       } else {
-        minApplied = distanceCost < vehicleBase;
-        net = minApplied ? vehicleBase : distanceCost;
+        minApplied = estimate < PRICING.minCharge;
+        net = minApplied ? PRICING.minCharge : estimate;
       }
 
       var vat = net * PRICING.vatRate;
@@ -1160,8 +1162,7 @@
       return {
         from: from.text, to: to.text,
         service: service, size: size, fragile: fragile,
-        km: km, vehicle: vehicle, vehicleBase: vehicleBase, inCity: inCity,
-        distanceCost: distanceCost, listedPrice: listedPrice,
+        km: km, listedPrice: listedPrice,
         fromCity: from.city.label, toCity: to.city.label,
         minApplied: minApplied, net: net, vat: vat, total: net + vat
       };
@@ -1227,7 +1228,6 @@
       if (quoteBox) quoteBox.hidden = true;
       if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';
 
-      var veh = VEHICLE_NAMES[q.vehicle];
       var note = $('#r-note');
 
       if (q.listedPrice) {
@@ -1240,15 +1240,9 @@
         $('#r-distance').textContent = q.km + ' ק"מ';
         if (note) note.textContent = 'המחיר לפי מחירון החברה לאזור הזה, לפני תוספות. ' +
           'שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו.';
-      } else if (q.inCity) {
-        /* inside a town it is one flat price, so there is no distance line to show */
-        $('#r-service-label').textContent = 'משלוח פנימי בתוך העיר (' + veh + ')';
-        $('#r-service').textContent = shekel(q.net);
-        $('#r-distance-label').textContent = 'מרחק משוער';
-        $('#r-distance').textContent = q.km + ' ק"מ';
       } else {
-        $('#r-service-label').textContent = SERVICE_NAMES[q.service] + ' (' + veh + ')';
-        $('#r-service').textContent = shekel(q.distanceCost);
+        $('#r-service-label').textContent = SERVICE_NAMES[q.service];
+        $('#r-service').textContent = shekel(q.net);
         $('#r-distance-label').textContent = 'מרחק משוער';
         $('#r-distance').textContent = q.km + ' ק"מ';
       }
@@ -1257,18 +1251,17 @@
           'סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.';
       }
 
-      /* size is not a surcharge — it decides the vehicle, so say that plainly */
       $('#r-size-row').hidden = false;
-      $('#r-size-label').textContent = 'גודל חבילה — ' + SIZE_NAMES[q.size];
-      $('#r-size').textContent = veh;
+      $('#r-size-label').textContent = 'גודל חבילה';
+      $('#r-size').textContent = SIZE_NAMES[q.size];
 
       var fragileRow = $('#r-fragile-row');
       fragileRow.hidden = !q.fragile;
-      if (q.fragile) $('#r-fragile').textContent = 'רכב מוגן';
+      if (q.fragile) $('#r-fragile').textContent = 'טיפול מוגן';
 
       var minRow = $('#r-min-row');
       minRow.hidden = !q.minApplied;
-      if (q.minApplied) $('#r-min').textContent = 'הושלם ל-' + shekel(q.vehicleBase);
+      if (q.minApplied) $('#r-min').textContent = 'הושלם ל-' + shekel(PRICING.minCharge);
 
       $('#r-net').textContent = shekel(q.net);
       $('#r-vat').textContent = shekel(q.vat);
