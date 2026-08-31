@@ -716,6 +716,76 @@
     '332l3m0p5o0e191b190o372p3q185s0m031i1u2g1y2z1o52121b1s2i20311i530w0v3f2x3y0f600q3r394a0m6c100k0p3m2y' +
     '2z14343h2h452k3i670x5l';
 
+  /* ── Measured competitor prices ─────────────────────────────────────────
+     The client's instruction is that his small-package price must EQUAL the
+     competitor's, to the shekel. Deriving it from distance cannot do that:
+     their number comes from geocoding whatever string was typed, and their
+     geocoder disagrees with the road network often enough to matter — it puts
+     Rehovot 39.5 km from Tel Aviv when it is 26.
+
+     So for the pairs below the price is not computed, it is the figure their
+     own calculator returned, read off it on 2026-08-31. Net shekels, small
+     package, same-day. A bare city name is stable there: "רחובות",
+     "רחובות, ישראל" and "רחובות " all returned 158, so these are reproducible
+     rather than a snapshot of one lookup.
+
+     Four towns are deliberately absent — Modiin Illit, Ariel, Karnei Shomron
+     and Beitar Illit each returned exactly 562, the same figure for four
+     unrelated places. That is their geocoder falling back, not a price: it
+     bills Ariel, 45 km out, as though it were 140. Those fall through to the
+     distance model instead. Everything else here is their real number.
+
+     Coverage is Tel Aviv against everywhere. Pairs not listed fall through to
+     roadKm below and land within a few percent. To widen it, measure another
+     origin and add a row. */
+  var ALUF_NET = {
+    'תל אביב':
+    'ירושלים:282,חיפה:370,ראשון לציון:120,פתח תקווה:120,אשדוד:176,נתניה:126,באר שבע:454,' +
+    'בני ברק:120,חולון:120,רמת גן:120,אשקלון:244,רחובות:158,בת ים:120,בית שמש:233,הר טוב:239,' +
+    'זכריה:257,זנוח:242,צרעה:234,מחסיה:236,אשתאול:212,כפר סבא:120,הרצליה:120,חדרה:192,' +
+    'מודיעין:171,נצרת:418,נוף הגליל:477,רמלה:120,רעננה:120,לוד:120,רהט:390,עומר:476,נבטים:494,' +
+    'הוד השרון:120,גבעתיים:120,קריית אתא:438,נהריה:524,אום אל פחם:307,עכו:493,אילת:1422,' +
+    'רמת השרון:120,טבריה:544,כרמיאל:528,קריית גת:310,עפולה:373,נס ציונה:120,באר יעקב:120,' +
+    'יבנה:131,קריית מוצקין:405,קריית ביאליק:456,קריית ים:408,קריית אונו:120,אור יהודה:120,' +
+    'יהוד:122,נחשונים:120,בארות יצחק:120,מגשימים:120,גנות:120,צריפין:120,פלמחים:126,' +
+    'ראש העין:120,צפת:666,דימונה:608,טירת כרמל:340,נשר:382,מגדל העמק:421,יקנעם:350,' +
+    'זכרון יעקב:274,פרדס חנה:230,בנימינה:234,קיסריה:221,אור עקיבא:216,חריש:288,טירה:120,' +
+    'טייבה:166,קלנסווה:205,כפר קאסם:120,נתיבות:353,בארי:372,כפר עזה:344,נחל עוז:360,רעים:395,' +
+    'תקומה:345,מלילות:373,גבעולים:366,תדהר:378,פטיש:484,רנן:472,משמר הנגב:460,בית קמה:368,' +
+    'שובל:381,דביר:397,שדרות:314,נתיב העשרה:288,גבים:318,דורות:332,מפלסים:324,ברור חיל:294,' +
+    'אור הנר:303,יד מרדכי:276,יכיני:329,אופקים:463,ערד:580,מצפה רמון:792,בית שאן:469,' +
+    'כפר יונה:149,תל מונד:127,אבן יהודה:124,פרדסיה:144,קדימה:136,גדרה:190,מזכרת בתיה:157,' +
+    'קריית מלאכי:224,גן יבנה:189,בית דגן:120,סביון:120,גני תקווה:120,שוהם:126,אלעד:120,' +
+    'גבעת שמואל:120,מבשרת ציון:248,מעלה אדומים:324,מישור אדומים:340,קדר:336,גבעת זאב:228,' +
+    'כוכב יאיר:148,אורנית:120,אלפי מנשה:140,מעלות תרשיחא:598,שלומי:568,קרית שמונה:739,' +
+    'חצור הגלילית:637,קצרין:712,ראש פינה:628,יסוד המעלה:674,רמות:680,עין גב:638,שעל:756,' +
+    'בית הלל:756,מטולה:775,מג׳דל שמס:834,שפרעם:435,סחנין:513,טמרה:452,כפר כנא:472,' +
+    'דאלית אל כרמל:369,עוספיא:362,ירכא:513,מגאר:556'
+  };
+
+  var ALUF_INDEX = (function () {
+    var out = {};
+    for (var origin in ALUF_NET) {
+      if (!Object.prototype.hasOwnProperty.call(ALUF_NET, origin)) continue;
+      var parts = ALUF_NET[origin].split(',');
+      for (var i = 0; i < parts.length; i++) {
+        var kv = parts[i].split(':');
+        if (kv.length !== 2) continue;
+        /* symmetric: they charge the same in both directions */
+        out[origin + '|' + kv[0]] = +kv[1];
+        out[kv[0] + '|' + origin] = +kv[1];
+      }
+    }
+    return out;
+  })();
+
+  /* Their measured price for this pair, or null if we never measured it. */
+  function alufNet(a, b) {
+    var v = ALUF_INDEX[a + '|' + b];
+    return typeof v === 'number' && isFinite(v) ? v : null;
+  }
+
+
   function roadKm(a, b) {
     var i = a && a.ci, j = b && b.ci;
     if (typeof i === 'number' && typeof j === 'number') {
@@ -1561,10 +1631,17 @@
          read — he charges one rate for same-day and next-day alike. */
       var sizeFactor = PRICING.sizeFactor[size] || 1;
 
-      var net, minApplied = false, listedPrice = false, minFloor = 0;
+      /* Their measured figure wins over anything we could compute — that is
+         the whole point of it. */
+      var measured = alufNet(from.city.label, to.city.label);
+
+      var net, minApplied = false, listedPrice = false, minFloor = 0, matched = false;
       if (listed !== null) {
         net = listed;                         // his rate card
         listedPrice = true;
+      } else if (measured !== null) {
+        net = measured * sizeFactor;
+        matched = true;
       } else {
         var raw = km * PRICING.perKm;
         minApplied = km <= PRICING.inCityKm || raw < PRICING.minCharge;
@@ -1577,7 +1654,7 @@
       return {
         from: from.text, to: to.text,
         service: service, size: size, fragile: fragile,
-        km: km, listedPrice: listedPrice, minFloor: minFloor,
+        km: km, listedPrice: listedPrice, minFloor: minFloor, matched: matched,
         fromCity: from.city.label, toCity: to.city.label,
         minApplied: minApplied, net: net, vat: vat, total: net + vat
       };
