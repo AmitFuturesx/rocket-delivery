@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=29">
+<link rel="stylesheet" href="assets/css/style.css?v=30">
 
 <script>
 document.documentElement.className = 'js';
@@ -577,8 +577,8 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
           <div class="result__body">
             <div class="price" id="r-price">
-              <div class="price__label">סה"כ לתשלום — כולל מע"מ</div>
-              <div class="price__amount" id="r-total">0 ₪</div>
+              <div class="price__label">המחיר שלכם — לפני מע"מ</div>
+              <div class="price__amount"><span id="r-total">0 ₪</span><span class="price__plus">+ מע"מ</span></div>
               <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>שליח זמין באזור שלכם</span>
 
               <dl class="price__rows">
@@ -587,8 +587,8 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
                 <div class="quote-line" id="r-size-row"><dt id="r-size-label">גודל חבילה</dt><dd id="r-size">—</dd></div>
                 <div class="quote-line" id="r-fragile-row" hidden><dt>תכולה שבירה / ערך גבוה</dt><dd id="r-fragile">—</dd></div>
                 <div class="quote-line quote-line--note" id="r-min-row" hidden><dt>מינימום חיוב</dt><dd id="r-min">—</dd></div>
-                <div class="quote-line quote-line--sum"><dt>סה"כ לפני מע"מ</dt><dd id="r-net">—</dd></div>
                 <div class="quote-line"><dt>מע"מ 18%</dt><dd id="r-vat">—</dd></div>
+                <div class="quote-line quote-line--sum"><dt>סה"כ לתשלום כולל מע"מ</dt><dd id="r-gross">—</dd></div>
               </dl>
 
               <p class="result__note" id="r-note">המחיר הוא הערכה על בסיס מרחק הנסיעה. שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.</p>
@@ -1543,6 +1543,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=29" defer></script>
+<script src="assets/js/app.js?v=30" defer></script>
 </body>
 </html>

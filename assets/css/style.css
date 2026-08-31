@@ -883,6 +883,19 @@ body.is-locked { overflow: hidden; }
   text-align: start;
 }
 .price__label { font-size: 13px; color: rgba(255, 255, 255, 0.55); margin-block-end: 6px; }
+
+/* "+ מע"מ" sits beside the figure, not under it, so the number is still the
+   first thing read. Sized in em so it tracks the amount down to the mobile
+   step, and kept on one line so it never wraps away from the price. */
+.price__plus {
+  font-size: .40em;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, .6);
+  margin-inline-start: .3em;
+  white-space: nowrap;
+}
+
 .price__amount {
   font-size: 44px;
   font-weight: 900;

@@ -1760,14 +1760,15 @@
       minRow.hidden = !q.minApplied;
       if (q.minApplied) $('#r-min').textContent = 'הושלם ל-' + shekel(q.minFloor || PRICING.minCharge);
 
-      $('#r-net').textContent = shekel(q.net);
+      $('#r-gross').textContent = shekel(q.total);
       $('#r-vat').textContent = shekel(q.vat);
-      countTo($('#r-total'), q.total, 600, shekel);
+      countTo($('#r-total'), q.net, 600, shekel);
 
       var msg = 'היי, בדקתי במחשבון באתר: ' + SERVICE_NAMES[q.service] +
         ' מ-' + q.from + ' ל-' + q.to +
         ' (חבילה ' + SIZE_NAMES[q.size] + (q.fragile ? ', תכולה שבירה' : '') + ')' +
-        ' — הערכת מחיר ' + Math.round(q.total) + ' ₪ כולל מע"מ. אשמח להזמין משלוח 🚀';
+        ' — הערכת מחיר ' + Math.round(q.net) + ' ₪ + מע"מ (' +
+        Math.round(q.total) + ' ₪ כולל). אשמח להזמין משלוח 🚀';
       $('#r-wa').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
 
       resultBox.classList.add('is-open');
