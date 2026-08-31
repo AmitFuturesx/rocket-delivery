@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=31">
+<link rel="stylesheet" href="assets/css/style.css?v=32">
 
 <script>
 document.documentElement.className = 'js';
@@ -384,7 +384,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         <span class="calc-l1">מחשבון</span>
         <span class="calc-l2">עלות <em>משלוח</em>.</span>
       </h2>
-      <p class="calc-sub">בחרו סוג שירות, כתבו מאיפה ולאן — ותקבלו פירוט מחיר מלא כולל מע"מ, לפני שאתם מתחייבים למשהו.</p>
+      <p class="calc-sub">בחרו סוג שירות, כתבו מאיפה ולאן — ותקבלו הערכת מחיר מפורטת, לפני שאתם מתחייבים למשהו.</p>
     </div>
 
     <div class="calc">
@@ -587,9 +587,12 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
           <div class="result__body">
             <div class="price" id="r-price">
-              <div class="price__label">המחיר שלכם — לפני מע"מ</div>
+              <div class="price__label">מחיר משוער — לפני מע"מ</div>
               <div class="price__amount"><span id="r-total">0 ₪</span><span class="price__plus">+ מע"מ</span></div>
-              <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>שליח זמין באזור שלכם</span>
+              <div class="price__chips">
+                <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>שליח זמין באזור שלכם</span>
+                <span class="price__est">הערכה — לא הצעה סופית</span>
+              </div>
 
               <dl class="price__rows">
                 <div class="quote-line"><dt id="r-service-label">שירות</dt><dd id="r-service">—</dd></div>
@@ -601,7 +604,14 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
                 <div class="quote-line quote-line--sum"><dt>סה"כ לתשלום כולל מע"מ</dt><dd id="r-gross">—</dd></div>
               </dl>
 
-              <p class="result__note" id="r-note">המחיר הוא הערכה על בסיס מרחק הנסיעה. שעות לילה, סופי שבוע או דרישות מיוחדות עשויים לשנות אותו — לאישור סופי דברו איתנו.</p>
+              <p class="result__note">
+                <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" focusable="false">
+                  <circle cx="10" cy="10" r="8.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M10 9v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="10" cy="6.2" r="1.05" fill="currentColor"/>
+                </svg>
+                <span id="r-note">זהו מחיר משוער. הוא עשוי לעלות או לרדת בהתאם לדרישות שלכם — שעות לילה, סופי שבוע, המתנה בכתובת או טיפול חריג. המחיר הסופי נסגר איתכם בוואטסאפ לפני שהשליח יוצא.</span>
+              </p>
             </div>
 
             <!-- Some deliveries are quoted by a person rather than calculated:
@@ -1576,6 +1586,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=31" defer></script>
+<script src="assets/js/app.js?v=32" defer></script>
 </body>
 </html>

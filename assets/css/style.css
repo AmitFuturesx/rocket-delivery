@@ -921,6 +921,30 @@ body.is-locked { overflow: hidden; }
   margin-block-start: 0.6rem;
 }
 
+.price__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 10px;
+}
+.price__chips .price__ok { margin-block-start: 0; }
+
+/* Says out loud what the small print used to whisper: the figure is an
+   estimate. Orange rather than red — this is a qualification, not a warning,
+   and the panel should not look like something went wrong. */
+.price__est {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  background: rgba(240, 72, 0, 0.18);
+  border: 1px solid rgba(240, 72, 0, 0.34);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFC4A6;
+  white-space: nowrap;
+}
+
 .price__ok {
   display: inline-flex;
   align-items: center;
@@ -946,7 +970,19 @@ body.is-locked { overflow: hidden; }
 .quote-line--sum { margin-block-start: 8px; padding-block-start: 10px; border-block-start: 1px dashed rgba(255, 255, 255, 0.2); }
 .quote-line--note dd { color: var(--orange-500); }
 
-.result__note { font-size: 11px; line-height: 1.5; color: rgba(255, 255, 255, 0.4); margin-block-start: 12px; }
+.result__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.66);
+  margin-block-start: 14px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.14);
+}
+.result__note svg { flex: none; margin-block-start: 2px; color: #FF8A5C; }
+@media (max-width: 560px) { .result__note { font-size: 11.5px; } }
 .result__actions { display: grid; gap: 8px; margin-block-start: 14px; }
 
 .calc-fallback {
