@@ -2028,6 +2028,35 @@ body.is-locked { overflow: hidden; }
   .faq2__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 }
 
+/* ── Questions under the calculator ─────────────────────────────────────
+   Reuses .fq from the FAQ section for the chevron and the open/close. These
+   rules only set the block's own width and re-apply the orange accent, which
+   .faq2 scopes to itself. Sits inside the calculator's container, so it lines
+   up with the calculator above it at every width. */
+.calc-faq {
+  max-inline-size: 780px;
+  margin-block-start: clamp(1.75rem, 4vw, 2.75rem);
+  margin-inline: auto;
+}
+.calc-faq__title {
+  font-size: clamp(1rem, 2.2vw, 1.12rem);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-block-end: 0.15rem;
+}
+.calc-faq .fq:first-of-type { border-block-start: 1px solid var(--line); }
+.calc-faq .fq summary:hover { color: var(--orange-ink); }
+.calc-faq .fq[open] summary { color: var(--orange-ink); }
+/* one column here, so the 46ch meant for the two-column FAQ reads too narrow */
+.calc-faq .faq__answer p { max-inline-size: 64ch; }
+
+@media (max-width: 640px) {
+  .calc-faq { margin-block-start: 1.5rem; }
+  .calc-faq__title { font-size: 1rem; }
+  .calc-faq .faq__answer p { max-inline-size: none; }
+}
+
 .fq {
   border-block-end: 1px solid var(--line);
   transition: border-color var(--t-base);

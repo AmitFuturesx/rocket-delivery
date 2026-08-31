@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=30">
+<link rel="stylesheet" href="assets/css/style.css?v=31">
 
 <script>
 document.documentElement.className = 'js';
@@ -138,6 +138,16 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     {
       "@type": "FAQPage",
       "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "איך מחושב מחיר המשלוח?",
+          "acceptedAnswer": { "@type": "Answer", "text": "מחיר המשלוח נקבע על פי מספר פרמטרים: המרחק בין נקודת האיסוף ליעד, משקל וגודל החבילה, רמת הדחיפות (רגיל/אקספרס), והאם נדרשים שירותים מיוחדים כמו טיפול בציוד רפואי או משלוח בשעות לא שגרתיות. ניתן לקבל הצעת מחיר מדויקת בטלפון." }
+        },
+        {
+          "@type": "Question",
+          "name": "מהם זמני האספקה של המשלוחים?",
+          "acceptedAnswer": { "@type": "Answer", "text": "אנחנו מספקים משלוחים תוך 24 שעות לכל רחבי הארץ. בנוסף, יש לנו שירות אקספרס שמאפשר משלוח תוך מספר שעות באזורים מסוימים. זמני האספקה המדויקים תלויים במיקום היעד ובסוג המשלוח." }
+        },
         {
           "@type": "Question",
           "name": "כמה עולה משלוח?",
@@ -613,6 +623,29 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Two questions the client fields on the phone often enough that they
+         belong beside the price rather than down in the FAQ section. Same
+         <details class="fq"> component as that section, so the chevron and the
+         open/close behaviour match and no extra JS is involved — which also
+         means they work before the page is interactive. -->
+    <div class="calc-faq">
+      <h3 class="calc-faq__title">שאלות נפוצות על המחיר והזמנים</h3>
+
+      <details class="fq">
+        <summary>איך מחושב מחיר המשלוח?</summary>
+        <div class="faq__answer">
+          <p>מחיר המשלוח נקבע על פי מספר פרמטרים: המרחק בין נקודת האיסוף ליעד, משקל וגודל החבילה, רמת הדחיפות (רגיל/אקספרס), והאם נדרשים שירותים מיוחדים כמו טיפול בציוד רפואי או משלוח בשעות לא שגרתיות. ניתן לקבל הצעת מחיר מדויקת בטלפון.</p>
+        </div>
+      </details>
+
+      <details class="fq">
+        <summary>מהם זמני האספקה של המשלוחים?</summary>
+        <div class="faq__answer">
+          <p>אנחנו מספקים משלוחים תוך 24 שעות לכל רחבי הארץ. בנוסף, יש לנו שירות אקספרס שמאפשר משלוח תוך מספר שעות באזורים מסוימים. זמני האספקה המדויקים תלויים במיקום היעד ובסוג המשלוח.</p>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -1543,6 +1576,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=30" defer></script>
+<script src="assets/js/app.js?v=31" defer></script>
 </body>
 </html>
