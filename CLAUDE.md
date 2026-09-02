@@ -1,6 +1,6 @@
 # ROCKET DELIVERY — Premium Landing Page Build Brief
 
-You are building a **premium, conversion-focused, Hebrew RTL landing page** for ROCKET DELIVERY (rocket-delivery.co.il) — an Israeli same-day courier company. The client paid for top-tier work. The previous site was a generic template built with zero SEO. This build is the corrective experience: **it must look like it was crafted by a premium web designer, never like a template or an AI default.**
+You are building a **premium, conversion-focused, Hebrew RTL landing page** for ROCKET DELIVERY (rocket-deliveries.com) — an Israeli same-day courier company. The client paid for top-tier work. The previous site was a generic template built with zero SEO. This build is the corrective experience: **it must look like it was crafted by a premium web designer, never like a template or an AI default.**
 
 **Design Read:** Premium consumer/service landing for Israeli businesses & private customers who need urgent deliveries, with an energetic-but-trustworthy language, brand-driven (deep navy + rocket orange), leaning toward custom CSS/Tailwind + motivated motion.
 **Dials:** DESIGN_VARIANCE: 8 · MOTION_INTENSITY: 6 · VISUAL_DENSITY: 4
@@ -171,7 +171,7 @@ Implementation: vanilla IntersectionObserver + CSS transitions/keyframes (no GSA
 ### Head
 - `<title>רוקט משלוחים | משלוחים מהיום להיום ושליחויות בפריסה ארצית</title>`
 - Meta description (~150 chars, Hebrew, includes מחשבון מחיר + מהיום להיום + פריסה ארצית + CTA).
-- Canonical `https://rocket-delivery.co.il/`, `og:*` + `twitter:card` with a branded share image (use `brand/poster-full-services.jpg` resized 1200×630), favicon from logo.
+- Canonical `https://rocket-deliveries.com/`, `og:*` + `twitter:card` with a branded share image (use `brand/poster-full-services.jpg` resized 1200×630), favicon from logo.
 
 ### Heading map (exactly one H1)
 - H1: hero headline (contains "משלוחים מהיום להיום").

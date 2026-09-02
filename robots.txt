@@ -1,4 +1,4 @@
-# רוקט משלוחים — rocket-delivery.co.il
+# רוקט משלוחים — rocket-deliveries.com
 #
 # One group per crawler. A crawler obeys only the FIRST group that matches it,
 # so there is exactly one "User-agent: *" here and everything it needs is
@@ -42,4 +42,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://rocket-delivery.co.il/sitemap.xml
+Sitemap: https://rocket-deliveries.com/sitemap.xml

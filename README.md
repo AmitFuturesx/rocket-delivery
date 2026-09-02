@@ -1,6 +1,6 @@
 # ROCKET DELIVERY — landing page
 
-Static Hebrew RTL landing page for rocket-delivery.co.il. No build step, no
+Static Hebrew RTL landing page for rocket-deliveries.com. No build step, no
 framework, no dependencies — upload the folder to any host and it runs.
 
 ```

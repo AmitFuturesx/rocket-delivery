@@ -1854,7 +1854,7 @@
 
       var body = 'שם: ' + name + '\nטלפון: ' + phone + '\n\n' + (message || '(ללא פירוט)');
       status.textContent = 'פותחים לכם חלון שליחה. אם זה לא נפתח — שלחו לנו הודעה בוואטסאפ.';
-      window.location.href = 'mailto:info@rocket-delivery.co.il' +
+      window.location.href = 'mailto:info@rocket-deliveries.com' +
         '?subject=' + encodeURIComponent('בקשה לחזרה מהאתר — ' + name) +
         '&body=' + encodeURIComponent(body);
     });
