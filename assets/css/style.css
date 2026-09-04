@@ -3548,3 +3548,32 @@ body.is-locked { overflow: hidden; }
 @media (max-width: 939px) {
   .mega--svc .mega__panel--svc { inset-inline: 0; inline-size: auto; }
 }
+
+/* A <summary> in the drawer has to look exactly like the <a> beside it, or the
+   two disclosures read as a different kind of thing from the rest of the list.
+   Matches .mobile-nav ul a: same size, weight, padding and rule underneath. */
+.mobile-nav ul .mega--mobile > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.95rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--navy-900);
+  border-block-end: 1px solid var(--line);
+}
+.mobile-nav ul .mega--mobile[open] > summary { color: var(--orange-ink); }
+/* the chevron is the affordance here — it says "this opens", so it stays put
+   and only turns, while the plain links keep their dot */
+.mobile-nav ul .mega--mobile > summary::after {
+  inline-size: 7px; block-size: 7px; opacity: .5; margin-block-start: -3px;
+}
+.mobile-nav ul .mega--mobile[open] > summary::after { opacity: 1; }
+/* the panel is inside a list item, so it must not inherit the link rule */
+.mobile-nav ul .mega--mobile .mega__panel { border-block-end: 1px solid var(--line); }
+.mobile-nav ul .mega--mobile .mega__col a {
+  padding-block: .35rem; font-size: .95rem; font-weight: 400;
+  border: 0; justify-content: flex-start;
+}
+.mobile-nav ul .mega--mobile .mega__col a::after { content: none; }
+.mobile-nav ul .mega--mobile .mega__all { border-block-end: 0; }

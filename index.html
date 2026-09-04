@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=43">
+<link rel="stylesheet" href="assets/css/style.css?v=45">
 
 <script>
 document.documentElement.className = 'js';
@@ -253,20 +253,20 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           <div class="mega__col">
             <p class="mega__region">לפי שירות</p>
             <ul>
-              <li><a href="/מסירה-משפטית">מסירה משפטית בכל הארץ</a></li>
-              <li><a href="/משלוחים-דחופים">משלוחים דחופים יוצאים עכשיו</a></li>
-              <li><a href="/שליח-עד-הבית">שליח עד הבית בלי לצאת מהדלת</a></li>
-              <li><a href="/משלוחים-לעסקים">שליחויות לעסקים עם חשבונית אחת</a></li>
+              <li><a href="/מסירה-משפטית">מסירה משפטית</a></li>
+              <li><a href="/משלוחים-דחופים">משלוחים דחופים</a></li>
+              <li><a href="/שליח-עד-הבית">שליח עד הבית</a></li>
+              <li><a href="/משלוחים-לעסקים">שליחויות לעסקים</a></li>
             </ul>
           </div>
           <div class="mega__col">
             <p class="mega__region">לפי תחום</p>
             <ul>
-              <li><a href="/משלוחים-לעורכי-דין">שליחויות לעורכי דין</a></li>
-              <li><a href="/משלוחים-לרואי-חשבון">שליחויות לרואי חשבון</a></li>
-              <li><a href="/משלוחים-לבתי-דפוס">שליחויות לבתי דפוס</a></li>
-              <li><a href="/משלוחים-למרפאות">שליחויות למרפאות וקליניקות</a></li>
-              <li><a href="/משלוחים-לחנויות">שליחויות לחנויות וקמעונאות</a></li>
+              <li><a href="/משלוחים-לעורכי-דין">לעורכי דין</a></li>
+              <li><a href="/משלוחים-לרואי-חשבון">לרואי חשבון</a></li>
+              <li><a href="/משלוחים-לבתי-דפוס">לבתי דפוס</a></li>
+              <li><a href="/משלוחים-למרפאות">למרפאות וקליניקות</a></li>
+              <li><a href="/משלוחים-לחנויות">לחנויות וקמעונאות</a></li>
             </ul>
           </div>
           </div>
@@ -401,9 +401,34 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   <nav aria-label="ניווט נייד">
     <ul>
       <li><a href="#top">ראשי</a></li>
-      <li><a href="#sectors">שירותים</a></li>
+      <li><!-- SVCM:START --><details class="mega mega--mobile">
+        <summary aria-label="שירותים — פתיחת רשימת השירותים">שירותים</summary>
+        <div class="mega__panel">
+          <div class="mega__grid">
+          <div class="mega__col">
+            <p class="mega__region">לפי שירות</p>
+            <ul>
+              <li><a href="/מסירה-משפטית">מסירה משפטית</a></li>
+              <li><a href="/משלוחים-דחופים">משלוחים דחופים</a></li>
+              <li><a href="/שליח-עד-הבית">שליח עד הבית</a></li>
+              <li><a href="/משלוחים-לעסקים">שליחויות לעסקים</a></li>
+            </ul>
+          </div>
+          <div class="mega__col">
+            <p class="mega__region">לפי תחום</p>
+            <ul>
+              <li><a href="/משלוחים-לעורכי-דין">לעורכי דין</a></li>
+              <li><a href="/משלוחים-לרואי-חשבון">לרואי חשבון</a></li>
+              <li><a href="/משלוחים-לבתי-דפוס">לבתי דפוס</a></li>
+              <li><a href="/משלוחים-למרפאות">למרפאות וקליניקות</a></li>
+              <li><a href="/משלוחים-לחנויות">לחנויות וקמעונאות</a></li>
+            </ul>
+          </div>
+          </div>
+          <a class="mega__all" href="/#calculator">חשבו מחיר לכל שירות ←</a>
+        </div>
+      </details><!-- SVCM:END --></li>
       <li><a href="#calculator">מחשבון מחיר</a></li>
-      <li><a href="#legal">מסירה משפטית</a></li>
       <li><!-- MEGAM:START --><details class="mega mega--mobile">
         <summary>אזורי שירות</summary>
         <div class="mega__panel">
@@ -1803,6 +1828,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=43" defer></script>
+<script src="assets/js/app.js?v=45" defer></script>
 </body>
 </html>

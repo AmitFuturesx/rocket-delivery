@@ -161,6 +161,18 @@ const MENU_CITIES = {
               'כרמיאל', 'עפולה', 'נצרת', 'זכרון יעקב'],
 };
 
+const SERVICE_LABEL = {
+  'מסירה-משפטית':        'מסירה משפטית',
+  'משלוחים-דחופים':      'משלוחים דחופים',
+  'שליח-עד-הבית':        'שליח עד הבית',
+  'משלוחים-לעסקים':      'שליחויות לעסקים',
+  'משלוחים-לעורכי-דין':  'לעורכי דין',
+  'משלוחים-לרואי-חשבון': 'לרואי חשבון',
+  'משלוחים-לבתי-דפוס':   'לבתי דפוס',
+  'משלוחים-למרפאות':     'למרפאות וקליניקות',
+  'משלוחים-לחנויות':     'לחנויות וקמעונאות',
+};
+
 const SERVICE_MENU = [
   { label: 'לפי שירות', items: ['מסירה-משפטית', 'משלוחים-דחופים', 'שליח-עד-הבית', 'משלוחים-לעסקים'] },
   { label: 'לפי תחום',  items: ['משלוחים-לעורכי-דין', 'משלוחים-לרואי-חשבון', 'משלוחים-לבתי-דפוס', 'משלוחים-למרפאות', 'משלוחים-לחנויות'] },
@@ -168,10 +180,10 @@ const SERVICE_MENU = [
 
 function servicesMenu() {
   const NL = String.fromCharCode(10);
-  const name = s => {
-    const sv = SERVICES.find(x => x.s === s);
-    return sv ? sv.h1.join(' ').replace(/\.$/, '') : s;
-  };
+  /* Menu labels are their own thing. Printing each page's h1 here put
+     "שליחויות לעסקים עם חשבונית אחת" in a 130px column, where it wrapped over
+     the item beside it. A headline is not a menu item. */
+  const name = s => SERVICE_LABEL[s] || s;
   const cols = SERVICE_MENU.map(g => `          <div class="mega__col">
             <p class="mega__region">${esc(g.label)}</p>
             <ul>
@@ -928,6 +940,11 @@ console.log(`נכתבו ${SERVICES.length} דפי שירות.`);
   };
   put('<!-- MEGA:START -->', '<!-- MEGA:END -->', megaMenu(BUILT));
   put('<!-- SVC:START -->', '<!-- SVC:END -->', servicesMenu());
+  /* the drawer version — same links, same disclosure, so "שירותים" behaves
+     exactly like "אזורי שירות" beside it instead of scrolling the page */
+  put('<!-- SVCM:START -->', '<!-- SVCM:END -->',
+      servicesMenu().replace('class="mega mega--svc"', 'class="mega mega--mobile"')
+                    .replace('mega__panel mega__panel--svc', 'mega__panel'));
 
   const mobile = `<details class="mega mega--mobile">
         <summary>אזורי שירות</summary>
