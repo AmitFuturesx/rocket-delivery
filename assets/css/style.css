@@ -3420,3 +3420,80 @@ body.is-locked { overflow: hidden; }
   color: var(--ink); text-decoration: none;
 }
 .areas__list a:hover { color: var(--orange-ink); text-decoration: underline; }
+
+/* ===================== 21. AREAS MEGA-MENU ============================== */
+/* Plain <details> — no script, keyboard-operable, and every link inside is
+   real markup on every page. The competitor builds the same menu in JS, which
+   is why theirs is invisible to a crawler and ours is not. */
+
+.mega { position: relative; }
+.mega > summary {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: .3rem;
+  white-space: nowrap;
+}
+.mega > summary::-webkit-details-marker { display: none; }
+.mega > summary::after {
+  content: ""; inline-size: 6px; block-size: 6px; flex: none;
+  border-inline-end: 2px solid currentColor; border-block-end: 2px solid currentColor;
+  transform: rotate(45deg); margin-block-start: -3px; opacity: .55;
+  transition: transform var(--t-base), opacity var(--t-base);
+}
+.mega[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); opacity: 1; }
+.mega[open] > summary { color: var(--orange-ink); }
+
+.mega__panel {
+  /* Anchored to the header container, not to the summary. Pinning it to the
+     summary sent it off one edge or the other depending on where in the nav
+     that word happened to sit; spanning the container is both stable and what
+     a menu this wide wants anyway. */
+  position: absolute; inset-block-start: calc(100% + 10px); inset-inline: 0;
+  z-index: 60;
+  max-block-size: min(72vh, 560px); overflow-y: auto;
+  background: var(--white, #fff); border: 1px solid var(--line);
+  border-radius: 16px; padding: 1.4rem 1.5rem 1.1rem;
+  box-shadow: 0 24px 60px -20px rgba(11, 16, 35, .28), 0 2px 6px rgba(11, 16, 35, .06);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mega[open] .mega__panel { animation: megaIn .18s var(--ease-out); }
+  @keyframes megaIn { from { opacity: 0; transform: translateY(-6px); } }
+}
+
+.mega__grid {
+  display: grid; gap: 1.1rem 1.4rem; align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+}
+.mega__region {
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+  color: var(--muted); margin: 0 0 .5rem; padding-block-end: .4rem;
+  border-block-end: 1px solid var(--line);
+}
+.mega__col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .1rem; }
+.mega__col a {
+  display: block; padding: .25rem 0; font-size: .88rem; color: var(--ink);
+  text-decoration: none; white-space: nowrap;
+}
+.mega__col a:hover { color: var(--orange-ink); }
+
+.mega__all {
+  display: inline-block; margin-block-start: 1.1rem; padding-block-start: .9rem;
+  border-block-start: 1px solid var(--line);
+  inline-size: 100%; font-size: .88rem; font-weight: 700;
+  color: var(--orange-ink); text-decoration: none;
+}
+.mega__all:hover { text-decoration: underline; }
+
+/* inside the mobile drawer the panel is part of the flow, not a popover */
+.mega--mobile { inline-size: 100%; }
+.mega--mobile > summary { inline-size: 100%; justify-content: space-between; }
+.mega--mobile .mega__panel {
+  position: static; inline-size: auto; box-shadow: none; border: 0;
+  padding: .9rem 0 .2rem; background: transparent; animation: none;
+}
+.mega--mobile .mega__grid { grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: .9rem 1rem; }
+.mega--mobile .mega__col a { font-size: .92rem; padding: .3rem 0; }
+
+/* the panel measures itself against the header container, so that is what it
+   positions from — and .mega itself must not create a containing block */
+.header .container--wide { position: relative; }
+.nav .mega { position: static; }
+.mega--mobile { position: relative; }

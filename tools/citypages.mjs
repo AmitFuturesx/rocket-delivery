@@ -137,6 +137,54 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 const slug = name => 'משלוחים-ב' + name.replace(/\s+/g, '-').replace(/["']/g, '');
 const nis = n => n.toLocaleString('he-IL') + ' ₪';
 
+/* ── the areas mega-menu ──────────────────────────────────────────────────
+   The competitor's header carries the same idea and gets nothing for it: their
+   menu is built in JavaScript, so a crawler fetching the page sees none of it.
+   Ours is plain markup inside <details>, which means it works with no script,
+   opens with the keyboard, and — the point — is a real link on every page.
+
+   Curated rather than all 150: past roughly a hundred links on a page each one
+   carries less, so this is the towns worth spending that on, with the hub
+   catching the rest. */
+let BUILT = new Set();
+
+const MENU_CITIES = {
+  dan:       ['תל אביב', 'רמת גן', 'גבעתיים', 'בני ברק', 'פתח תקווה', 'גבעת שמואל',
+              'קריית אונו', 'אור יהודה', 'יהוד', 'גני תקווה', 'ראש העין', 'אלעד'],
+  sharon:    ['נתניה', 'הרצליה', 'רעננה', 'כפר סבא', 'הוד השרון', 'רמת השרון',
+              'כפר יונה', 'תל מונד', 'קדימה', 'אבן יהודה'],
+  shfela:    ['ראשון לציון', 'חולון', 'בת ים', 'רחובות', 'נס ציונה', 'רמלה', 'לוד',
+              'באר יעקב', 'יבנה', 'גדרה', 'מודיעין', 'שוהם', 'אשדוד', 'אשקלון'],
+  jerusalem: ['ירושלים', 'בית שמש', 'מבשרת ציון', 'מעלה אדומים', 'גבעת זאב'],
+  south:     ['באר שבע', 'קריית גת', 'אילת', 'דימונה', 'נתיבות', 'שדרות'],
+  north:     ['חיפה', 'חדרה', 'קריית אתא', 'נהריה', 'עכו', 'טבריה', 'צפת',
+              'כרמיאל', 'עפולה', 'נצרת', 'זכרון יעקב'],
+};
+
+function megaMenu(built) {
+  const order = ['dan', 'sharon', 'shfela', 'jerusalem', 'south', 'north'];
+  const cols = order.map(k => {
+    const list = MENU_CITIES[k].filter(c => built.has(c));
+    if (!list.length) return '';
+    return `          <div class="mega__col">
+            <p class="mega__region">${esc(REGIONS[k].label)}</p>
+            <ul>
+${list.map(c => `              <li><a href="/${slug(c)}">${esc(c)}</a></li>`).join('\n')}
+            </ul>
+          </div>`;
+  }).filter(Boolean).join('\n');
+
+  return `<details class="mega">
+        <summary aria-label="אזורי שירות — פתיחת רשימת יישובים">אזורי שירות</summary>
+        <div class="mega__panel">
+          <div class="mega__grid">
+${cols}
+          </div>
+          <a class="mega__all" href="/אזורי-שירות">כל ${built.size} אזורי השירות ←</a>
+        </div>
+      </details>`;
+}
+
 /* ── shared page shell ───────────────────────────────────────────────────
    Head, icon defs, header and footer live here once. Both the city pages
    and the service-area hub render through it, so a change to the header
@@ -187,7 +235,15 @@ ${JSON.stringify(schema, null, 2)}
         <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><use href="#i-rocket"></use></svg>
         <span class="logo__type"><b>ROCKET</b><span>DELIVERY</span></span>
       </a>
-      <div class="header__actions" style="margin-inline-start:auto">
+      <nav class="nav" aria-label="ניווט ראשי">
+        <a href="/">ראשי</a>
+        <a href="/#sectors">שירותים</a>
+        <a href="/#calculator">מחשבון מחיר</a>
+        ${megaMenu(BUILT)}
+        <a href="/#faq">שאלות ותשובות</a>
+      </nav>
+
+      <div class="header__actions">
         <a class="btn btn--primary" href="/#calculator">חשבו מחיר משלוח</a>
         <a class="icon-btn" href="tel:+${WA}" aria-label="התקשרו אלינו: ${TEL}">
           <svg width="21" height="21" aria-hidden="true"><use href="#i-phone"></use></svg>
@@ -363,6 +419,8 @@ const targets = [...new Set([...priced, ...measured])]
   .filter(n => !REGION_ALIASES.has(n))
   .sort((a, b) => a.localeCompare(b, 'he'));
 
+BUILT = new Set(targets);
+
 console.log(`ערים לבנייה: ${targets.length}  (גרסת CSS: v=${ver})`);
 if (DRY) { targets.forEach((t, i) => console.log(`  ${String(i + 1).padStart(3)}. ${t} → /${slug(t)}`)); process.exit(0); }
 
@@ -432,6 +490,43 @@ ${blocks}
 }
 
 /* sitemap — the two originals plus everything we just built */
+/* the home page gets the same menu, injected between markers so the city list
+   lives in exactly one place and cannot drift between the two templates */
+{
+  const idx = path.join(ROOT, 'index.html');
+  let html = fs.readFileSync(idx, 'utf8');
+  const nl = html.includes('\r\n') ? '\r\n' : '\n';
+  const put = (start, end, content) => {
+    const re = new RegExp(start.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+                          '[\\s\\S]*?' + end.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    if (!re.test(html)) { console.error('סימון חסר ב-index.html: ' + start); process.exit(1); }
+    html = html.replace(re, start + content.split('\n').join(nl) + end);
+  };
+  put('<!-- MEGA:START -->', '<!-- MEGA:END -->', megaMenu(BUILT));
+
+  const mobile = `<details class="mega mega--mobile">
+        <summary>אזורי שירות</summary>
+        <div class="mega__panel">
+          <div class="mega__grid">
+${['dan', 'sharon', 'shfela', 'jerusalem', 'south', 'north'].map(k => {
+    const list = MENU_CITIES[k].filter(c => BUILT.has(c));
+    return !list.length ? '' : `            <div class="mega__col">
+              <p class="mega__region">${esc(REGIONS[k].label)}</p>
+              <ul>
+${list.map(c => `                <li><a href="/${slug(c)}">${esc(c)}</a></li>`).join('\n')}
+              </ul>
+            </div>`;
+  }).filter(Boolean).join('\n')}
+          </div>
+          <a class="mega__all" href="/אזורי-שירות">כל ${BUILT.size} אזורי השירות ←</a>
+        </div>
+      </details>`;
+  put('<!-- MEGAM:START -->', '<!-- MEGAM:END -->', mobile);
+
+  fs.writeFileSync(idx, html);
+  console.log('התפריט הוזרק לדף הבית.');
+}
+
 const hubDir = path.join(ROOT, 'אזורי-שירות');
 fs.mkdirSync(hubDir, { recursive: true });
 fs.writeFileSync(path.join(hubDir, 'index.html'), renderHub());
