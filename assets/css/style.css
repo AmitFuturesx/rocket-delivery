@@ -3534,3 +3534,17 @@ body.is-locked { overflow: hidden; }
   .legal-steps li { gap: .15rem .8rem; padding-block: 1rem; }
   .legal-steps li::before { inline-size: 26px; block-size: 26px; font-size: .76rem; }
 }
+
+/* the services panel holds two short columns, not six long ones — it should
+   size to its contents rather than stretch across the whole header */
+.mega__panel--svc {
+  /* RTL: inline-START is the right edge. Pinning it there aligns the panel's
+     right side under the summary and opens it leftwards, into the page. The
+     other way round it ran off the screen. */
+  inset-inline: 0 auto;
+  inline-size: min(94vw, 460px);
+}
+.nav .mega--svc { position: relative; }
+@media (max-width: 939px) {
+  .mega--svc .mega__panel--svc { inset-inline: 0; inline-size: auto; }
+}
