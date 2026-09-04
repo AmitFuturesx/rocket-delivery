@@ -3497,3 +3497,40 @@ body.is-locked { overflow: hidden; }
 .header .container--wide { position: relative; }
 .nav .mega { position: static; }
 .mega--mobile { position: relative; }
+
+/* ===================== 22. LEGAL DELIVERY PAGES ======================== */
+/* Reuses the city page column; these rules cover only the numbered process,
+   which is the one place this page differs structurally. The numbering is
+   information here — the steps happen in that order and the order is the
+   product. */
+
+.legal-page__resp {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-block-start: 1rem; font-size: .88rem; font-weight: 600; color: var(--muted);
+}
+.legal-page__resp .price__dot { background: #10B981; }
+
+.legal-steps {
+  list-style: none; counter-reset: step; margin: 1.4rem 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 0;
+}
+.legal-steps li {
+  counter-increment: step;
+  display: grid; grid-template-columns: auto 1fr; gap: .15rem 1.15rem;
+  padding-block: 1.15rem; border-block-start: 1px solid var(--line);
+}
+.legal-steps li:first-child { border-block-start: 0; padding-block-start: 0; }
+.legal-steps li::before {
+  content: counter(step); grid-row: 1 / span 2;
+  inline-size: 30px; block-size: 30px; border-radius: 50%;
+  display: grid; place-items: center; margin-block-start: 2px;
+  background: var(--orange-600); color: #fff;
+  font-size: .82rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.legal-steps b { font-size: 1rem; color: var(--ink); font-weight: 700; }
+.legal-steps span { font-size: .92rem; line-height: 1.65; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .legal-steps li { gap: .15rem .8rem; padding-block: 1rem; }
+  .legal-steps li::before { inline-size: 26px; block-size: 26px; font-size: .76rem; }
+}

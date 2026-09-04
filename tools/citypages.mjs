@@ -375,7 +375,10 @@ function render(city, ver) {
       <div class="city__grid">
         <article><h3>מהיום להיום</h3><p>איסוף ומסירה באותו יום עסקים ב${esc(city.name)} ובכל הארץ. השירות המבוקש ביותר, ומה שרוב הלקוחות מזמינים.</p></article>
         <article><h3>מהיום למחר</h3><p>איסוף היום, מסירה ביום העסקים הבא — <strong>באותו מחיר בדיוק</strong> כמו מהיום להיום. בלי תוספת על דחיפות.</p></article>
-        <article><h3>מסירה משפטית</h3><p>מסירת כתבי בי־דין ב${esc(city.name)} עם עד שלוש הגעות, תיעוד כל ניסיון ואישור מסירה חתום. מתומחרת לגופו של תיק.</p></article>
+        <article><h3>מסירה משפטית</h3><p>מסירת כתבי בי־דין ב${esc(city.name)} עם עד שלוש הגעות, תיעוד כל ניסיון ואישור מסירה חתום. מתומחרת לגופו של תיק.${
+          LEGAL_CITIES.includes(city.name)
+            ? ` <a href="/${legalSlug(city.name)}">מסירה משפטית ב${esc(city.name)} ←</a>`
+            : ''}</p></article>
         <article><h3>משלוחים לעסקים</h3><p>איסוף קבוע מחנות, מחסן או משרד ב${esc(city.name)}. חשבונית מרוכזת, שליח מוכר ומחיר סגור מראש.</p></article>
       </div>
     </section>
@@ -403,6 +406,153 @@ function render(city, ver) {
   </div>
 </main>
 ` });
+}
+
+/* ── legal-delivery pages ─────────────────────────────────────────────────
+   The client's highest-margin work, and the competitor's biggest bet: 67 pages
+   under /legal-service plus 36 under /lawyer-couriers. Nobody spends 103 pages
+   on a category that does not pay.
+
+   These carry no price on purpose — he quotes process serving per case, so the
+   page collects the details and hands them to a person, exactly like the
+   calculator does.
+
+   Only the towns where a person plausibly searches this. A kibbutz in the Negev
+   does not need a process-serving page, and building one would be the thin
+   filler this whole approach is meant to avoid. */
+const LEGAL_CITIES = [
+  'תל אביב', 'ירושלים', 'חיפה', 'ראשון לציון', 'פתח תקווה', 'אשדוד', 'נתניה',
+  'באר שבע', 'בני ברק', 'חולון', 'רמת גן', 'אשקלון', 'רחובות', 'בת ים',
+  'בית שמש', 'כפר סבא', 'הרצליה', 'חדרה', 'מודיעין', 'רמלה', 'רעננה', 'לוד',
+  'גבעתיים', 'הוד השרון', 'קריית גת', 'נס ציונה',
+];
+
+const legalSlug = name => 'מסירה-משפטית-ב' + name.replace(/\s+/g, '-').replace(/["']/g, '');
+
+function renderLegal(city, ver) {
+  const reg = REGIONS[regionOf(city)];
+  const nb = neighbours(city.name, 6);
+  const url = SITE + '/' + legalSlug(city.name);
+  const wa = `https://wa.me/${WA}?text=` + encodeURIComponent(
+    `שלום, אבקש הצעת מחיר למסירה משפטית ב${city.name}. אשמח לפרט את סוג המסמך וכתובת הנמען.`);
+
+  const title = `מסירה משפטית ב${city.name} — מסירת כתבי בי־דין | רוקט משלוחים`;
+  const desc = `מסירת כתבי בי־דין ומסמכים משפטיים ב${city.name}. עד שלוש הגעות בימים ובשעות שונות כולל ערב, תיעוד כל ניסיון ואישור מסירה חתום. מענה אנושי תוך 5 דקות.`;
+
+  const faq = [
+    { q: `כמה עולה מסירה משפטית ב${city.name}?`,
+      a: `מסירה משפטית מתומחרת לגופו של תיק ולא לפי טבלה — המחיר נגזר ממספר ההגעות הנדרשות, מדחיפות התיק ומהאזור בתוך ${city.name}. שלחו לנו את פרטי המסירה ותקבלו הצעה מסודרת, בדרך כלל תוך חמש דקות.` },
+    { q: `מה קורה אם הנמען לא נמצא בכתובת?`,
+      a: `אנחנו מגיעים עד שלוש פעמים, בימים ובשעות שונות כולל שעות ערב, ומתעדים כל הגעה בנפרד. אם לא ניתן למסור לידי הנמען, מבצעים הדבקה על הדלת עם תיעוד מלא של מקום ההדבקה ושעתה — כך שהתיעוד עומד בדרישות בית המשפט.` },
+    { q: `אילו מסמכים אתם מוסרים?`,
+      a: `כתבי תביעה, הזמנות לדין, צווים, התראות לפני נקיטת הליכים, הודעות פינוי ומסמכים משפטיים אחרים. אם אתם לא בטוחים שהמסמך שלכם מתאים — שאלו אותנו לפני שאתם מזמינים.` },
+    { q: `תוך כמה זמן מתבצעת המסירה?`,
+      a: `ההגעה הראשונה ל${city.name} מתבצעת בדרך כלל תוך יום עסקים אחד מרגע אישור ההזמנה. בתיקים דחופים אפשר לצאת באותו יום — ציינו זאת כשאתם פונים אלינו.` },
+  ];
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Service', '@id': url + '#service',
+        name: `מסירה משפטית ב${city.name}`,
+        serviceType: 'מסירת כתבי בי־דין',
+        provider: { '@id': SITE + '/#business' },
+        areaServed: { '@type': 'City', name: city.name,
+          geo: { '@type': 'GeoCoordinates', latitude: city.lat, longitude: city.lon } },
+        url,
+        description: `מסירת כתבי בי־דין ומסמכים משפטיים ב${city.name} עם עד שלוש הגעות, תיעוד מלא ואישור מסירה חתום.` },
+      { '@type': 'FAQPage', '@id': url + '#faq',
+        mainEntity: faq.map(f => ({ '@type': 'Question', name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'ראשי', item: SITE + '/' },
+        { '@type': 'ListItem', position: 2, name: `משלוחים ב${city.name}`, item: SITE + '/' + slug(city.name) },
+        { '@type': 'ListItem', position: 3, name: `מסירה משפטית ב${city.name}`, item: url } ] },
+    ],
+  };
+
+  return shell({ title, desc, url, ver, schema, body: `
+<main class="city legal-page">
+  <div class="container">
+
+    <nav class="crumbs" aria-label="מיקום בתוך האתר">
+      <a href="/">ראשי</a><span aria-hidden="true">›</span>
+      <a href="/${slug(city.name)}">משלוחים ב${esc(city.name)}</a><span aria-hidden="true">›</span>
+      <span aria-current="page">מסירה משפטית</span>
+    </nav>
+
+    <h1 class="city__h1">מסירה משפטית<br><em>ב${esc(city.name)}.</em></h1>
+
+    <p class="city__lead">
+      מסירת כתבי בי־דין ומסמכים משפטיים לנמען ב${esc(city.name)}, בהליך מתועד כחוק.
+      עד <strong>שלוש הגעות</strong> בימים ובשעות שונות כולל שעות ערב, תיעוד נפרד של כל
+      ניסיון, ובסיום אישור מסירה חתום שאפשר להגיש לבית המשפט.
+    </p>
+
+    <div class="city__cta">
+      <a class="btn btn--wa btn--lg" href="${wa}" target="_blank" rel="noopener">
+        <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>לקבלת הצעה למסירה ב${esc(city.name)}</a>
+      <a class="btn btn--ghost btn--lg" href="tel:+${WA}">
+        <svg width="18" height="18" aria-hidden="true"><use href="#i-phone"></use></svg>${TEL}</a>
+    </div>
+    <p class="legal-page__resp"><span class="price__dot" aria-hidden="true"></span>מענה אנושי תוך 5 דקות</p>
+
+    <section class="city__block">
+      <h2>איך המסירה מתבצעת</h2>
+      <ol class="legal-steps">
+        <li><b>קבלת המסמך</b><span>שולחים לנו את כתב בי־הדין, שם הנמען וכתובתו ב${esc(city.name)}. אם יש חלון זמן שחשוב לעמוד בו — מציינים אותו כאן.</span></li>
+        <li><b>הגעה ראשונה</b><span>בדרך כלל תוך יום עסקים אחד. השליח מתעד את מועד ההגעה ואת מה שקרה בה, גם אם הנמען לא נמצא.</span></li>
+        <li><b>הגעות נוספות</b><span>עד שלוש בסך הכול, במכוון בימים ובשעות שונות — כולל ערב — כדי שלא ייטען שהניסיונות נעשו כולם באותה שעה.</span></li>
+        <li><b>הדבקה, אם צריך</b><span>כשלא ניתן למסור לידי הנמען, מבצעים הדבקה על הדלת ומתעדים את מקום ההדבקה ואת שעתה.</span></li>
+        <li><b>אישור מסירה</b><span>בסיום מקבלים טופס מפורט עם חתימה דיגיטלית ותיעוד כל ההגעות, מוכן להגשה.</span></li>
+      </ol>
+    </section>
+
+    <section class="city__block">
+      <h2>מה אנחנו מוסרים</h2>
+      <div class="city__grid">
+        <article><h3>כתבי תביעה והזמנות לדין</h3><p>מסירה אישית לנמען ב${esc(city.name)} עם תיעוד מלא, כנדרש בתקנות סדר הדין האזרחי.</p></article>
+        <article><h3>צווים והחלטות</h3><p>צווי מניעה, עיקול והחלטות בית משפט — כולל תיקים דחופים שיוצאים באותו יום.</p></article>
+        <article><h3>התראות לפני הליכים</h3><p>מכתבי התראה של עורכי דין, שבהם התיעוד של המסירה חשוב לא פחות מהמסמך עצמו.</p></article>
+        <article><h3>הודעות פינוי ודרישות</h3><p>מסמכים שבהם מועד המסירה המדויק הוא זה שמפעיל את השעון — ולכן הוא מתועד לדקה.</p></article>
+      </div>
+    </section>
+
+    ${nb.length ? `<section class="city__block">
+      <h2>גם באזור ${esc(reg.label)}</h2>
+      <p class="city__nb">אותו שליח מטפל במסירות גם ב${nb.map(n => esc(n.name)).join('، ')} — כל היישובים האלה בטווח של ${Math.max(...nb.map(n => n.km))} ק״מ מ${esc(city.name)}, כך שאפשר לשלב כמה מסירות באותה יציאה.</p>
+    </section>` : ''}
+
+    <section class="city__block">
+      <h2>למה אין כאן מחיר</h2>
+      <p class="city__nb">
+        מסירה משפטית לא מתומחרת לפי טבלה. שתי מסירות באותה כתובת ב${esc(city.name)} יכולות
+        להיות שונות לגמרי במחיר — אחת נמסרת בהגעה הראשונה, השנייה דורשת שלוש הגעות בשעות
+        ערב ותיעוד מורחב. לכן אנחנו מעדיפים לשמוע את פרטי התיק ולתת מחיר שנעמוד בו,
+        במקום להציג מספר שישתנה אחר כך.
+      </p>
+    </section>
+
+    <section class="city__block">
+      <h2>שאלות נפוצות</h2>
+      ${faq.map(f => `<details class="fq">
+        <summary>${esc(f.q)}</summary>
+        <div class="faq__answer"><p>${esc(f.a)}</p></div>
+      </details>`).join('\n      ')}
+    </section>
+
+    <section class="city__end">
+      <h2>יש לכם מסירה ב${esc(city.name)}?</h2>
+      <p>שלחו את פרטי המסירה ונחזור אליכם עם הצעת מחיר מסודרת — בדרך כלל תוך חמש דקות.</p>
+      <div class="city__cta">
+        <a class="btn btn--wa btn--lg" href="${wa}" target="_blank" rel="noopener">
+          <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>שלחו פרטים בוואטסאפ</a>
+        <a class="btn btn--ghost btn--lg" href="/${slug(city.name)}">משלוחים רגילים ב${esc(city.name)}</a>
+      </div>
+    </section>
+
+  </div>
+</main>` });
 }
 
 /* ── build ────────────────────────────────────────────────────────────────── */
@@ -490,6 +640,14 @@ ${blocks}
 }
 
 /* sitemap — the two originals plus everything we just built */
+const legalTargets = LEGAL_CITIES.filter(n => byName[n] && BUILT.has(n));
+for (const name of legalTargets) {
+  const dir = path.join(ROOT, legalSlug(name));
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), renderLegal(byName[name], ver));
+}
+console.log(`נכתבו ${legalTargets.length} דפי מסירה משפטית.`);
+
 /* the home page gets the same menu, injected between markers so the city list
    lives in exactly one place and cannot drift between the two templates */
 {
@@ -536,6 +694,7 @@ const today = new Date().toISOString().slice(0, 10);
 const entries = [
   { loc: SITE + '/', pri: '1.0', freq: 'weekly' },
   { loc: SITE + '/אזורי-שירות', pri: '0.9', freq: 'monthly' },
+  ...legalTargets.map(n => ({ loc: SITE + '/' + legalSlug(n), pri: '0.9', freq: 'monthly' })),
   ...targets.map(n => ({ loc: SITE + '/' + slug(n), pri: '0.8', freq: 'monthly' })),
   { loc: SITE + '/privacy.html', pri: '0.3', freq: 'yearly' },
 ];
