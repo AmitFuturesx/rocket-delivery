@@ -469,6 +469,34 @@ const LEGAL_CITIES = [
 
 const legalSlug = name => 'מסירה-משפטית-ב' + name.replace(/\s+/g, '-').replace(/["']/g, '');
 
+/* The generic explanation of process serving belongs on /מסירה-משפטית, not on
+   twenty-six near-identical copies of itself — measured at 0.699 similarity
+   when it lived here, which is the competitor's own number. What stays on a
+   city page is what is actually local to it: how far the driver travels, what
+   a normal delivery to the same address costs as a reference point, and which
+   towns share the run. */
+function legalAngle(city) {
+  const hub = 'תל אביב';
+  const km = roadKm(hub, city.name);
+  const ref = quote(hub, city.name, 'small');
+  const reg = REGIONS[regionOf(city)];
+
+  if (km <= 25) return {
+    h: `כמה זמן זה לוקח ב${city.name}`,
+    p: `${city.name} נמצאת ${km} ק״מ ממרכז הפעילות שלנו, ולכן הגעה נוספת עולה לנו מעט מאוד — וזה מתבטא במחיר. בפועל זה אומר ששלוש ההגעות מתפרסות בקלות על פני יומיים־שלושה בשעות שונות, בלי שנצטרך לגבות עליהן כמו על נסיעה לפריפריה.`,
+  };
+
+  if (km <= 60) return {
+    h: `מה שכדאי לדעת על מסירה ב${city.name}`,
+    p: `${city.name} נמצאת ${km} ק״מ ממרכז הפעילות שלנו — טווח שבו כל הגעה היא נסיעה בפני עצמה. לשם השוואה, משלוח רגיל לאותה כתובת ב${city.name} עולה ${nis(ref.gross)}; מסירה משפטית עולה יותר כי היא כוללת עד שלוש נסיעות כאלה ואת התיעוד שמלווה אותן. לכן גם כדאי לומר לנו מראש אם ידוע לכם שהנמען נמצא בשעות מסוימות — זה חוסך הגעה שלמה.`,
+  };
+
+  return {
+    h: `מסירה ב${city.name} — מה שונה כאן`,
+    p: `${city.name} נמצאת ${km} ק״מ ממרכז הפעילות שלנו, ב${reg.label}. בטווח הזה כל הגעה היא נסיעה ארוכה, ולכן אנחנו מתאמים את המסירה אחרת: במקום שלוש יציאות נפרדות, אנחנו מנסים לתזמן אותן סביב מידע שיש לכם על הנמען. משלוח רגיל לאותה כתובת עולה ${nis(ref.gross)}, וזה נותן מושג למה מסירה שדורשת שלוש הגעות מתומחרת לגופה ולא לפי טבלה.`,
+  };
+}
+
 function renderLegal(city, ver) {
   const reg = REGIONS[regionOf(city)];
   const nb = neighbours(city.name, 6);
@@ -537,25 +565,13 @@ function renderLegal(city, ver) {
     </div>
     <p class="legal-page__resp"><span class="price__dot" aria-hidden="true"></span>מענה אנושי תוך 5 דקות</p>
 
-    <section class="city__block">
-      <h2>איך המסירה מתבצעת</h2>
-      <ol class="legal-steps">
-        <li><b>קבלת המסמך</b><span>שולחים לנו את כתב בי־הדין, שם הנמען וכתובתו ב${esc(city.name)}. אם יש חלון זמן שחשוב לעמוד בו — מציינים אותו כאן.</span></li>
-        <li><b>הגעה ראשונה</b><span>בדרך כלל תוך יום עסקים אחד. השליח מתעד את מועד ההגעה ואת מה שקרה בה, גם אם הנמען לא נמצא.</span></li>
-        <li><b>הגעות נוספות</b><span>עד שלוש בסך הכול, במכוון בימים ובשעות שונות — כולל ערב — כדי שלא ייטען שהניסיונות נעשו כולם באותה שעה.</span></li>
-        <li><b>הדבקה, אם צריך</b><span>כשלא ניתן למסור לידי הנמען, מבצעים הדבקה על הדלת ומתעדים את מקום ההדבקה ואת שעתה.</span></li>
-        <li><b>אישור מסירה</b><span>בסיום מקבלים טופס מפורט עם חתימה דיגיטלית ותיעוד כל ההגעות, מוכן להגשה.</span></li>
-      </ol>
-    </section>
 
     <section class="city__block">
-      <h2>מה אנחנו מוסרים</h2>
-      <div class="city__grid">
-        <article><h3>כתבי תביעה והזמנות לדין</h3><p>מסירה אישית לנמען ב${esc(city.name)} עם תיעוד מלא, כנדרש בתקנות סדר הדין האזרחי.</p></article>
-        <article><h3>צווים והחלטות</h3><p>צווי מניעה, עיקול והחלטות בית משפט — כולל תיקים דחופים שיוצאים באותו יום.</p></article>
-        <article><h3>התראות לפני הליכים</h3><p>מכתבי התראה של עורכי דין, שבהם התיעוד של המסירה חשוב לא פחות מהמסמך עצמו.</p></article>
-        <article><h3>הודעות פינוי ודרישות</h3><p>מסמכים שבהם מועד המסירה המדויק הוא זה שמפעיל את השעון — ולכן הוא מתועד לדקה.</p></article>
-      </div>
+      <h2>${esc(legalAngle(city).h)}</h2>
+      <p class="city__nb">${legalAngle(city).p}</p>
+      <p class="city__nb" style="margin-block-start:.9rem">
+        <a href="/מסירה-משפטית">אילו מסמכים אנחנו מוסרים ואיך התהליך עובד ←</a>
+      </p>
     </section>
 
     ${nb.length ? `<section class="city__block">
@@ -610,6 +626,19 @@ const SERVICES = [
     blocks: [
       { h: 'מה שמבדיל מסירה משפטית ממשלוח', p: 'במשלוח רגיל מה שחשוב הוא שהחבילה תגיע. במסירה משפטית חשוב באותה מידה מה קרה בכל ניסיון שלא הצליח: באיזו שעה, באיזה יום, מה נמצא בכתובת. תיעוד חלקי הוא הסיבה הנפוצה ביותר שמסירה נדחית, ובשלב הזה כבר בזבזתם שבועיים.' },
       { h: 'למה אין כאן מחיר', p: 'שתי מסירות באותה כתובת יכולות להיות שונות לחלוטין. אחת נמסרת בהגעה הראשונה בעשר בבוקר; השנייה דורשת שלוש הגעות, אחת מהן בשמונה בערב, והדבקה מתועדת. תמחור לפי טבלה היה אומר שאחד מכם משלם על עבודה שלא נעשתה — לכן אנחנו שומעים את פרטי התיק ונותנים מחיר שנעמוד בו.' },
+    ],
+    steps: [
+      ['קבלת המסמך', 'שולחים לנו את כתב בי־הדין, שם הנמען וכתובתו. אם יש חלון זמן שחשוב לעמוד בו — מציינים אותו כאן ולא אחרי שהשליח יצא.'],
+      ['הגעה ראשונה', 'בדרך כלל תוך יום עסקים אחד. השליח מתעד את מועד ההגעה ואת מה שקרה בה, גם אם הנמען לא נמצא.'],
+      ['הגעות נוספות', 'עד שלוש בסך הכול, במכוון בימים ובשעות שונות — כולל ערב — כדי שלא ייטען שכל הניסיונות נעשו באותה שעה.'],
+      ['הדבקה, אם צריך', 'כשלא ניתן למסור לידי הנמען, מבצעים הדבקה על הדלת ומתעדים את מקום ההדבקה ואת שעתה.'],
+      ['אישור מסירה', 'בסיום מקבלים טופס מפורט עם חתימה דיגיטלית ותיעוד כל ההגעות, מוכן להגשה.'],
+    ],
+    docs: [
+      ['כתבי תביעה והזמנות לדין', 'מסירה אישית לנמען עם תיעוד מלא, כנדרש בתקנות סדר הדין האזרחי.'],
+      ['צווים והחלטות', 'צווי מניעה, עיקול והחלטות בית משפט — כולל תיקים דחופים שיוצאים באותו יום.'],
+      ['התראות לפני הליכים', 'מכתבי התראה של עורכי דין, שבהם התיעוד של המסירה חשוב לא פחות מהמסמך עצמו.'],
+      ['הודעות פינוי ודרישות', 'מסמכים שבהם מועד המסירה המדויק הוא זה שמפעיל את השעון — ולכן הוא מתועד לדקה.'],
     ],
     faq: [
       { q: 'כמה הגעות כלולות?', a: 'עד שלוש, בימים ובשעות שונות — כולל שעות ערב. הפיזור הזה מכוון: מסירה שכל שלושת הניסיונות בה נעשו באותה שעה ביום קלה יותר לתקוף.' },
@@ -802,6 +831,20 @@ ${sv.blocks.map(b => `    <section class="city__block">
       <p class="city__nb">${esc(b.p)}</p>
     </section>`).join('\n')}
 
+${sv.steps ? `    <section class="city__block">
+      <h2>איך המסירה מתבצעת</h2>
+      <ol class="legal-steps">
+${sv.steps.map(([t, d]) => `        <li><b>${esc(t)}</b><span>${esc(d)}</span></li>`).join('\n')}
+      </ol>
+    </section>` : ''}
+
+${sv.docs ? `    <section class="city__block">
+      <h2>מה אנחנו מוסרים</h2>
+      <div class="city__grid">
+${sv.docs.map(([t, d]) => `        <article><h3>${esc(t)}</h3><p>${esc(d)}</p></article>`).join('\n')}
+      </div>
+    </section>` : ''}
+
 ${hubList}
 
     <section class="city__block">
@@ -818,6 +861,202 @@ ${hubList}
       <div class="city__cta">
         <a class="btn btn--primary btn--lg" href="/#calculator">למחשבון המחיר</a>
         <a class="btn btn--ghost btn--lg" href="/אזורי-שירות">אזורי השירות שלנו</a>
+      </div>
+    </section>
+
+  </div>
+</main>` });
+}
+
+/* ── route pages ──────────────────────────────────────────────────────────
+   "משלוח מתל אביב לחיפה" is typed by somebody who has already decided to send
+   something and wants to know what it costs. That is the most valuable query
+   on the site, and the one page type where we can answer it outright — the
+   competitor's equivalent pages cannot show a price at all.
+
+   One page per unordered PAIR, not per direction. The price and the distance
+   are identical both ways, so two pages would be the same page twice; each one
+   says in its own words that it covers the return leg too. */
+const ROUTE_CITIES = [
+  'תל אביב', 'ירושלים', 'חיפה', 'ראשון לציון', 'פתח תקווה', 'אשדוד', 'נתניה',
+  'באר שבע', 'בני ברק', 'חולון', 'רמת גן', 'אשקלון', 'רחובות', 'בת ים',
+  'הרצליה', 'כפר סבא', 'מודיעין', 'אילת',
+];
+
+const routeSlug = (a, b) =>
+  'משלוח-מ' + a.replace(/\s+/g, '-') + '-ל' + b.replace(/\s+/g, '-');
+
+/* rough driving time, stated as a range and labelled as one. Under 25 km the
+   variable is traffic, not distance, so the range widens rather than narrows. */
+function driveWindow(km) {
+  if (km <= 12) return 'כ־15–30 דקות';
+  if (km <= 25) return 'כ־25–45 דקות';
+  if (km <= 60) return `כ־${Math.round(km / 60 * 60)}–${Math.round(km / 45 * 60)} דקות`;
+  const lo = Math.round(km / 85 * 60), hi = Math.round(km / 60 * 60);
+  return lo >= 90
+    ? `כ־${(lo / 60).toFixed(1).replace('.0', '')}–${(hi / 60).toFixed(1).replace('.0', '')} שעות`
+    : `כ־${lo}–${hi} דקות`;
+}
+
+/* What actually differs between one route and the next is the kind of journey
+   it is — a hop inside Dan is a different job from a run to Eilat, and the
+   people booking them are sending different things. Keyed on real attributes
+   (distance band and the two regions), so the variation tracks something true
+   rather than rotating text to look different. */
+function routeAngle(a, b, km) {
+  const ra = regionOf(byName[a]), rb = regionOf(byName[b]);
+  const cross = ra !== rb;
+
+  if (km <= 20) return {
+    h: `מסלול קצר, ולכן צפוי`,
+    p: `${a} ו${b} כמעט נוגעות זו בזו — ${km} ק״מ ביניהן. במסלול כזה מה שקובע את זמן ההגעה הוא התנועה ולא המרחק, ולכן שעת ההזמנה משנה יותר מהכתובת. רוב מה שעובר כאן הוא מסמכים, מפתחות וחבילות קטנות שצריכות להיות בצד השני תוך שעה־שעתיים.`,
+  };
+
+  if (km <= 45) return {
+    h: `מה עובר במסלול הזה`,
+    p: `${km} ק״מ בין ${a} ל${b} הוא הטווח הקלאסי של משלוח עסקי יומי: הזמנה שנאספת מהחנות ומגיעה ללקוח באותו יום, מסמך חתום שחוזר למשרד, או פריט שעובר בין שני סניפים. הנסיעה ישירה, בלי מרכז מיון ובלי לחכות לקו חלוקה.`,
+  };
+
+  if (km <= 100) return {
+    h: cross ? `בין ${REGIONS[ra].label} ל${REGIONS[rb].label}` : `מסלול בינעירוני`,
+    p: `${km} ק״מ ${cross ? `בין ${REGIONS[ra].label} ל${REGIONS[rb].label}` : `בין שתי ערים באותו אזור`} הם המרחק שבו ההבדל בין שליחות לחברת שילוח מתחיל להיות מורגש. חברת שילוח תאסוף למרכז מיון ותחלק למחרת; אצלנו זו נסיעה אחת רציפה, ולכן מה שנאסף ב${a} בבוקר נמסר ב${b} עוד באותו יום.`,
+  };
+
+  return {
+    h: `מסלול ארוך — ומה שכדאי לדעת עליו`,
+    p: `${km} ק״מ בין ${a} ל${b} הם נסיעה של שעות, ולכן שני דברים חשובים כאן יותר מאשר במסלול קצר. הראשון: שעת האיסוף קובעת אם המשלוח נמסר היום או מחר, אז כדאי להזמין מוקדם ככל האפשר. השני: זו נסיעה ייעודית ולא קו קבוע — החבילה שלכם היא מה שברכב, והיא לא ממתינה למילוי משאית.`,
+  };
+}
+
+function renderRoute(a, b, ver) {
+  const km = roadKm(a, b);
+  const s = quote(a, b, 'small'), m = quote(a, b, 'medium'), l = quote(a, b, 'large');
+  const url = SITE + '/' + routeSlug(a, b);
+  const minPriced = s.net <= PRICING.minCharge;
+  const wa = `https://wa.me/${WA}?text=` + encodeURIComponent(`היי, אני צריך משלוח מ${a} ל${b}`);
+
+  const title = `משלוח מ${a} ל${b} — ${nis(s.gross)} | רוקט משלוחים`;
+  const desc = `משלוח מ${a} ל${b}: ${km} ק״מ, ${nis(s.gross)} כולל מע"מ לחבילה קטנה מהיום להיום. מחיר ידוע מראש, נסיעה ישירה, מסירה עם אישור.`;
+
+  const faq = [
+    { q: `כמה עולה משלוח מ${a} ל${b}?`,
+      a: `${nis(s.gross)} כולל מע"מ לחבילה קטנה. בינונית ${nis(m.gross)}, גדולה ${nis(l.gross)}. ${
+        minPriced
+          ? 'המסלול קצר מהמרחק שממנו מתחיל החיוב לפי קילומטר, ולכן הוא מתומחר במינימום החיוב.'
+          : `המחיר מחושב לפי ${km} ק״מ של נסיעה בפועל.`}` },
+    { q: `כמה זמן לוקח המשלוח?`,
+      a: `הנסיעה עצמה היא ${driveWindow(km)} בתנאי דרך רגילים. בשירות מהיום להיום השליח יוצא לאיסוף ב${a} בסמוך לאישור ההזמנה, כך שברוב המקרים המשלוח נמסר ב${b} באותו יום עסקים.` },
+    { q: `המחיר זהה גם בכיוון ההפוך?`,
+      a: `כן. משלוח מ${b} ל${a} עולה בדיוק אותו דבר — אותו מרחק, אותו מחיר. אין הבדל בין הכיוונים.` },
+    { q: `מהיום למחר זול יותר?`,
+      a: `לא, ואנחנו לא גובים תוספת על דחיפות. מהיום להיום ומהיום למחר עולים אותו דבר במסלול הזה: ${nis(s.gross)} לחבילה קטנה.` },
+  ];
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Service', '@id': url + '#service',
+        name: `משלוח מ${a} ל${b}`, serviceType: 'שליחות בין־עירונית',
+        provider: { '@id': SITE + '/#business' }, url, description: desc,
+        areaServed: [{ '@type': 'City', name: a }, { '@type': 'City', name: b }],
+        offers: { '@type': 'Offer', priceCurrency: 'ILS', price: String(s.gross),
+                  availability: 'https://schema.org/InStock',
+                  priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'ILS',
+                    price: String(s.net), valueAddedTaxIncluded: false } } },
+      { '@type': 'FAQPage', '@id': url + '#faq',
+        mainEntity: faq.map(f => ({ '@type': 'Question', name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'ראשי', item: SITE + '/' },
+        { '@type': 'ListItem', position: 2, name: `משלוחים ב${a}`, item: SITE + '/' + slug(a) },
+        { '@type': 'ListItem', position: 3, name: `משלוח מ${a} ל${b}`, item: url } ] },
+    ],
+  };
+
+  const row = (label, q) => `        <tr>
+          <td>${label}</td>
+          <td class="num">${nis(q.net)}</td>
+          <td class="num strong">${nis(q.gross)}</td>
+        </tr>`;
+
+  return shell({ title, desc, url, ver, schema, body: `
+<main class="city route">
+  <div class="container">
+
+    <nav class="crumbs" aria-label="מיקום בתוך האתר">
+      <a href="/">ראשי</a><span aria-hidden="true">›</span>
+      <a href="/${slug(a)}">משלוחים ב${esc(a)}</a><span aria-hidden="true">›</span>
+      <span aria-current="page">ל${esc(b)}</span>
+    </nav>
+
+    <h1 class="city__h1">משלוח מ${esc(a)}<br><em>ל${esc(b)}.</em></h1>
+
+    <div class="route__figures">
+      <div><b>${nis(s.gross)}</b><span>חבילה קטנה, כולל מע״מ</span></div>
+      <div><b>${km} ק״מ</b><span>מרחק נסיעה בפועל</span></div>
+      <div><b>${driveWindow(km)}</b><span>זמן נסיעה משוער</span></div>
+    </div>
+
+    <p class="city__lead">
+      ${minPriced
+        ? `המסלול מ${esc(a)} ל${esc(b)} קצר יחסית — ${km} ק״מ — ולכן הוא מתומחר במינימום החיוב ולא לפי קילומטר. <strong>${nis(s.gross)} כולל מע״מ</strong>, בלי קשר לשעה שבה תזמינו.`
+        : `נסיעה ישירה של ${km} ק״מ מ${esc(a)} ל${esc(b)}, בלי תחנות ביניים ובלי מרכז מיון. <strong>${nis(s.gross)} כולל מע״מ</strong> לחבילה קטנה — מחיר שאתם יודעים לפני שאתם מתחייבים.`}
+    </p>
+
+    <div class="city__cta">
+      <a class="btn btn--wa btn--lg" href="${wa}" target="_blank" rel="noopener">
+        <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>הזמינו משלוח מ${esc(a)} ל${esc(b)}</a>
+      <a class="btn btn--ghost btn--lg" href="/#calculator">שנו גודל או יעד במחשבון</a>
+    </div>
+
+    <section class="city__block">
+      <h2>מחירים מלאים למסלול</h2>
+      <p class="city__sub">מהיום להיום ומהיום למחר — אותו מחיר. אנחנו לא גובים תוספת על דחיפות.</p>
+      <div class="city__scroll">
+        <table class="city__table">
+          <thead><tr><th>גודל חבילה</th><th>לפני מע״מ</th><th>כולל מע״מ</th></tr></thead>
+          <tbody>
+${row('קטנה — מעטפה, מסמכים, קופסה קטנה', s)}
+${row('בינונית — קרטון בינוני', m)}
+${row('גדולה — קרטון גדול או כמה קרטונים', l)}
+          </tbody>
+        </table>
+      </div>
+      <p class="city__note">
+        המחירים מחושבים לפי מרחק הנסיעה בפועל. שעות לילה, סופי שבוע, המתנה בכתובת
+        או טיפול חריג עשויים לשנות אותם — לאישור סופי דברו איתנו.
+      </p>
+    </section>
+
+    <section class="city__block">
+      <h2>${esc(routeAngle(a, b, km).h)}</h2>
+      <p class="city__nb">${routeAngle(a, b, km).p}</p>
+    </section>
+
+    <section class="city__block">
+      <h2>גם בכיוון ההפוך</h2>
+      <p class="city__nb">
+        משלוח מ${esc(b)} ל${esc(a)} עולה בדיוק אותו דבר — ${nis(s.gross)} לחבילה קטנה.
+        אותו מרחק, אותו מחיר, ואותו שליח מרגע האיסוף ועד המסירה. אם אתם צריכים
+        הלוך ושוב באותו יום, אמרו לנו כשאתם מזמינים ונתאם יציאה אחת.
+      </p>
+    </section>
+
+    <section class="city__block">
+      <h2>שאלות נפוצות</h2>
+      ${faq.map(f => `<details class="fq">
+        <summary>${esc(f.q)}</summary>
+        <div class="faq__answer"><p>${esc(f.a)}</p></div>
+      </details>`).join('\n      ')}
+    </section>
+
+    <section class="city__end">
+      <h2>מוכנים לשלוח?</h2>
+      <p>המחיר כאן הוא המחיר. שלחו הודעה ונצא לדרך — או שנו את הפרטים במחשבון אם המשלוח שונה.</p>
+      <div class="city__cta">
+        <a class="btn btn--wa btn--lg" href="${wa}" target="_blank" rel="noopener">
+          <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>הזמינו בוואטסאפ</a>
+        <a class="btn btn--ghost btn--lg" href="/${slug(b)}">משלוחים ב${esc(b)}</a>
       </div>
     </section>
 
@@ -926,6 +1165,21 @@ for (const sv of SERVICES) {
 }
 console.log(`נכתבו ${SERVICES.length} דפי שירות.`);
 
+const routePairs = [];
+for (let i = 0; i < ROUTE_CITIES.length; i++) {
+  for (let j = i + 1; j < ROUTE_CITIES.length; j++) {
+    const a = ROUTE_CITIES[i], b = ROUTE_CITIES[j];
+    if (!byName[a] || !byName[b] || !BUILT.has(a) || !BUILT.has(b)) continue;
+    routePairs.push([a, b]);
+  }
+}
+for (const [a, b] of routePairs) {
+  const dir = path.join(ROOT, routeSlug(a, b));
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), renderRoute(a, b, ver));
+}
+console.log(`נכתבו ${routePairs.length} דפי מסלול.`);
+
 /* the home page gets the same menu, injected between markers so the city list
    lives in exactly one place and cannot drift between the two templates */
 {
@@ -979,6 +1233,7 @@ const entries = [
   { loc: SITE + '/', pri: '1.0', freq: 'weekly' },
   { loc: SITE + '/אזורי-שירות', pri: '0.9', freq: 'monthly' },
   ...SERVICES.map(sv => ({ loc: SITE + '/' + sv.s, pri: '0.9', freq: 'monthly' })),
+  ...routePairs.map(([a, b]) => ({ loc: SITE + '/' + routeSlug(a, b), pri: '0.9', freq: 'monthly' })),
   ...legalTargets.map(n => ({ loc: SITE + '/' + legalSlug(n), pri: '0.9', freq: 'monthly' })),
   ...targets.map(n => ({ loc: SITE + '/' + slug(n), pri: '0.8', freq: 'monthly' })),
   { loc: SITE + '/privacy.html', pri: '0.3', freq: 'yearly' },

@@ -3577,3 +3577,28 @@ body.is-locked { overflow: hidden; }
 }
 .mobile-nav ul .mega--mobile .mega__col a::after { content: none; }
 .mobile-nav ul .mega--mobile .mega__all { border-block-end: 0; }
+
+/* ===================== 23. ROUTE PAGES ================================= */
+/* The three figures are the reason someone opened this page — price, distance,
+   time — so they sit above the prose rather than inside a paragraph of it. */
+.route__figures {
+  display: grid; gap: 1px; margin-block-start: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  background: var(--line); border: 1px solid var(--line);
+  border-radius: 16px; overflow: hidden;
+}
+.route__figures > div {
+  background: var(--white, #fff); padding: 1.15rem 1.25rem;
+  display: flex; flex-direction: column; gap: .25rem;
+}
+.route__figures b {
+  font-size: clamp(1.35rem, 3.4vw, 1.7rem); font-weight: 800; color: var(--ink);
+  letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.route__figures > div:first-child b { color: var(--orange-ink); }
+.route__figures span { font-size: .82rem; color: var(--muted); line-height: 1.4; }
+
+@media (max-width: 560px) {
+  .route__figures { grid-template-columns: 1fr 1fr; }
+  .route__figures > div:first-child { grid-column: 1 / -1; }
+}
