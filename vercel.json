@@ -42,7 +42,23 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "geolocation=(), microphone=(), camera=()"
+          "value": "geolocation=(), microphone=(), camera=(), payment=(), usb=(), serial=(), bluetooth=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=(), display-capture=(), screen-wake-lock=(), idle-detection=(), local-fonts=(), xr-spatial-tracking=()"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'sha256-5r0ceAi77ofyhKluuUBJUzdOIMc4aEZR9Xlgif5W6zg=' 'sha256-CZReHtcxEwqcw5gr8Whi/7FdIKfkzb4N2BLlqGVTk7s=' 'sha256-SBE3mYjIQ0NJI+xyxdO3d2uwnvbkzRjATZidmrnfBm4=' 'sha256-dzFfrkbeSYhGsQaNP9ePleZlQ+FEItGw/vCRgtMwJAM=' 'sha256-rnSilqx70ysJSINaYijSOVvGOzG2uzSgg0sneaLAnns='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; media-src 'self'; form-action 'self'; frame-ancestors 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "X-Permitted-Cross-Domain-Policies",
+          "value": "none"
         }
       ]
     },

@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=46">
+<link rel="stylesheet" href="assets/css/style.css?v=47">
 
 <script>
 document.documentElement.className = 'js';
@@ -650,7 +650,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
               <label class="field__label" for="pickup">כתובת איסוף</label>
               <div class="input-wrap">
                 <svg width="20" height="20" aria-hidden="true"><use href="#i-pin"></use></svg>
-                <input class="input" id="pickup" name="pickup" type="text" autocomplete="off"
+                <input class="input" id="pickup" name="pickup" type="text" autocomplete="off" maxlength="120"
                        placeholder="מאיפה לאסוף?"
                        aria-describedby="pickup-err" role="combobox" aria-expanded="false"
                        aria-autocomplete="list" aria-controls="pickup-suggest">
@@ -665,7 +665,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
               <label class="field__label" for="dropoff">כתובת מסירה</label>
               <div class="input-wrap">
                 <svg width="20" height="20" aria-hidden="true"><use href="#i-pin"></use></svg>
-                <input class="input" id="dropoff" name="dropoff" type="text" autocomplete="off"
+                <input class="input" id="dropoff" name="dropoff" type="text" autocomplete="off" maxlength="120"
                        placeholder="לאן למסור?"
                        aria-describedby="dropoff-err" role="combobox" aria-expanded="false"
                        aria-autocomplete="list" aria-controls="dropoff-suggest">
@@ -1828,6 +1828,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=46" defer></script>
+<script src="assets/js/app.js?v=47" defer></script>
 </body>
 </html>
