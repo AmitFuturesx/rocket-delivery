@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import EXTRA_SERVICES from './services-extra.mjs';
 
 /* fileURLToPath, not url.pathname — this machine's home directory is Hebrew and
    pathname hands back the percent-encoded form, which fs cannot open. */
@@ -162,20 +163,83 @@ const MENU_CITIES = {
 };
 
 const SERVICE_LABEL = {
-  'מסירה-משפטית':        'מסירה משפטית',
-  'משלוחים-דחופים':      'משלוחים דחופים',
-  'שליח-עד-הבית':        'שליח עד הבית',
-  'משלוחים-לעסקים':      'שליחויות לעסקים',
-  'משלוחים-לעורכי-דין':  'לעורכי דין',
-  'משלוחים-לרואי-חשבון': 'לרואי חשבון',
-  'משלוחים-לבתי-דפוס':   'לבתי דפוס',
-  'משלוחים-למרפאות':     'למרפאות וקליניקות',
-  'משלוחים-לחנויות':     'לחנויות וקמעונאות',
+  "מסירה-משפטית": "מסירה משפטית",
+  "משלוחים-דחופים": "משלוחים דחופים",
+  "שליח-עד-הבית": "שליח עד הבית",
+  "משלוחים-לעסקים": "שליחויות לעסקים",
+  "משלוח-מדלת-לדלת": "מדלת לדלת",
+  "משלוחים-תוך-24-שעות": "תוך 24 שעות",
+  "משלוחים-בין-עירוניים": "בין־עירוני",
+  "משלוח-חד-פעמי": "משלוח חד פעמי",
+  "משלוחים-לאנשים-פרטיים": "לאנשים פרטיים",
+  "משלוחים-לעורכי-דין": "לעורכי דין",
+  "משלוחים-לרואי-חשבון": "לרואי חשבון",
+  "משלוחים-לבתי-דפוס": "לבתי דפוס",
+  "משלוחים-למרפאות": "למרפאות וקליניקות",
+  "משלוחים-לחנויות": "לחנויות וקמעונאות",
+  "משלוחים-לעסקי-מזון": "לעסקי מזון",
+  "משלוחים-לבתי-מרקחת": "לבתי מרקחת",
+  "משלוחים-למגזר-החרדי": "למגזר החרדי",
+  "משלוח-מסמכים": "מסמכים וחוזים",
+  "משלוח-פרחים": "זרי פרחים",
+  "משלוח-יין-ואלכוהול": "יין ואלכוהול",
+  "משלוחים-בקירור": "בקירור",
+  "משלוחי-ציוד-רפואי": "ציוד רפואי",
+  "משלוח-חלקי-חילוף": "חלקי חילוף",
+  "משלוח-מתנות": "מתנות ומארזים",
+  "שליח-קונה-ומביא": "שליח קונה ומביא",
+  "איסוף-מהחנות": "איסוף מהחנות",
+  "פתק-לכותל": "פתק לכותל"
 };
 
 const SERVICE_MENU = [
-  { label: 'לפי שירות', items: ['מסירה-משפטית', 'משלוחים-דחופים', 'שליח-עד-הבית', 'משלוחים-לעסקים'] },
-  { label: 'לפי תחום',  items: ['משלוחים-לעורכי-דין', 'משלוחים-לרואי-חשבון', 'משלוחים-לבתי-דפוס', 'משלוחים-למרפאות', 'משלוחים-לחנויות'] },
+  {
+    "label": "שירותי משלוח",
+    "items": [
+      "מסירה-משפטית",
+      "משלוחים-דחופים",
+      "משלוחים-תוך-24-שעות",
+      "משלוחים-בין-עירוניים",
+      "משלוח-מדלת-לדלת",
+      "שליח-עד-הבית",
+      "משלוח-חד-פעמי"
+    ]
+  },
+  {
+    "label": "לפי תחום",
+    "items": [
+      "משלוחים-לעסקים",
+      "משלוחים-לעורכי-דין",
+      "משלוחים-לרואי-חשבון",
+      "משלוחים-לבתי-דפוס",
+      "משלוחים-למרפאות",
+      "משלוחים-לחנויות",
+      "משלוחים-לעסקי-מזון"
+    ]
+  },
+  {
+    "label": "לפי סוג תכולה",
+    "items": [
+      "משלוח-מסמכים",
+      "משלוח-פרחים",
+      "משלוח-יין-ואלכוהול",
+      "משלוחים-בקירור",
+      "משלוחי-ציוד-רפואי",
+      "משלוח-חלקי-חילוף",
+      "משלוח-מתנות"
+    ]
+  },
+  {
+    "label": "שירותים מיוחדים",
+    "items": [
+      "שליח-קונה-ומביא",
+      "איסוף-מהחנות",
+      "משלוחים-לבתי-מרקחת",
+      "משלוחים-למגזר-החרדי",
+      "משלוחים-לאנשים-פרטיים",
+      "פתק-לכותל"
+    ]
+  }
 ];
 
 function servicesMenu() {
@@ -224,6 +288,61 @@ ${cols}
         </div>
       </details>`;
 }
+
+/* ── the footer link block ────────────────────────────────────────────────
+   The competitor's footer carries 566 links and earns nothing from a single
+   one of them: it is assembled in JavaScript, so a crawler fetching the page
+   never sees it. Copying that scale would be copying something that does not
+   work — and past roughly a hundred links on a page each one carries less
+   weight anyway, so 566 scattered links pass less than ninety aimed ones.
+
+   What was actually wrong on our side was the opposite problem: the generated
+   pages shipped a footer with ONE link in it. 176 pages with no way out. That
+   is what this fixes. */
+function footerLinks() {
+  const col = (label, rows) => `        <div class="fnav__col">
+          <h3>${esc(label)}</h3>
+          <ul>
+${rows.map(([href, text]) => `            <li><a href="${href}">${esc(text)}</a></li>`).join('\n')}
+          </ul>
+        </div>`;
+
+  const svc = k => SERVICE_MENU.find(g => g.label === k).items
+    .map(i => ['/' + i, SERVICE_LABEL[i] || i]);
+
+  const cities = ['תל אביב', 'ירושלים', 'חיפה', 'ראשון לציון', 'פתח תקווה', 'אשדוד',
+                  'נתניה', 'באר שבע', 'רמת גן', 'בני ברק', 'חולון', 'רחובות']
+    .filter(c => BUILT.has(c)).map(c => ['/' + slug(c), 'שליחויות ב' + c]);
+
+  /* the routes people search for, priced — the pages worth surfacing */
+  const routes = [['תל אביב', 'ירושלים'], ['תל אביב', 'חיפה'], ['תל אביב', 'באר שבע'],
+                  ['תל אביב', 'אילת'], ['ירושלים', 'תל אביב'], ['חיפה', 'תל אביב'],
+                  ['ראשון לציון', 'ירושלים'], ['פתח תקווה', 'חיפה'],
+                  ['נתניה', 'ירושלים'], ['אשדוד', 'תל אביב']]
+    .map(([a, b]) => {
+      const hit = routePairsRef.find(([x, y]) =>
+        (x === a && y === b) || (x === b && y === a));
+      return hit ? ['/' + routeSlug(hit[0], hit[1]), `מ${hit[0]} ל${hit[1]}`] : null;
+    }).filter(Boolean);
+
+  const legal = LEGAL_BUILT.slice(0, 10).map(c => ['/' + legalSlug(c), 'מסירה משפטית ב' + c]);
+
+  return `<nav class="fnav" aria-label="מפת האתר">
+      <div class="fnav__grid">
+${col('שירותי משלוח', svc('שירותי משלוח'))}
+${col('לפי תחום', svc('לפי תחום'))}
+${col('לפי סוג תכולה', svc('לפי סוג תכולה'))}
+${col('שירותים מיוחדים', svc('שירותים מיוחדים'))}
+${col('ערים מובילות', cities)}
+${routes.length ? col('מסלולים מבוקשים', routes) : ''}
+${legal.length ? col('מסירה משפטית לפי עיר', legal) : ''}
+      </div>
+      <a class="fnav__all" href="/אזורי-שירות">כל ${BUILT.size} אזורי השירות ←</a>
+    </nav>`;
+}
+
+/* filled in by the build so footerLinks can name real route pages */
+let routePairsRef = [];
 
 /* ── shared page shell ───────────────────────────────────────────────────
    Head, icon defs, header and footer live here once. Both the city pages
@@ -296,7 +415,9 @@ ${body}
 
 <footer class="footer">
   <div class="container">
-    <div class="footer__bottom" style="margin-block-start:0;border:0">
+    ${footerLinks()}
+
+    <div class="footer__bottom">
       <span>© <span id="year">2026</span> רוקט משלוחים. כל הזכויות שמורות.</span>
       <span>נבנה ע"י <a href="https://amitzur.digital" target="_blank" rel="noopener">Amitzur Digital</a></span>
     </div>
@@ -774,6 +895,9 @@ const SERVICES = [
   },
 ];
 
+/* the second wave lives in its own file — the array had outgrown this one */
+SERVICES.push(...EXTRA_SERVICES);
+
 let LEGAL_BUILT = [];
 
 function renderService(sv, ver) {
@@ -1083,6 +1207,21 @@ BUILT = new Set(targets);
 console.log(`ערים לבנייה: ${targets.length}  (גרסת CSS: v=${ver})`);
 if (DRY) { targets.forEach((t, i) => console.log(`  ${String(i + 1).padStart(3)}. ${t} → /${slug(t)}`)); process.exit(0); }
 
+/* Everything the footer names has to be known before the first page renders,
+   or the pages built earliest ship a footer missing half its columns. */
+const legalTargets = LEGAL_CITIES.filter(n => byName[n] && BUILT.has(n));
+LEGAL_BUILT = legalTargets;
+
+const routePairs = [];
+for (let i = 0; i < ROUTE_CITIES.length; i++) {
+  for (let j = i + 1; j < ROUTE_CITIES.length; j++) {
+    const a = ROUTE_CITIES[i], b = ROUTE_CITIES[j];
+    if (!byName[a] || !byName[b] || !BUILT.has(a) || !BUILT.has(b)) continue;
+    routePairs.push([a, b]);
+  }
+}
+routePairsRef = routePairs;
+
 let written = 0;
 for (const name of targets) {
   const city = byName[name];
@@ -1149,13 +1288,11 @@ ${blocks}
 }
 
 /* sitemap — the two originals plus everything we just built */
-const legalTargets = LEGAL_CITIES.filter(n => byName[n] && BUILT.has(n));
 for (const name of legalTargets) {
   const dir = path.join(ROOT, legalSlug(name));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), renderLegal(byName[name], ver));
 }
-LEGAL_BUILT = legalTargets;
 console.log(`נכתבו ${legalTargets.length} דפי מסירה משפטית.`);
 
 for (const sv of SERVICES) {
@@ -1165,14 +1302,7 @@ for (const sv of SERVICES) {
 }
 console.log(`נכתבו ${SERVICES.length} דפי שירות.`);
 
-const routePairs = [];
-for (let i = 0; i < ROUTE_CITIES.length; i++) {
-  for (let j = i + 1; j < ROUTE_CITIES.length; j++) {
-    const a = ROUTE_CITIES[i], b = ROUTE_CITIES[j];
-    if (!byName[a] || !byName[b] || !BUILT.has(a) || !BUILT.has(b)) continue;
-    routePairs.push([a, b]);
-  }
-}
+
 for (const [a, b] of routePairs) {
   const dir = path.join(ROOT, routeSlug(a, b));
   fs.mkdirSync(dir, { recursive: true });
@@ -1194,6 +1324,7 @@ console.log(`נכתבו ${routePairs.length} דפי מסלול.`);
   };
   put('<!-- MEGA:START -->', '<!-- MEGA:END -->', megaMenu(BUILT));
   put('<!-- SVC:START -->', '<!-- SVC:END -->', servicesMenu());
+  put('<!-- FNAV:START -->', '<!-- FNAV:END -->', footerLinks());
   /* the drawer version — same links, same disclosure, so "שירותים" behaves
      exactly like "אזורי שירות" beside it instead of scrolling the page */
   put('<!-- SVCM:START -->', '<!-- SVCM:END -->',
