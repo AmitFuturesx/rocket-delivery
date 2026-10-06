@@ -780,6 +780,44 @@
   })();
 
   /* Their measured price for this pair, or null if we never measured it. */
+  /* ── The client's own prices ────────────────────────────────────────────
+     Routes he has decided to price himself, overriding the matched figure.
+     Kept separate from ALUF_NET on purpose: that table means "this is what
+     their calculator returned", and folding his decisions into it would make
+     it a mix of measurement and opinion that nobody could untangle later.
+
+     Net shekels, PER SIZE. A size listed here is set outright; a size left out
+     keeps the matched price and the usual ladder, which is why these are keyed
+     by size rather than by route — "only the small one" was the instruction,
+     and letting the 10% ladder run off a lowered base would have quietly cut
+     medium and large too.
+
+     Symmetric — a route costs the same in both directions. */
+  var ROUTE_OVERRIDE = {
+    /* 2026-10-06: a short, high-volume run he wants to win on. Small only;
+       medium and large stay where the matched price put them. */
+    'תל אביב|חולון': { small: 100 }
+  };
+
+  var OVERRIDE_INDEX = (function () {
+    var out = {};
+    for (var k in ROUTE_OVERRIDE) {
+      if (!Object.prototype.hasOwnProperty.call(ROUTE_OVERRIDE, k)) continue;
+      var p = k.split('|');
+      out[p[0] + '|' + p[1]] = ROUTE_OVERRIDE[k];
+      out[p[1] + '|' + p[0]] = ROUTE_OVERRIDE[k];
+    }
+    return out;
+  })();
+
+  /* His own net price for this exact route and size, or null. */
+  function overrideNet(a, b, size) {
+    var row = OVERRIDE_INDEX[a + '|' + b];
+    if (!row) return null;
+    var v = row[size];
+    return typeof v === 'number' && isFinite(v) ? v : null;
+  }
+
   function alufNet(a, b) {
     var v = ALUF_INDEX[a + '|' + b];
     return typeof v === 'number' && isFinite(v) ? v : null;
@@ -1631,12 +1669,16 @@
          read — he charges one rate for same-day and next-day alike. */
       var sizeFactor = PRICING.sizeFactor[size] || 1;
 
-      /* Their measured figure wins over anything we could compute — that is
-         the whole point of it. */
+      /* His own price for this route and size beats the matched one, which in
+         turn beats anything we could compute. */
+      var own = overrideNet(from.city.label, to.city.label, size);
       var measured = alufNet(from.city.label, to.city.label);
 
       var net, minApplied = false, listedPrice = false, minFloor = 0, matched = false;
-      if (listed !== null) {
+      if (own !== null) {
+        net = own;                            // his price for this size, as-is
+        matched = true;
+      } else if (listed !== null) {
         net = listed;                         // his rate card
         listedPrice = true;
       } else if (measured !== null) {

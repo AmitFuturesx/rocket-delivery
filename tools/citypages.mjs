@@ -63,6 +63,25 @@ const ALUF = (() => {
   return out;
 })();
 
+/* Routes the client prices himself, read from the same ROUTE_OVERRIDE block the
+   calculator uses so a page can never quote a figure the calculator would not —
+   which is the whole reason this generator reads app.js rather than holding its
+   own copy of the numbers. Keyed by size, because an override may apply to one
+   size and leave the rest on the matched price. */
+const OVERRIDE = (() => {
+  const out = {};
+  const m = src.match(/var ROUTE_OVERRIDE = \{([\s\S]*?)\n {2}\};/);
+  if (!m) return out;
+  for (const row of m[1].matchAll(/'([^']+)\|([^']+)'\s*:\s*\{([^}]*)\}/g)) {
+    const [, a, b, body] = row;
+    const sizes = {};
+    for (const s of body.matchAll(/(\w+)\s*:\s*(\d+(?:\.\d+)?)/g)) sizes[s[1]] = +s[2];
+    out[a + '|' + b] = sizes;
+    out[b + '|' + a] = sizes;
+  }
+  return out;
+})();
+
 const PRICING = { perKm: 4, minCharge: 120, inCityKm: 12, vat: 0.18,
                   size: { small: 1, medium: 1.1, large: 1.21 } };
 
@@ -78,6 +97,11 @@ function roadKm(a, b) {
 
 /* the calculator's own precedence: a measured competitor price beats the model */
 function quote(a, b, size = 'small') {
+  const own = (OVERRIDE[a + '|' + b] || {})[size];
+  if (typeof own === 'number') {
+    return { net: Math.round(own), gross: Math.round(own * (1 + PRICING.vat)),
+             km: roadKm(a, b), measured: true };
+  }
   const measured = ALUF[a + '|' + b];
   const f = PRICING.size[size];
   if (typeof measured === 'number') {
