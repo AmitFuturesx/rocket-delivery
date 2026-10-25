@@ -793,20 +793,49 @@
      medium and large too.
 
      Symmetric — a route costs the same in both directions. */
-  var ROUTE_OVERRIDE = {
-    /* 2026-10-06: a short, high-volume run he wants to win on. Small only;
+  var ROUTE_PRICES = [
+    /* 2026-10-06: a short, high-volume run he wants to win on. Small only —
        medium and large stay where the matched price put them. */
-    'תל אביב|חולון': { small: 100 }
-  };
+    { from: ['תל אביב'], to: ['חולון'], small: 100 },
+
+    /* 2026-10-25, four blocks, in the shape he sent them. Same price in both
+       directions and for both service levels, which the engine gives for free:
+       nothing here reads the service, because same-day and next-day have cost
+       the same since the day he set that rule. */
+    { from: ['תל אביב', 'פתח תקווה', 'רמת גן', 'גבעתיים',
+             'יהוד', 'גני תקווה', 'קריית אונו'],
+      to:   ['נתניה'],
+      small: 180, medium: 200, large: 250 },
+
+    { from: ['תל אביב', 'גבעתיים', 'רמת גן', 'בני ברק'],
+      to:   ['ראש העין'],
+      small: 150, medium: 170, large: 210 },
+
+    { from: ['תל אביב', 'גבעתיים', 'רמת גן', 'בני ברק', 'פתח תקווה',
+             'רמת השרון', 'הרצליה', 'יהוד', 'גני תקווה', 'קריית אונו'],
+      to:   ['חדרה'],
+      small: 200, medium: 230, large: 260 },
+
+    { from: ['תל אביב', 'רמת גן', 'גבעתיים'],
+      to:   ['כפר סבא', 'רעננה'],
+      small: 150, medium: 170, large: 200 }
+  ];
 
   var OVERRIDE_INDEX = (function () {
     var out = {};
-    for (var k in ROUTE_OVERRIDE) {
-      if (!Object.prototype.hasOwnProperty.call(ROUTE_OVERRIDE, k)) continue;
-      var p = k.split('|');
-      out[p[0] + '|' + p[1]] = ROUTE_OVERRIDE[k];
-      out[p[1] + '|' + p[0]] = ROUTE_OVERRIDE[k];
-    }
+    ROUTE_PRICES.forEach(function (b) {
+      var sizes = {};
+      ['small', 'medium', 'large'].forEach(function (k) {
+        if (typeof b[k] === 'number') sizes[k] = b[k];
+      });
+      b.from.forEach(function (f) {
+        b.to.forEach(function (t) {
+          if (f === t) return;
+          out[f + '|' + t] = sizes;
+          out[t + '|' + f] = sizes;
+        });
+      });
+    });
     return out;
   })();
 

@@ -70,14 +70,27 @@ const ALUF = (() => {
    size and leave the rest on the matched price. */
 const OVERRIDE = (() => {
   const out = {};
-  const m = src.match(/var ROUTE_OVERRIDE = \{([\s\S]*?)\n {2}\};/);
-  if (!m) return out;
-  for (const row of m[1].matchAll(/'([^']+)\|([^']+)'\s*:\s*\{([^}]*)\}/g)) {
-    const [, a, b, body] = row;
+  const m = src.match(/var ROUTE_PRICES = \[([\s\S]*?)\n {2}\];/);
+  if (!m) { console.error('לא נמצא ROUTE_PRICES ב-app.js'); process.exit(1); }
+  /* strip comments first — a Hebrew note between blocks would otherwise be
+     swept into the from/to lists by the bracket match below */
+  const body = m[1].replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const blk of body.matchAll(/\{([\s\S]*?)\}/g)) {
+    const b = blk[1];
+    const list = key => {
+      const g = b.match(new RegExp(key + ":\\s*\\[([^\\]]*)\\]"));
+      return g ? [...g[1].matchAll(/'([^']+)'/g)].map(x => x[1]) : [];
+    };
     const sizes = {};
-    for (const s of body.matchAll(/(\w+)\s*:\s*(\d+(?:\.\d+)?)/g)) sizes[s[1]] = +s[2];
-    out[a + '|' + b] = sizes;
-    out[b + '|' + a] = sizes;
+    for (const s of ['small', 'medium', 'large']) {
+      const g = b.match(new RegExp("\\b" + s + ":\\s*(\\d+(?:\\.\\d+)?)"));
+      if (g) sizes[s] = +g[1];
+    }
+    for (const f of list('from')) for (const t of list('to')) {
+      if (f === t) continue;
+      out[f + '|' + t] = sizes;
+      out[t + '|' + f] = sizes;
+    }
   }
   return out;
 })();
