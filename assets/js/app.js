@@ -1792,6 +1792,9 @@
         return;
       }
 
+      /* one conversion per page load; track.js owns the guard */
+      if (window.rdCalcResult) window.rdCalcResult();
+
       if (priceBox) priceBox.hidden = false;
       if (quoteBox) quoteBox.hidden = true;
       if (waLabel) waLabel.textContent = 'הזמינו עכשיו בוואטסאפ';

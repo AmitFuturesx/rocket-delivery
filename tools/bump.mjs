@@ -13,7 +13,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PAGES = ['index.html', 'privacy.html', '404.html'];
-const TARGETS = ['assets/css/style.css', 'assets/js/app.js'];
+const TARGETS = ['assets/css/style.css', 'assets/js/app.js', 'assets/js/track.js'];
 
 /* read the current version off index.html so the number survives without a
    separate state file to drift out of sync */

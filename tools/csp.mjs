@@ -67,6 +67,40 @@ const sorted = [...hashes.keys()].sort();
  *
  * object-src and base-uri are shut entirely — both are pure attack surface
  * here, since the site has no plugins and no <base> tag. */
+/* Google Ads conversion tracking, and nothing wider.
+ *
+ * The tag is the one third party on this site, so each origin it needs is
+ * named rather than letting a wildcard in. gtag.js itself comes from
+ * googletagmanager; the conversion beacon goes to googleadservices and
+ * doubleclick; the pixel variants come back as images; and the conversion
+ * linker opens a frame on td.doubleclick.net, which is why frame-src stops
+ * being 'none'. google.co.il is listed beside google.com because the ping
+ * follows the visitor's country domain and the audience here is Israeli. */
+const G = {
+  /* doubleclick belongs in script-src, not only in img-src: the conversion
+     ping is fetched as a SCRIPT (viewthroughconversion), which the first
+     version of this policy blocked outright. Found by loading it. */
+  script:  ['https://www.googletagmanager.com', 'https://www.googleadservices.com',
+            'https://www.google.com', 'https://googleads.g.doubleclick.net'],
+  /* ad.doubleclick.net is the cross-domain conversion linker. It only fires
+     when a gclid is present — that is, only on the ad traffic this whole job
+     exists to measure — so leaving it out would have cost attribution on
+     exactly the clicks that matter, and quietly. Found by loading the page
+     with a gclid rather than without one.
+     img and connect cannot execute anything, so the list here is a little
+     wider than script-src, which stays tight. */
+  img:     ['https://www.google.com', 'https://www.google.co.il',
+            'https://www.googleadservices.com', 'https://googleads.g.doubleclick.net',
+            'https://ad.doubleclick.net', 'https://pagead2.googlesyndication.com',
+            'https://www.googletagmanager.com'],
+  connect: ['https://www.google.com', 'https://www.google.co.il',
+            'https://www.googleadservices.com', 'https://googleads.g.doubleclick.net',
+            'https://ad.doubleclick.net', 'https://pagead2.googlesyndication.com',
+            'https://www.googletagmanager.com', 'https://stats.g.doubleclick.net'],
+  frame:   ['https://td.doubleclick.net', 'https://bid.g.doubleclick.net',
+            'https://www.googletagmanager.com'],
+};
+
 const policy = [
   "default-src 'self'",
   /* Hash sources MUST be quoted. Unquoted, the browser reports each one as an
@@ -74,16 +108,16 @@ const policy = [
      which on this site means the `js` class never lands and the whole thing
      renders in its no-JavaScript state. Caught by loading the policy rather
      than by reading it. */
-  "script-src 'self' " + sorted.map(h => `'${h}'`).join(' '),
+  "script-src 'self' " + G.script.join(' ') + ' ' + sorted.map(h => `'${h}'`).join(' '),
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  "img-src 'self' data: " + G.img.join(' '),
   "font-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' " + G.connect.join(' '),
   "manifest-src 'self'",
   "media-src 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'",
-  "frame-src 'none'",
+  "frame-src " + G.frame.join(' '),
   "object-src 'none'",
   "base-uri 'none'",
   'upgrade-insecure-requests',

@@ -407,6 +407,15 @@ function shell({ title, desc, url, ver, schema, body }) {
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/css/style.css?v=${ver}">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18291568679"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18291568679');
+</script>
+<script src="/assets/js/track.js?v=${ver}" defer></script>
 <script>document.documentElement.className='js';</script>
 <script type="application/ld+json">
 ${JSON.stringify(schema, null, 2)}
