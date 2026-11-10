@@ -2647,6 +2647,12 @@ body.is-locked { overflow: hidden; }
   line-height: 1.65;
 }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block-start: 1.8rem; }
+/* WhatsApp and the call button are a stacked pair of equal width: two
+   promises, read top to bottom, rather than a long button and a short one. */
+@media (min-width: 420px) {
+  .hero__cta { display: grid; inline-size: fit-content; max-inline-size: 100%; }
+  .hero__cta .btn { justify-content: flex-start; }
+}
 @media (max-width: 419px) { .hero__cta .btn { inline-size: 100%; } }
 
 .hero__trust {
