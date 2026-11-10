@@ -31,7 +31,7 @@
 
 <link rel="preload" href="assets/fonts/gs-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/gs-book.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=52">
+<link rel="stylesheet" href="assets/css/style.css?v=55">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18291568679"></script>
 <script>
@@ -40,7 +40,7 @@
   gtag('js', new Date());
   gtag('config', 'AW-18291568679');
 </script>
-<script src="/assets/js/track.js?v=52" defer></script>
+<script src="/assets/js/track.js?v=55" defer></script>
 
 <script>
 document.documentElement.className = 'js';
@@ -156,7 +156,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         {
           "@type": "Question",
           "name": "מהם זמני האספקה של המשלוחים?",
-          "acceptedAnswer": { "@type": "Answer", "text": "אנחנו מספקים משלוחים תוך 24 שעות לכל רחבי הארץ. בנוסף, יש לנו שירות אקספרס שמאפשר משלוח תוך מספר שעות באזורים מסוימים. זמני האספקה המדויקים תלויים במיקום היעד ובסוג המשלוח." }
+          "acceptedAnswer": { "@type": "Answer", "text": "בשירות מהיום להיום החבילה נאספת ונמסרת באותו יום עסקים — השליח נוסע ישירות מכתובת האיסוף לכתובת המסירה, בלי מרכז מיון ובלי תחנות ביניים. בשירות מהיום למחר האיסוף מתבצע היום והמסירה למחרת. זמן ההגעה המשוער נמסר לכם בוואטסאפ לפני שהשליח יוצא." }
         },
         {
           "@type": "Question",
@@ -310,6 +310,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           <a class="mega__all" href="/#calculator">חשבו מחיר לכל שירות ←</a>
         </div>
       </details><!-- SVC:END -->
+        <a href="/legal">מסירה משפטית</a>
         <a href="#calculator">מחשבון מחיר</a>
         <!-- MEGA:START --><details class="mega">
         <summary aria-label="אזורי שירות — פתיחת רשימת יישובים">אזורי שירות</summary>
@@ -412,8 +413,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       </nav>
 
       <div class="header__actions">
-        <a class="btn btn--pill-light" href="https://wa.me/972537232057?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%A9%D7%AA%D7%97%D7%96%D7%A8%D7%95%20%D7%90%D7%9C%D7%99%D7%99%20%D7%91%D7%A0%D7%95%D7%92%D7%A2%20%D7%9C%D7%9E%D7%A9%D7%9C%D7%95%D7%97" target="_blank" rel="noopener">תחזרו אליי</a>
-        <a class="btn btn--primary" href="#calculator">חשבו מחיר משלוח</a>
+        <a class="btn btn--primary hdr-wa" href="https://wa.me/972537232057?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%A9%D7%AA%D7%97%D7%96%D7%A8%D7%95%20%D7%90%D7%9C%D7%99%D7%99%20%D7%91%D7%A0%D7%95%D7%92%D7%A2%20%D7%9C%D7%9E%D7%A9%D7%9C%D7%95%D7%97" target="_blank" rel="noopener" aria-label="שלחו הודעה בוואטסאפ"><svg width="18" height="18" aria-hidden="true"><use href="#i-whatsapp"></use></svg><span class="hdr-wa__t">שלחו הודעה בוואטסאפ</span></a>
         <a class="icon-btn" href="tel:+972537232057" aria-label="התקשרו אלינו: 053-7232057">
           <svg width="21" height="21" aria-hidden="true"><use href="#i-phone"></use></svg>
         </a>
@@ -493,6 +493,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           <a class="mega__all" href="/#calculator">חשבו מחיר לכל שירות ←</a>
         </div>
       </details><!-- SVCM:END --></li>
+      <li><a href="/legal">מסירה משפטית</a></li>
       <li><a href="#calculator">מחשבון מחיר</a></li>
       <li><!-- MEGAM:START --><details class="mega mega--mobile">
         <summary>אזורי שירות</summary>
@@ -595,7 +596,8 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     </ul>
   </nav>
   <div class="mobile-nav__cta">
-    <a class="btn btn--primary btn--lg btn--block" href="#calculator">חשבו מחיר משלוח</a>
+    <a class="btn btn--ghost btn--lg btn--block" href="tel:+972537232057">
+      <svg width="20" height="20" aria-hidden="true"><use href="#i-phone"></use></svg>התקשרו: <span class="nowrap">053-7232057</span></a>
     <a class="btn btn--wa btn--lg btn--block" href="https://wa.me/972537232057?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%20%D7%A8%D7%95%D7%A7%D7%98%20%D7%9E%D7%A9%D7%9C%D7%95%D7%97%D7%99%D7%9D%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%9E%D7%A9%D7%9C%D7%95%D7%97" target="_blank" rel="noopener">
       <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>דברו איתנו בוואטסאפ</a>
   </div>
@@ -614,12 +616,12 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         <span class="hero__l1">משלוחים</span>
         <span class="hero__l2">מהיום <em>להיום</em>.</span>
       </h1>
-      <p class="hero__sub">צי רכבים משלנו, שליחים שלנו ופריסה ארצית. מחשבים מחיר תוך 30 שניות — ושליח יוצא לדרך.</p>
+      <p class="hero__sub">שולחים כתובות בוואטסאפ, מקבלים מחיר תוך 2 דקות, ושליח יוצא לדרך.</p>
       <div class="hero__cta">
-        <a class="btn btn--primary btn--lg" href="#calculator">
-          <svg width="20" height="20" aria-hidden="true"><use href="#i-calculator"></use></svg>חשבו מחיר משלוח</a>
-        <a class="btn btn--ghost btn--lg" href="https://wa.me/972537232057?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%20%D7%A8%D7%95%D7%A7%D7%98%20%D7%9E%D7%A9%D7%9C%D7%95%D7%97%D7%99%D7%9D%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%9E%D7%A9%D7%9C%D7%95%D7%97" target="_blank" rel="noopener">
-          <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>דברו איתנו בוואטסאפ</a>
+        <a class="btn btn--primary btn--lg btn--duo" href="https://wa.me/972537232057?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A9%D7%9C%D7%95%D7%97%20%D7%9E%D7%A9%D7%9C%D7%95%D7%97.%0A%0A%D7%9B%D7%AA%D7%95%D7%91%D7%AA%20%D7%90%D7%99%D7%A1%D7%95%D7%A3%3A%0A%D7%9B%D7%AA%D7%95%D7%91%D7%AA%20%D7%9E%D7%A1%D7%99%D7%A8%D7%94%3A%0A%D7%9E%D7%94%20%D7%A9%D7%95%D7%9C%D7%97%D7%99%D7%9D%3A%0A" target="_blank" rel="noopener">
+          <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg><span class="btn__duo"><span>שלחו כתובות בוואטסאפ</span><span class="btn__tail">מחיר תוך 2 דקות</span></span></a>
+        <a class="btn btn--ghost btn--lg" href="#calculator">
+          <svg width="20" height="20" aria-hidden="true"><use href="#i-calculator"></use></svg>חשבו מחיר בעצמכם</a>
       </div>
       <ul class="hero__trust">
         <li><svg width="19" height="19" aria-hidden="true"><use href="#i-lightning"></use></svg>זמינות מיידית</li>
@@ -896,9 +898,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             <div class="price" id="r-price">
               <div class="price__label">מחיר משוער — לפני מע"מ</div>
               <div class="price__amount"><span id="r-total">0 ₪</span><span class="price__plus">+ מע"מ</span></div>
+              <p class="price__adjust">זה מחיר משוער. <b>אור יכול להתאים לך מחיר בוואטסאפ.</b></p>
               <div class="price__chips">
                 <span class="price__ok"><span class="price__dot" aria-hidden="true"></span>שליח זמין באזור שלכם</span>
-                <span class="price__est">הערכה — לא הצעה סופית</span>
               </div>
 
               <dl class="price__rows">
@@ -917,7 +919,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
                   <path d="M10 9v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                   <circle cx="10" cy="6.2" r="1.05" fill="currentColor"/>
                 </svg>
-                <span id="r-note">זהו מחיר משוער. הוא עשוי לעלות או לרדת בהתאם לדרישות שלכם — שעות לילה, סופי שבוע, המתנה בכתובת או טיפול חריג. המחיר הסופי נסגר איתכם בוואטסאפ לפני שהשליח יוצא.</span>
+                <span id="r-note">המחיר עשוי לעלות או לרדת בהתאם לדרישות שלכם — שעות לילה, סופי שבוע, המתנה בכתובת או טיפול חריג. הסכום הסופי נסגר איתכם בוואטסאפ לפני שהשליח יוצא.</span>
               </p>
             </div>
 
@@ -960,7 +962,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       <details class="fq">
         <summary>מהם זמני האספקה של המשלוחים?</summary>
         <div class="faq__answer">
-          <p>אנחנו מספקים משלוחים תוך 24 שעות לכל רחבי הארץ. בנוסף, יש לנו שירות אקספרס שמאפשר משלוח תוך מספר שעות באזורים מסוימים. זמני האספקה המדויקים תלויים במיקום היעד ובסוג המשלוח.</p>
+          <p>בשירות מהיום להיום החבילה נאספת ונמסרת באותו יום עסקים — השליח נוסע ישירות מכתובת האיסוף לכתובת המסירה, בלי מרכז מיון ובלי תחנות ביניים. בשירות מהיום למחר האיסוף מתבצע היום והמסירה למחרת. זמן ההגעה המשוער נמסר לכם בוואטסאפ לפני שהשליח יוצא.</p>
         </div>
       </details>
     </div>
@@ -1004,7 +1006,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <!-- ===================== DRIVE — הנסיעה: צד ← פנייה ← מבט־על (UC 1:1) ===================== -->
 <section class="drv" aria-labelledby="drv-title">
   <div class="drv__stage">
-    <div class="drv__speed" aria-hidden="true"><b id="speedo">00</b><span>קמ"ש</span></div>
+    <div class="drv__speed" aria-hidden="true"><b id="speedo">38</b><span>קמ"ש</span></div>
 
     <!-- ── Part A: side view — the truck rolls while services glide past ── -->
     <div class="drv__side">
@@ -1380,7 +1382,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           <b class="proof2__num">5.0</b>
           <span class="proof2__scoremeta">
             <span class="stars" aria-hidden="true"><svg width="18" height="18"><use href="#i-star"></use></svg><svg width="18" height="18"><use href="#i-star"></use></svg><svg width="18" height="18"><use href="#i-star"></use></svg><svg width="18" height="18"><use href="#i-star"></use></svg><svg width="18" height="18"><use href="#i-star"></use></svg></span>
-            <span>12 ביקורות בגוגל</span>
+            <span>26 ביקורות בגוגל</span>
           </span>
         </div>
         <a class="proof2__link" href="https://maps.app.goo.gl/xTTAzQuF6dRchmpF6" target="_blank" rel="noopener">לכל הביקורות בגוגל<svg width="17" height="17" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
@@ -1399,11 +1401,27 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             </figure>
             <figure class="rv">
               <figcaption class="rv__head">
+                <span class="rv__av rv__av--d" aria-hidden="true">E</span>
+                <span class="rv__who"><b>Elihav Shron</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
+              </figcaption>
+              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
+              <blockquote>שירות פשוט מעולה! יוסף היה אדיב, מקצועי וזמין לאורך כל הדרך. המשלוח הגיע במהירות ובדיוק כפי שסוכם. רואים שמדובר באדם שאכפת לו מהלקוחות וחשוב לו לתת שירות ברמה גבוהה. ממליץ בחום על Rocket Delivery!</blockquote>
+            </figure>
+            <figure class="rv">
+              <figcaption class="rv__head">
                 <span class="rv__av rv__av--b" aria-hidden="true">י</span>
                 <span class="rv__who"><b>יוסי איליאייב</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
               </figcaption>
               <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
               <blockquote>כבר תקופה דואגים לי עם שירות מהיר ואדיב. תמיד זמינים. ממש מרוצה.</blockquote>
+            </figure>
+            <figure class="rv">
+              <figcaption class="rv__head">
+                <span class="rv__av rv__av--e" aria-hidden="true">א</span>
+                <span class="rv__who"><b>אנג'לה איסקוב</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
+              </figcaption>
+              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
+              <blockquote>חברה פשוט נהדרת! השתמשנו בשירות שלהם והיינו מרוצים מעל הראש. שירות אמין, מהיר ומקצועי, והכי חשוב – יחס חם ואנושי שזה לא מובן מאליו היום. המשלוח הגיע מהר ובמצב מושלם. ממליצה עליהם מכל הלב!</blockquote>
             </figure>
             <figure class="rv">
               <figcaption class="rv__head">
@@ -1423,47 +1441,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             </figure>
             <figure class="rv" aria-hidden="true">
               <figcaption class="rv__head">
-                <span class="rv__av rv__av--b" aria-hidden="true">י</span>
-                <span class="rv__who"><b>יוסי איליאייב</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
+                <span class="rv__av rv__av--d" aria-hidden="true">E</span>
+                <span class="rv__who"><b>Elihav Shron</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
               </figcaption>
               <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>כבר תקופה דואגים לי עם שירות מהיר ואדיב. תמיד זמינים. ממש מרוצה.</blockquote>
-            </figure>
-            <figure class="rv" aria-hidden="true">
-              <figcaption class="rv__head">
-                <span class="rv__av rv__av--c" aria-hidden="true">ע</span>
-                <span class="rv__who"><b>עדן פרץ</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
-              </figcaption>
-              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>שירות אישי, מהיר ויעיל — ממליצה בחום.</blockquote>
-            </figure>
-          </div>
-        </div>
-        <div class="proof2__col proof2__col--b" aria-hidden="true">
-          <div class="proof2__track proof2__track--down">
-            <figure class="rv" aria-hidden="true">
-              <figcaption class="rv__head">
-                <span class="rv__av rv__av--b" aria-hidden="true">י</span>
-                <span class="rv__who"><b>יוסי איליאייב</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
-              </figcaption>
-              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>כבר תקופה דואגים לי עם שירות מהיר ואדיב. תמיד זמינים. ממש מרוצה.</blockquote>
-            </figure>
-            <figure class="rv" aria-hidden="true">
-              <figcaption class="rv__head">
-                <span class="rv__av rv__av--c" aria-hidden="true">ע</span>
-                <span class="rv__who"><b>עדן פרץ</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
-              </figcaption>
-              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>שירות אישי, מהיר ויעיל — ממליצה בחום.</blockquote>
-            </figure>
-            <figure class="rv" aria-hidden="true">
-              <figcaption class="rv__head">
-                <span class="rv__av rv__av--a" aria-hidden="true">א</span>
-                <span class="rv__who"><b>איתי גדות</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
-              </figcaption>
-              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>משלוח הכי טוב בארץ, מגיע מהר, שירות מאוד טוב ואנשים טובים. תודה רבה לכם.</blockquote>
+              <blockquote>שירות פשוט מעולה! יוסף היה אדיב, מקצועי וזמין לאורך כל הדרך. המשלוח הגיע במהירות ובדיוק כפי שסוכם. רואים שמדובר באדם שאכפת לו מהלקוחות וחשוב לו לתת שירות ברמה גבוהה. ממליץ בחום על Rocket Delivery!</blockquote>
             </figure>
             <figure class="rv" aria-hidden="true">
               <figcaption class="rv__head">
@@ -1475,19 +1457,19 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             </figure>
             <figure class="rv" aria-hidden="true">
               <figcaption class="rv__head">
+                <span class="rv__av rv__av--e" aria-hidden="true">א</span>
+                <span class="rv__who"><b>אנג'לה איסקוב</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
+              </figcaption>
+              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
+              <blockquote>חברה פשוט נהדרת! השתמשנו בשירות שלהם והיינו מרוצים מעל הראש. שירות אמין, מהיר ומקצועי, והכי חשוב – יחס חם ואנושי שזה לא מובן מאליו היום. המשלוח הגיע מהר ובמצב מושלם. ממליצה עליהם מכל הלב!</blockquote>
+            </figure>
+            <figure class="rv" aria-hidden="true">
+              <figcaption class="rv__head">
                 <span class="rv__av rv__av--c" aria-hidden="true">ע</span>
                 <span class="rv__who"><b>עדן פרץ</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
               </figcaption>
               <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
               <blockquote>שירות אישי, מהיר ויעיל — ממליצה בחום.</blockquote>
-            </figure>
-            <figure class="rv" aria-hidden="true">
-              <figcaption class="rv__head">
-                <span class="rv__av rv__av--a" aria-hidden="true">א</span>
-                <span class="rv__who"><b>איתי גדות</b><span><svg class="rv__g" width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>ביקורת Google</span></span>
-              </figcaption>
-              <div class="stars rv__stars" aria-hidden="true"><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg><svg width="15" height="15"><use href="#i-star"></use></svg></div>
-              <blockquote>משלוח הכי טוב בארץ, מגיע מהר, שירות מאוד טוב ואנשים טובים. תודה רבה לכם.</blockquote>
             </figure>
           </div>
         </div>
@@ -1973,6 +1955,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/vendor/MotionPathPlugin.min.js" defer></script>
 <script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/app.js?v=52" defer></script>
+<script src="assets/js/fleet.js?v=55" defer></script>
+<script src="assets/js/app.js?v=55" defer></script>
 </body>
 </html>

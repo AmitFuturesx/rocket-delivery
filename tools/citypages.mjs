@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import EXTRA_SERVICES from './services-extra.mjs';
+import renderLegalLanding from './legal-landing.mjs';
 
 /* fileURLToPath, not url.pathname — this machine's home directory is Hebrew and
    pathname hands back the percent-encoded form, which fs cannot open. */
@@ -385,7 +386,7 @@ let routePairsRef = [];
    Head, icon defs, header and footer live here once. Both the city pages
    and the service-area hub render through it, so a change to the header
    cannot land on one and miss the other. */
-function shell({ title, desc, url, ver, schema, body }) {
+function shell({ title, desc, url, ver, schema, body, icons = '', headerCta = null, bodyClass = '' }) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl" class="no-js">
 <head>
@@ -421,7 +422,7 @@ function shell({ title, desc, url, ver, schema, body }) {
 ${JSON.stringify(schema, null, 2)}
 </script>
 </head>
-<body>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-rocket" viewBox="0 0 40 40"><g transform="rotate(-45 20 20)">
@@ -431,6 +432,7 @@ ${JSON.stringify(schema, null, 2)}
     <path d="M17.2 31.6h5.6L20 37.4Z" fill="#F04800"/></g></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7.6 3.5H4.9A1.9 1.9 0 0 0 3 5.4C3 14.6 9.4 21 18.6 21a1.9 1.9 0 0 0 1.9-1.9v-2.7l-4.4-1.8-1.9 2.3a13.7 13.7 0 0 1-5.1-5.1l2.3-1.9L7.6 3.5Z"/></symbol>
   <symbol id="i-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35M12.05 21.8a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.43 9.89-9.89 9.89m8.42-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.9c0 2.09.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45c6.55 0 11.89-5.34 11.89-11.9 0-3.17-1.24-6.16-3.48-8.4Z"/></symbol>
+${icons ? '\n  ' + icons : ''}
 </defs></svg>
 
 <header class="header is-stuck" id="site-header">
@@ -443,13 +445,16 @@ ${JSON.stringify(schema, null, 2)}
       <nav class="nav" aria-label="ניווט ראשי">
         <a href="/">ראשי</a>
         ${servicesMenu()}
+        <a href="/legal"${url === SITE + '/legal' ? ' class="is-active" aria-current="page"' : ''}>מסירה משפטית</a>
         <a href="/#calculator">מחשבון מחיר</a>
         ${megaMenu(BUILT)}
         <a href="/#faq">שאלות ותשובות</a>
       </nav>
 
       <div class="header__actions">
-        <a class="btn btn--primary" href="/#calculator">חשבו מחיר משלוח</a>
+        ${headerCta
+          ? `<a class="btn btn--primary" href="${headerCta.href}"${headerCta.wa ? ' target="_blank" rel="noopener"' : ''}>${esc(headerCta.label)}</a>`
+          : '<a class="btn btn--primary" href="/#calculator">חשבו מחיר משלוח</a>'}
         <a class="icon-btn" href="tel:+${WA}" aria-label="התקשרו אלינו: ${TEL}">
           <svg width="21" height="21" aria-hidden="true"><use href="#i-phone"></use></svg>
         </a>
@@ -1400,6 +1405,42 @@ ${list.map(c => `                <li><a href="/${slug(c)}">${esc(c)}</a></li>`).
   console.log('התפריט הוזרק לדף הבית.');
 }
 
+/* /legal — the paid-campaign landing page for the legal service. Written
+   through the same shell as everything else, so it carries the site's header,
+   footer, menus, Google tag and track.js without a second copy of any of them.
+   Its body is its own design; see tools/legal-landing.mjs for why it is a
+   separate page from /מסירה-משפטית rather than a section inside it. */
+{
+  const dir = path.join(ROOT, 'legal');
+  fs.mkdirSync(dir, { recursive: true });
+  /* The fleet and the Google reviews are lifted out of the home page rather
+     than written a second time, so the two pages cannot drift: a new review
+     or a changed vehicle lands on both. Three things are adjusted on the way:
+     asset paths become absolute (this page lives one directory down), the
+     'reveal' class goes (it is opacity:0 until app.js adds .in, and this page
+     does not load app.js), and the fleet's sub-line stops pointing at a
+     calculator this page does not have. */
+  const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').replace(/\r\n/g, '\n');
+  const lift = (cls, label) => {
+    const m = home.match(new RegExp('<section class="[^"]*\\b' + cls + '\\b[^"]*"[\\s\\S]*?<\\/section>'));
+    if (!m) { console.error('לא נמצא בדף הבית: ' + label); process.exit(1); }
+    return m[0]
+      .replace(/(src|srcset)="assets\//g, '$1="/assets/')
+      .replace(/(class="[^"]*?)\s+reveal(?=[\s"])/g, '$1');
+  };
+  const FLEET_SUB = 'הרכבים והשליחים — שלנו. בוחרים את הרכב המתאים, והמחשבון כבר מכוון לגודל המשלוח שלכם.';
+  let fleet = lift('fleet2', 'צי הרכבים');
+  if (!fleet.includes(FLEET_SUB)) { console.error('שורת המשנה של צי הרכבים השתנתה — עדכנו את FLEET_SUB'); process.exit(1); }
+  fleet = fleet.replace(FLEET_SUB, 'הרכבים והשליחים — שלנו, לא קבלן משנה. מסמך דחוף יוצא בקטנוע, ארגזי תיקים ברכב פרטי, ומעבר משרד — במסחרית.');
+  const reviews = lift('proof2', 'הביקורות');
+
+  fs.writeFileSync(path.join(dir, 'index.html'), renderLegalLanding({
+    shell, esc, SITE, WA, TEL, legalCities: legalTargets, legalSlug, ver,
+    sections: { fleet, reviews },
+  }));
+  console.log('דף הנחיתה /legal נכתב.');
+}
+
 const hubDir = path.join(ROOT, 'אזורי-שירות');
 fs.mkdirSync(hubDir, { recursive: true });
 fs.writeFileSync(path.join(hubDir, 'index.html'), renderHub());
@@ -1409,6 +1450,7 @@ const today = new Date().toISOString().slice(0, 10);
 const entries = [
   { loc: SITE + '/', pri: '1.0', freq: 'weekly' },
   { loc: SITE + '/אזורי-שירות', pri: '0.9', freq: 'monthly' },
+  { loc: SITE + '/legal', pri: '0.9', freq: 'monthly' },
   ...SERVICES.map(sv => ({ loc: SITE + '/' + sv.s, pri: '0.9', freq: 'monthly' })),
   ...routePairs.map(([a, b]) => ({ loc: SITE + '/' + routeSlug(a, b), pri: '0.9', freq: 'monthly' })),
   ...legalTargets.map(n => ({ loc: SITE + '/' + legalSlug(n), pri: '0.9', freq: 'monthly' })),

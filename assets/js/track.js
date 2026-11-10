@@ -132,12 +132,24 @@
     if (!isWhatsApp(u)) return;
 
     stamp(a);
-    push('whatsapp_click');
 
     if (a.target === '_blank') {
-      convert(LABEL.whatsapp);                     // this tab stays put
+      /* Decide AFTER the click has finished dispatching. This listener runs
+         first (capture, on document), so it cannot see what a handler further
+         down does — and the mobile fleet carousel cancels a tap on a side
+         vehicle to rotate it into the centre instead of opening WhatsApp. A
+         cancelled click is not a lead; counting it was inflating conversions
+         on exactly the phones the campaign pays for. Stamping stays above,
+         synchronous, because the new tab opens with whatever href is on the
+         link when dispatch ends. */
+      window.setTimeout(function () {
+        if (e.defaultPrevented) return;
+        push('whatsapp_click');
+        convert(LABEL.whatsapp);                   // this tab stays put
+      }, 0);
       return;
     }
+    push('whatsapp_click');
     e.preventDefault();
     var href = a.href;
     convert(LABEL.whatsapp, function () { window.location.href = href; });

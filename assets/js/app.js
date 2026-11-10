@@ -1054,6 +1054,17 @@
     }, function (mmCtx) {
       var drvPhone = mmCtx.conditions.phone;
       var drvSpeedo = $('#speedo');
+      /* The dial reports the TRUCK, not the thumb. It used to print
+         |scrollVelocity| / 24 outright, so it read 00 whenever the reader
+         stopped flicking — which is most of the time a section is on screen,
+         and which parked a stationary dial under a truck that is plainly
+         moving. Now a cruising baseline carries it and the reader's scroll
+         speed adds on top, smoothed so the digits never snap. scrub: 0.5
+         keeps onUpdate firing for about half a second after the scroll stops,
+         so the needle coasts back down to the baseline rather than dropping
+         to it in one frame. */
+      var DRV_CRUISE = 38;
+      var drvSpeed = DRV_CRUISE;
       var drvSpeedWrap = $('.drv__speed');
       var drvSide = $('.drv__side');
       var drvTruckSide = $('.drv__truck-side');
@@ -1118,7 +1129,9 @@
           trigger: drv, start: 'top top', end: 'bottom bottom', scrub: 0.5,
           invalidateOnRefresh: true,
           onUpdate: function (st) {
-            var v = Math.min(94, Math.round(Math.abs(st.getVelocity()) / 24));
+            var raw = Math.min(94, DRV_CRUISE + Math.abs(st.getVelocity()) / 26);
+            drvSpeed += (raw - drvSpeed) * 0.16;
+            var v = Math.round(drvSpeed);
             if (drvSpeedo) drvSpeedo.textContent = (v < 10 ? '0' : '') + v;
           }
         }
@@ -1819,9 +1832,13 @@
         $('#r-distance').textContent = q.km + ' ק"מ';
       }
       if (!q.listedPrice && note) {
-        note.textContent = 'זהו מחיר משוער. הוא עשוי לעלות או לרדת בהתאם ' +
-          'לדרישות שלכם — שעות לילה, סופי שבוע, המתנה בכתובת או טיפול חריג. ' +
-          'המחיר הסופי נסגר איתכם בוואטסאפ לפני שהשליח יוצא.';
+        /* "this is an estimate" now lives in .price__adjust, directly under
+           the figure, where it names Or. Saying it a second time down here
+           was how a reader stopped reading either one — so this line keeps
+           only the part the short one does not carry: WHY it can move. */
+        note.textContent = 'המחיר עשוי לעלות או לרדת בהתאם לדרישות שלכם — ' +
+          'שעות לילה, סופי שבוע, המתנה בכתובת או טיפול חריג. הסכום הסופי ' +
+          'נסגר איתכם בוואטסאפ לפני שהשליח יוצא.';
       }
 
       $('#r-size-row').hidden = false;
@@ -1981,70 +1998,9 @@
     });
   }
 
-  /* 09. FLEET PODIUM ====================================================== */
-  /* Functional layer, deliberately outside the GSAP gate: the carousel must
-     work with reduced motion and without the cinematic stack. The cards
-     themselves are plain WhatsApp links — no JS needed to order. */
-  (function () {
-    var stage = $('.fleet2__stage');
-    if (!stage) return;
-    var items = $$('.fv', stage);
+  /* 09. FLEET PODIUM — the mobile carousel lives in assets/js/fleet.js, so
+     pages without this file can still run it. */
 
-    /* mobile: 3-position carousel — centre big, sides small + blurred */
-    if (items.length !== 3) return;
-    var mq = window.matchMedia('(max-width: 759px)');
-    var dots = $$('.fleet2__dots i');
-    var idx = 1;                      // start on the truck, the podium star
-    var lock = false;
-
-    function apply() {
-      items.forEach(function (el, i) {
-        el.classList.remove('is-center', 'is-left', 'is-right');
-        if (!mq.matches) return;
-        if (i === idx) el.classList.add('is-center');
-        else if (i === (idx + 1) % 3) el.classList.add('is-left');
-        else el.classList.add('is-right');
-      });
-      dots.forEach(function (d, i) { d.classList.toggle('on', mq.matches && i === idx); });
-    }
-
-    function go(step) {
-      if (lock || !mq.matches) return;
-      lock = true;
-      idx = (idx + step + 3) % 3;
-      apply();
-      setTimeout(function () { lock = false; }, 660);
-    }
-
-    $$('.fleet2__arrow').forEach(function (btn) {
-      btn.addEventListener('click', function () { go(parseInt(btn.getAttribute('data-dir'), 10)); });
-    });
-
-    /* tapping a side vehicle brings it to the centre instead of navigating */
-    items.forEach(function (item, i) {
-      item.addEventListener('click', function (e) {
-        if (mq.matches && i !== idx) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          go(i === (idx + 1) % 3 ? 1 : -1);
-        }
-      }, true);
-    });
-
-    /* swipe — visual mapping: drag toward a side pulls that side's vehicle in */
-    var x0 = null;
-    stage.addEventListener('pointerdown', function (e) { x0 = e.clientX; }, { passive: true });
-    stage.addEventListener('pointerup', function (e) {
-      if (x0 === null) return;
-      var dx = e.clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) < 42) return;
-      go(dx < 0 ? -1 : 1);           // drag left reveals the item on the left
-    }, { passive: true });
-
-    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
-    apply();
-  })();
 
   var yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();

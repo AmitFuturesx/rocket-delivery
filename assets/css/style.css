@@ -25,6 +25,7 @@
    20. Floating WhatsApp + cookie banner
    21. Privacy page
    22. Reduced motion & print
+   23. /legal landing page
    ========================================================================== */
 
 
@@ -355,6 +356,27 @@ button, input, textarea, select {
 }
 
 .btn--lg { min-block-size: 56px; padding: 0.9rem 1.9rem; font-size: 1.05rem; }
+/* -- the hero's primary CTA carries a promise as well as a verb ---------- */
+.btn--duo { padding-block: 0.7rem; }
+.btn__duo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.25;
+}
+.btn__tail {
+  font-size: 0.8em;
+  font-weight: 600;
+  opacity: 0.82;
+}
+/* Above 560px it reads as one sentence with a middot, which is how the brief
+   writes it; the separator is generated so the markup holds no stray glyph. */
+@media (min-width: 561px) {
+  .btn__duo { flex-direction: row; align-items: center; gap: 0.45em; }
+  .btn__tail { font-size: 0.86em; }
+  .btn__tail::before { content: '· '; opacity: 0.55; }
+}
+
 .btn--block { inline-size: 100%; }
 
 .link-arrow {
@@ -930,20 +952,17 @@ body.is-locked { overflow: hidden; }
 .price__chips .price__ok { margin-block-start: 0; }
 
 /* Says out loud what the small print used to whisper: the figure is an
-   estimate. Orange rather than red — this is a qualification, not a warning,
-   and the panel should not look like something went wrong. */
-.price__est {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 12px;
-  background: rgba(240, 72, 0, 0.18);
-  border: 1px solid rgba(240, 72, 0, 0.34);
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #FFC4A6;
-  white-space: nowrap;
+   estimate, and a person can move it. Sits directly under the amount, where
+   the eye already is, rather than in the chip row where it read as a status
+   badge. Orange rather than red — a qualification, not a warning. */
+.price__adjust {
+  margin-block-start: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
 }
+.price__adjust b { font-weight: 700; color: #FFB08A; }
+@media (max-width: 560px) { .price__adjust { font-size: 12.5px; } }
 
 .price__ok {
   display: inline-flex;
@@ -1662,7 +1681,10 @@ body.is-locked { overflow: hidden; }
 .proof2__link:hover svg { transform: translateX(-5px); }
 @media (max-width: 939px) { .proof2__link { margin-inline: auto; } }
 
-/* -- the floating stream: two columns drifting in opposite directions ---- */
+/* -- the floating stream: ONE lane, five reviews -------------------------
+   It was two lanes drifting in opposite directions, which is the right
+   pattern for eight reviews and the wrong one for five: both lanes were fed
+   the same cards, so the same reviewer showed up twice at once. */
 .proof2__stream {
   position: relative;
   display: flex;
@@ -1673,7 +1695,6 @@ body.is-locked { overflow: hidden; }
           mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
 }
 .proof2__col { flex: 1; min-inline-size: 0; }
-.proof2__col--b { padding-block-start: 4.5rem; }   /* stagger the second lane */
 .proof2__track {
   display: flex;
   flex-direction: column;
@@ -1716,6 +1737,8 @@ body.is-locked { overflow: hidden; }
 .rv__av--a { background: var(--orange-ink); }
 .rv__av--b { background: var(--navy-700); }
 .rv__av--c { background: #B7791F; }
+.rv__av--d { background: #2F4E7A; }
+.rv__av--e { background: #9A4B1F; }
 .rv__who b { display: block; font-size: 0.95rem; color: var(--ink); }
 .rv__who > span {
   display: flex;
@@ -1729,15 +1752,13 @@ body.is-locked { overflow: hidden; }
 .rv blockquote { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--ink); }
 
 @media (max-width: 939px) {
-  .proof2__stream { block-size: min(96vw, 420px); }
-  .proof2__col--b { display: none; }   /* one readable lane on small screens */
-  .proof2__col { max-inline-size: 420px; margin-inline: auto; }
+  .proof2__stream { block-size: min(118vw, 470px); }
+  .proof2__col { max-inline-size: 460px; margin-inline: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .proof2__track { animation: none; }
   .proof2__track .rv[aria-hidden="true"] { display: none; }
-  .proof2__col--b { display: none; }
   .proof2__stream {
     block-size: auto;
     overflow: visible;
@@ -3640,4 +3661,731 @@ body.is-locked { overflow: hidden; }
 @media (max-width: 600px) {
   .fnav__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
   .fnav__col a { font-size: .84rem; }
+}
+
+
+
+/* 23. /legal — the legal-service landing page ==============================
+   A page inside the site rather than a page bolted onto it: same tokens, same
+   header and footer, same heading language — giant two-tone line, one word in
+   orange, full stop.
+
+   The hero is DARK (v2, Nov 2026 — Amit asked for something sharper and more
+   professional for lawyers). The shared header is position:absolute with
+   navy-ink links and no is-stuck rule, so a dark hero would swallow the whole
+   navigation; the page therefore sets body.hdr-dark and the header switches
+   to light ink for this page only.
+   ========================================================================= */
+
+.lp { background: var(--white); }
+
+/* -- shared heading language --------------------------------------------- */
+.lp-h1, .lp-h2 { font-weight: 700; letter-spacing: -0.02em; }
+.lp-h1 > span, .lp-h2 > span { display: block; }
+.lp-h1 em, .lp-h2 em { font-style: normal; color: var(--orange-600); }
+
+.lp-h1 {
+  margin-block-start: 1.15rem;
+  font-size: clamp(2.3rem, 5.4vw, 4.5rem);
+  line-height: 1.02;
+}
+.lp-h2 {
+  font-size: clamp(2.05rem, 4.6vw, 3.8rem);
+  line-height: 1.04;
+}
+.lp-h2--light { color: var(--white); }
+/* the locked orange is too dark against navy; the 500 reads as the same hue */
+.lp-h2--light em { color: var(--orange-500); }
+.lp-h2--mid { text-align: center; }
+
+/* -- reveal: a 15-line IntersectionObserver, not a scroll library ---------
+   The no-js rule is the important one. If the observer never runs — JS off,
+   script blocked, an old browser — these elements must be VISIBLE, not stuck
+   at opacity 0 waiting for a class that is never added. */
+.rv-up {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.rv-up.is-in { opacity: 1; transform: none; }
+.no-js .rv-up { opacity: 1; transform: none; transition: none; }
+.rv-up:nth-child(2) { transition-delay: 0.07s; }
+.rv-up:nth-child(3) { transition-delay: 0.14s; }
+.rv-up:nth-child(4) { transition-delay: 0.21s; }
+@media (prefers-reduced-motion: reduce) {
+  .rv-up { opacity: 1; transform: none; transition: none; }
+}
+
+/* -- hero v2: dark, a fine ruled grid, the sheet lit from behind ---------- */
+.lp-hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: calc(var(--header-h) + clamp(2.8rem, 5vw, 4.4rem)) clamp(3.4rem, 7vw, 6.2rem);
+  background:
+    radial-gradient(46% 62% at 24% 48%, rgba(240, 72, 0, 0.20), transparent 70%),
+    radial-gradient(60% 80% at 100% 0%, rgba(47, 78, 122, 0.45), transparent 70%),
+    var(--navy-950);
+  color: rgba(255, 255, 255, 0.72);
+  overflow: clip;            /* the stamp and the toast hang past the sheet */
+}
+/* A ruled grid, faded out toward the edges so it reads as texture, not as
+   graph paper. On its own layer so the mask does not touch the content. */
+.lp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 45%, #000 30%, transparent 78%);
+          mask-image: radial-gradient(75% 70% at 50% 45%, #000 30%, transparent 78%);
+}
+.lp-hero::after {            /* one orange hairline closing the dark band */
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent, rgba(240, 72, 0, 0.55), transparent);
+}
+.lp-hero__grid { display: grid; gap: clamp(2.6rem, 5vw, 4.2rem); align-items: center; }
+@media (min-width: 1100px) {
+  .lp-hero__grid { grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr); }
+}
+
+.lp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.62);
+}
+.lp-eyebrow::before {        /* a short rule, the way a brief opens */
+  content: '';
+  flex: none;
+  inline-size: 34px;
+  block-size: 2px;
+  background: var(--orange-600);
+}
+/* One text run, not three flex items: as separate items the phrase broke
+   into two narrow columns on a 375px phone. Under 480px the first half goes,
+   so the line that says WHO this page is for stays on one line. */
+.lp-eyebrow b { font-weight: 600; color: var(--orange-500); }
+@media (max-width: 479px) { .lp-eyebrow__lead { display: none; } }
+
+.lp-hero .lp-h1 { color: var(--white); margin-block-start: 1.2rem; }
+.lp-hero .lp-h1 em { color: var(--orange-500); }
+
+.lp-hero__sub {
+  margin-block-start: 1.3rem;
+  max-inline-size: 33rem;
+  font-size: clamp(1.04rem, 1.55vw, 1.22rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+.lp-hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block-start: 2rem; }
+@media (max-width: 419px) { .lp-hero__cta .btn { inline-size: 100%; } }
+
+/* The spec strip. Three figures divided by hairlines — what a lawyer checks
+   first, set like numbers in a schedule rather than ticks in a list. */
+.lp-spec {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-block-start: clamp(2.2rem, 4vw, 2.8rem);
+  padding-block-start: 1.4rem;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+  max-inline-size: 36rem;
+}
+.lp-spec > div { padding-inline: 1.1rem; }
+.lp-spec > div:first-child { padding-inline-start: 0; }
+.lp-spec > div + div { border-inline-start: 1px solid rgba(255, 255, 255, 0.12); }
+.lp-spec dt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  min-block-size: 2.6rem;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.lp-spec dt small { font-size: 0.42em; font-weight: 600; color: rgba(255, 255, 255, 0.62); }
+.lp-spec dt svg { align-self: center; color: var(--orange-500); }
+.lp-spec dd {
+  margin: 0.45rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
+@media (max-width: 479px) {
+  .lp-spec > div { padding-inline: 0.7rem; }
+  .lp-spec dd { font-size: 0.78rem; }
+}
+
+/* -- the sample proof of service: the deliverable, as the hero object -----
+   Markup, not an image. It costs nothing to load on a page that is paid for
+   per click, it stays selectable, and it reflows at any width instead of
+   becoming an unreadable 320px-wide screenshot of a form. */
+.lp-doc { position: relative; margin: 0; padding-block-start: 3.4rem; }
+.lp-doc__sheet {
+  position: relative;
+  max-inline-size: 30rem;
+  margin-inline: auto;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--sh-3);
+  transform: rotate(-1.5deg);
+}
+@media (max-width: 599px) { .lp-doc__sheet { transform: none; } }
+
+.lp-doc__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block-end: 0.85rem;
+  border-block-end: 1px solid var(--line);
+}
+.lp-doc__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.lp-doc__brand svg { color: var(--orange-600); }
+.lp-doc__brand > span { display: flex; flex-direction: column; line-height: 1.1; }
+.lp-doc__brand small { margin-block-start: 3px; font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+
+.lp-doc__meta { display: grid; gap: 0.5rem; margin-block: 0.95rem; }
+.lp-doc__meta > div { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.86rem; }
+.lp-doc__meta dt { color: var(--muted); }
+.lp-doc__meta dd { margin: 0; font-weight: 600; color: var(--ink); text-align: end; }
+
+.lp-doc__label {
+  padding-block-start: 0.85rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.lp-doc__tries { display: grid; gap: 0.45rem; margin-block-start: 0.7rem; }
+.lp-doc__tries li {
+  /* RTL puts column 1 — the attempt number — on the RIGHT, which is the
+     reading order this list wants. No physical override needed here. */
+  display: grid;
+  grid-template-columns: 26px auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--off-white);
+  border-radius: var(--r-input);
+  font-size: 0.84rem;
+}
+.lp-doc__tries li.is-done {
+  background: rgba(16, 185, 129, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.26);
+}
+.lp-doc__n {
+  inline-size: 26px;
+  block-size: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy-800);
+  color: var(--white);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.is-done .lp-doc__n { background: #0E9F6E; }
+.lp-doc__when {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  direction: ltr;            /* a date and a clock time are LTR data */
+  font-variant-numeric: tabular-nums;
+}
+.lp-doc__when b { font-weight: 700; }
+.lp-doc__when span { font-size: 0.76rem; color: var(--muted); }
+.lp-doc__what { color: var(--navy-700); }
+.is-done .lp-doc__what { font-weight: 600; color: #046C4E; }
+
+/* The signature row reserves space for the stamp with padding-inline-end,
+   which on this RTL page is the LEFT — the corner the stamp sits in. Without
+   it the scribble and the stamp land on top of each other. */
+.lp-doc__sign {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-block-start: 1rem;
+  padding-block-start: 0.85rem;
+  padding-inline-end: clamp(5.4rem, 8vw, 6.6rem);
+  border-block-start: 1px dashed var(--line);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.lp-doc__scribble { inline-size: 104px; block-size: 28px; color: var(--navy-700); opacity: 0.72; }
+
+.lp-doc__stamp {
+  position: absolute;
+  /* PHYSICAL left/bottom. This is screen-space layout art pinned to a corner
+     of the sheet; inset-inline-start resolves to the RIGHT on an RTL page and
+     would park the stamp over the brand mark. */
+  left: clamp(0.9rem, 2vw, 1.3rem);
+  bottom: clamp(0.8rem, 1.8vw, 1.1rem);
+  inline-size: clamp(68px, 5.6vw, 86px);
+  block-size: clamp(68px, 5.6vw, 86px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid rgba(240, 72, 0, 0.48);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--orange-ink);
+  line-height: 1.1;
+  transform: rotate(-13deg);
+}
+.lp-doc__stamp b { font-size: 0.98rem; font-weight: 900; }
+.lp-doc__stamp span { font-size: 0.64rem; font-weight: 700; opacity: 0.78; }
+
+.lp-doc__cap {
+  margin-block-start: 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+/* -- sections ------------------------------------------------------------ */
+.lp-sec { padding-block: var(--section-y); background: var(--white); }
+.lp-sec--soft { background: var(--off-white); }
+.lp-sec--navy { background: var(--navy-900); }
+
+/* -- why: two wide cards per row, never four narrow ones -----------------
+   Four columns on a 1340px container is 310px each, and a 60-word Hebrew
+   paragraph at that width runs ten lines. Two columns gives five. */
+.lp-why {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
+  margin-block-start: clamp(2rem, 4vw, 3.2rem);
+}
+@media (min-width: 680px) { .lp-why { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.lp-card {
+  padding: clamp(1.3rem, 2.4vw, 1.8rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--sh-1);
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .lp-card:hover { transform: translateY(-4px); box-shadow: var(--sh-2); }
+  /* the reveal owns transform until it lands, so the lift waits for it */
+  .lp-card:not(.is-in):hover { transform: translateY(18px); }
+}
+.lp-card__ic {
+  display: grid;
+  place-items: center;
+  inline-size: 46px;
+  block-size: 46px;
+  margin-block-end: 1rem;
+  border-radius: 14px;
+  background: var(--tint-orange);
+  color: var(--orange-ink);
+}
+.lp-card h3 { font-size: clamp(1.05rem, 1.6vw, 1.22rem); line-height: 1.3; }
+.lp-card p { margin-block-start: 0.6rem; font-size: 0.95rem; line-height: 1.62; color: var(--muted); }
+
+/* -- the three steps, on navy -------------------------------------------- */
+.lp-steps {
+  display: grid;
+  gap: clamp(1.1rem, 2.4vw, 1.7rem);
+  margin-block-start: clamp(2rem, 4vw, 3.2rem);
+}
+@media (min-width: 900px) { .lp-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.lp-steps > li {
+  position: relative;
+  padding: clamp(1.3rem, 2.6vw, 1.9rem);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--r-card);
+}
+.lp-steps__n {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  margin-block-end: 1rem;
+  border-radius: 50%;
+  background: var(--orange-ink);
+  color: var(--white);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+.lp-steps h3 { color: var(--white); font-size: clamp(1.05rem, 1.6vw, 1.2rem); }
+.lp-steps p { margin-block-start: 0.6rem; font-size: 0.95rem; line-height: 1.62; color: rgba(255, 255, 255, 0.68); }
+
+/* The rail between steps. PHYSICAL left: the next card is to the LEFT on an
+   RTL page, so that is the direction the line has to travel. */
+@media (min-width: 900px) {
+  .lp-steps > li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: calc(clamp(1.3rem, 2.6vw, 1.9rem) + 19px);
+    left: calc(-1 * clamp(1.1rem, 2.4vw, 1.7rem));
+    inline-size: clamp(1.1rem, 2.4vw, 1.7rem);
+    block-size: 2px;
+    background: linear-gradient(to left, rgba(240, 72, 0, 0.7), rgba(240, 72, 0, 0.08));
+  }
+}
+
+/* -- for firms: navy cards inside a light section ------------------------ */
+.lp-firm { display: grid; gap: clamp(2rem, 4vw, 3.4rem); align-items: start; }
+@media (min-width: 1000px) {
+  .lp-firm { grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr); }
+}
+.lp-firm__lead {
+  margin-block-start: 1.2rem;
+  max-inline-size: 32rem;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  line-height: 1.66;
+  color: var(--muted);
+}
+.lp-firm__copy .btn { margin-block-start: 1.7rem; }
+.lp-firm__list { display: grid; gap: 0.9rem; }
+.lp-firm__list li {
+  display: grid;
+  gap: 0.4rem;
+  padding: clamp(1.15rem, 2.2vw, 1.5rem);
+  background: var(--navy-900);
+  border-radius: var(--r-card);
+}
+.lp-firm__list b { font-size: 1.05rem; font-weight: 700; color: var(--white); }
+.lp-firm__list span { font-size: 0.93rem; line-height: 1.6; color: rgba(255, 255, 255, 0.66); }
+
+/* -- faq: a bare two-column accordion, no cards -------------------------
+   CSS columns would reflow the whole section every time one opens, so this
+   is a grid: an open row grows, the other column stays put. */
+.lp-faq { margin-block-start: clamp(1.8rem, 3.5vw, 2.8rem); }
+@media (min-width: 900px) {
+  .lp-faq {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(2rem, 4vw, 3.5rem);
+    align-content: start;
+  }
+}
+
+/* -- close --------------------------------------------------------------- */
+.lp-close {
+  padding-block: clamp(3.4rem, 7vw, 6.5rem);
+  background:
+    radial-gradient(72% 95% at 50% 0%, rgba(240, 72, 0, 0.17), transparent 68%),
+    var(--navy-950);
+  text-align: center;
+}
+.lp-close > .container { max-inline-size: 760px; }
+.lp-close__sub {
+  margin-block-start: 1.1rem;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+.lp-close__cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block-start: 1.9rem;
+}
+@media (max-width: 419px) { .lp-close__cta .btn { inline-size: 100%; } }
+
+/* -- the city rail: internal links, not a link farm ---------------------- */
+.lp-cities {
+  padding-block: clamp(2.2rem, 4vw, 3.4rem);
+  background: var(--off-white);
+  border-block-start: 1px solid var(--line);
+}
+.lp-cities h2 { font-size: 1.15rem; }
+.lp-cities > .container > p {
+  margin-block-start: 0.5rem;
+  max-inline-size: 46rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+.lp-cities > .container > p a {
+  color: var(--orange-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.lp-cities__list { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-block-start: 1.2rem; }
+.lp-cities__list a {
+  padding: 0.4rem 0.85rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--navy-700);
+  transition: border-color var(--t-base), color var(--t-base);
+}
+.lp-cities__list a:hover { border-color: var(--orange-ink); color: var(--orange-ink); }
+
+/* Section 22's global reduced-motion block uses `*` with !important, which
+   kills these transitions but not the opacity:0 they start from — so say it
+   here explicitly as well. The script already adds is-in to everything when
+   reduced motion is asked for; this is the belt to that braces. */
+@media (prefers-reduced-motion: reduce) {
+  .lp-card:hover, .lp-card:not(.is-in):hover { transform: none; }
+  .lp-doc__sheet { transform: none; }
+  .lp-doc__stamp { transform: rotate(-13deg); }
+}
+
+@media print {
+  .lp-hero, .lp-sec--navy, .lp-close, .lp-firm__list li {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .lp-h2--light, .lp-steps h3, .lp-firm__list b { color: #000 !important; }
+  .lp-steps p, .lp-firm__list span, .lp-close__sub { color: #333 !important; }
+  .lp-cities, .lp-close__cta, .lp-hero__cta { display: none !important; }
+  .lp-doc__sheet { transform: none; box-shadow: none; }
+}
+
+
+/* 23b. /legal hero v2 — the dark header and the live sheet ================ */
+
+/* The header is shared and position:absolute, with navy ink. Over a dark hero
+   that is invisible, so this page lightens it. Scoped to the bar's own links
+   and summaries — a bare ".nav a" would also turn the white mega-menu panel's
+   links white on white. */
+.hdr-dark .header .logo { color: var(--white); }
+.hdr-dark .header .logo__type b { color: var(--white); }
+.hdr-dark .header .nav > a,
+.hdr-dark .header .nav > .mega > summary { color: rgba(255, 255, 255, 0.78); }
+.hdr-dark .header .nav > a:hover,
+.hdr-dark .header .nav > a.is-active,
+.hdr-dark .header .nav > .mega[open] > summary { color: var(--white); }
+.hdr-dark .header .icon-btn {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+}
+.hdr-dark .header .icon-btn:hover { border-color: var(--orange-500); color: var(--orange-500); }
+
+/* status chip: two states stacked in one cell, so the swap never reflows */
+.lp-doc__status {
+  display: grid;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+.lp-doc__st {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.lp-doc__st::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.lp-doc__st--wait { background: rgba(245, 166, 35, 0.14); color: #B26A00; opacity: 0; }
+.lp-doc__st--done { background: rgba(16, 185, 129, 0.13); color: #047857; }
+
+/* a hairline that fills while the attempts are being made. PHYSICAL right:
+   it grows from the reading start of an RTL sheet, which is its right edge */
+.lp-doc__progress {
+  position: absolute;
+  top: 0;
+  right: var(--r-card);
+  left: var(--r-card);
+  block-size: 2px;
+  background: var(--orange-600);
+  transform-origin: right center;
+  border-radius: 2px;
+}
+
+/* the WhatsApp update, sitting above the sheet like a notification. PHYSICAL
+   left/top: screen-space art, pinned to the sheet's far corner */
+.lp-doc__toast {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: clamp(0rem, 3vw, 1.6rem);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-inline-size: min(21rem, 92%);
+  padding: 0.7rem 0.95rem;
+  background: rgba(17, 24, 52, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+.lp-doc__toast-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 50%;
+  background: var(--whatsapp);
+  color: #04310F;
+}
+.lp-doc__toast-t { display: grid; gap: 1px; line-height: 1.35; }
+.lp-doc__toast-t b { font-size: 0.8rem; color: var(--white); }
+.lp-doc__toast-t span { font-size: 0.76rem; color: rgba(255, 255, 255, 0.64); }
+
+.lp-doc__scribble path { stroke-dasharray: 160; stroke-dashoffset: 0; }
+
+/* -- the loop -------------------------------------------------------------
+   Why not Lottie: the player alone is ~160KB of JavaScript, and the animation
+   JSON would have to be authored by hand anyway (there is no After Effects
+   file to export from). On a page paid for per click that is the wrong trade
+   for a few fades. Everything below is CSS on transform and opacity — it
+   runs on the compositor, costs nothing to load, and keeps running even if
+   every script on the page fails.
+
+   One 11-second cycle, every part timed inside it, so the whole sheet resets
+   together:
+     0–4%    blank form, status "בטיפול", progress line starts
+     6%      attempt 1 — not found
+     21%     attempt 2 — not found
+     37%     attempt 3 — served in person (green)
+     41%     status flips to "נמסר", progress line full
+     44%     the stamp lands
+     47%     the signature draws
+     55%     the WhatsApp update arrives
+     92–98%  everything clears for the next round
+
+   The resting style of every element is its FINAL state. Reduced motion, a
+   browser that drops the animation, or a screenshot tool all see the finished
+   sheet — never a half-empty form. */
+@media (prefers-reduced-motion: no-preference) {
+  .lp-doc { --lp-cycle: 11s; }
+  .lp-doc__try-1 { animation: lpTry1 var(--lp-cycle) var(--ease-out) infinite; }
+  .lp-doc__try-2 { animation: lpTry2 var(--lp-cycle) var(--ease-out) infinite; }
+  .lp-doc__try-3 { animation: lpTry3 var(--lp-cycle) var(--ease-out) infinite; }
+  .lp-doc__st--wait { animation: lpWait var(--lp-cycle) linear infinite; }
+  .lp-doc__st--done { animation: lpDone var(--lp-cycle) linear infinite; }
+  .lp-doc__progress { animation: lpProg var(--lp-cycle) cubic-bezier(.4, 0, .2, 1) infinite; }
+  .lp-doc__stamp { animation: lpStamp var(--lp-cycle) cubic-bezier(.2, .9, .3, 1.25) infinite; }
+  .lp-doc__scribble path { animation: lpSign var(--lp-cycle) ease-in-out infinite; }
+  .lp-doc__toast { animation: lpToast var(--lp-cycle) var(--ease-out) infinite; }
+}
+
+@keyframes lpTry1 {
+  0%, 5%   { opacity: 0; transform: translateY(10px); }
+  9%, 92%  { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lpTry2 {
+  0%, 20%  { opacity: 0; transform: translateY(10px); }
+  24%, 92% { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lpTry3 {
+  0%, 36%  { opacity: 0; transform: translateY(10px); }
+  40%, 92% { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lpWait {
+  0%, 39%  { opacity: 1; }
+  41%, 95% { opacity: 0; }
+  99%, 100% { opacity: 1; }
+}
+@keyframes lpDone {
+  0%, 39%  { opacity: 0; }
+  41%, 94% { opacity: 1; }
+  98%, 100% { opacity: 0; }
+}
+@keyframes lpProg {
+  0%       { transform: scaleX(0); opacity: 1; }
+  40%, 92% { transform: scaleX(1); opacity: 1; }
+  97%, 100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes lpStamp {
+  0%, 43%  { opacity: 0; transform: rotate(-13deg) scale(2.2); }
+  47%, 92% { opacity: 1; transform: rotate(-13deg) scale(1); }
+  97%, 100% { opacity: 0; transform: rotate(-13deg) scale(1); }
+}
+@keyframes lpSign {
+  0%, 46%  { stroke-dashoffset: 160; }
+  54%, 92% { stroke-dashoffset: 0; }
+  97%, 100% { stroke-dashoffset: 160; }
+}
+@keyframes lpToast {
+  0%, 54%  { opacity: 0; transform: translateY(12px) scale(0.96); }
+  58%, 91% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+
+/* Reduced motion: section 22 shortens every animation to ~0ms rather than
+   removing it, which on a looping keyframe set can strand an element on
+   whichever frame it happens to end. Removing them outright leaves the
+   resting style — the finished sheet. */
+@media (prefers-reduced-motion: reduce) {
+  .lp-doc__try-1, .lp-doc__try-2, .lp-doc__try-3, .lp-doc__st--wait,
+  .lp-doc__st--done, .lp-doc__progress, .lp-doc__stamp, .lp-doc__toast,
+  .lp-doc__scribble path { animation: none !important; }
+}
+
+/* -- mobile: the sheet sits under the copy; the toast tucks in ------------ */
+@media (max-width: 599px) {
+  .lp-doc { padding-block-start: 3rem; }
+  .lp-doc__toast { left: 0.4rem; max-inline-size: calc(100% - 0.8rem); }
+}
+
+/* -- the lifted home-page sections, on this page ------------------------- */
+.lp .fleet2, .lp .proof2 { scroll-margin-block-start: 1rem; }
+
+@media print {
+  .lp-doc__toast, .lp-hero::before { display: none !important; }
+  .lp-hero .lp-h1, .lp-spec dt { color: #000 !important; }
+}
+
+/* Home header WhatsApp button. With "מסירה משפטית" added to the menu, a
+   1024px header measured 51px wider than the screen: the button wrapped to
+   two lines and pushed the phone icon off the left edge. Between 1024 and
+   1199 it becomes an icon, the same size as the phone button beside it, and
+   the label returns from 1200 up, where there is room. Below 1024 the menu
+   collapses into the drawer, so the label has room again. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .header .hdr-wa {
+    inline-size: 46px;
+    min-block-size: 46px;
+    padding: 0;
+    border-radius: 50%;
+  }
+  .header .hdr-wa .hdr-wa__t { display: none; }
+}
+
+/* The menu gained an item ("מסירה משפטית") on every page, and between 1024
+   and 1279 the header no longer fit: measured, the header button wrapped to
+   two lines (61px tall instead of 46) on the home page at 1200 and on every
+   inner page at 1024. Tighter spacing and slightly smaller menu type in that
+   band only; above 1280 nothing changes. nowrap keeps a button a button. */
+.header .btn--primary { white-space: nowrap; }
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .nav { gap: 0.7rem; }
+  .nav > a, .nav > .mega > summary { font-size: 0.88rem; }
+  .header .btn--primary { padding-inline: 1rem; }
 }
