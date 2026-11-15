@@ -818,7 +818,12 @@
 
     { from: ['תל אביב', 'רמת גן', 'גבעתיים'],
       to:   ['כפר סבא', 'רעננה'],
-      small: 150, medium: 170, large: 200 }
+      small: 150, medium: 170, large: 200 },
+
+    /* 2026-11-15: Netanya and Binyamina, both directions. */
+    { from: ['נתניה'],
+      to:   ['בנימינה'],
+      small: 150, medium: 160, large: 180 }
   ];
 
   var OVERRIDE_INDEX = (function () {
