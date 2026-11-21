@@ -4471,3 +4471,33 @@ body.is-locked { overflow: hidden; }
 @media (min-width: 1024px) and (max-width: 1359px) {
   .nav > a[href$="#calculator"] { display: none; }
 }
+
+/* -- /business benefits in the home page's notch-tab cards (§16F) --------
+   Four cards, so two columns at every desktop width: the home grid's third
+   column at 1240+ would leave one card alone on the second row. */
+@media (min-width: 1240px) { .bz-svc .svc__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.bz-svc .svc__title em { font-style: normal; color: var(--orange-ink); }
+.bz-svc .svc-card p { max-inline-size: 36ch; }
+/* .rv-up.is-in sets transform:none later in the file, which would cancel
+   the card's hover lift; restore it for these cards only */
+.bz-svc .svc-card.rv-up.is-in:hover { transform: translateY(-5px); }
+.bz-svc .bz-sectors { margin-block-start: clamp(2.6rem, 5vw, 4rem); }
+
+/* Icon life. On the home page GSAP moves one part of each icon; this page
+   has no GSAP, so the same idea runs on CSS — one moving part per icon,
+   transform and opacity only, off under reduced motion. */
+.bz-ic-bob, .bz-ic-d1, .bz-ic-d2, .bz-ic-d3 { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .bz-ic-bob { animation: bzBob 1.8s ease-in-out infinite; }
+  .bz-ic-dash { animation: bzDash 1.6s linear infinite; }
+  .bz-ic-t1 { animation: bzTick 3.6s ease-in-out infinite; }
+  .bz-ic-t2 { animation: bzTick 3.6s ease-in-out 0.45s infinite; }
+  .bz-ic-t3 { animation: bzTick 3.6s ease-in-out 0.9s infinite; }
+  .bz-ic-d1 { animation: bzDot 1.4s ease-in-out infinite; }
+  .bz-ic-d2 { animation: bzDot 1.4s ease-in-out 0.18s infinite; }
+  .bz-ic-d3 { animation: bzDot 1.4s ease-in-out 0.36s infinite; }
+}
+@keyframes bzBob  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes bzDash { to { stroke-dashoffset: -18; } }
+@keyframes bzTick { 0%, 8% { opacity: 0.15; } 22%, 80% { opacity: 1; } 100% { opacity: 0.15; } }
+@keyframes bzDot  { 0%, 100% { transform: translateY(0); opacity: 0.55; } 40% { transform: translateY(-4px); opacity: 1; } }
