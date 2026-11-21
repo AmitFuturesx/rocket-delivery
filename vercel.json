@@ -24,9 +24,19 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/account",
+      "destination": "https://rocket-accounts.vercel.app/account"
+    },
+    {
+      "source": "/account/:path*",
+      "destination": "https://rocket-accounts.vercel.app/account/:path*"
+    }
+  ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/((?!account).*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",

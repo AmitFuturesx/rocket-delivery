@@ -126,7 +126,10 @@ const policy = [
 const VERCEL = path.join(ROOT, 'vercel.json');
 const conf = JSON.parse(fs.readFileSync(VERCEL, 'utf8'));
 
-const global = conf.headers.find(h => h.source === '/(.*)');
+/* Everything except /account: that path is the accounts app (rewritten to its
+   own Vercel project), which sends its own nonce-based CSP. Two policies on one
+   response are both enforced, so ours would block its scripts. */
+const global = conf.headers.find(h => h.source === '/((?!account).*)');
 if (!global) { console.error('לא נמצא בלוק הכותרות הגלובלי ב-vercel.json'); process.exit(1); }
 
 /* A static courier site needs none of these. Naming them explicitly means a
