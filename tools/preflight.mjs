@@ -49,6 +49,8 @@ for (const page of PAGES) {
   for (const raw of [...attrs(html, 'src'), ...attrs(html, 'href'), ...attrs(html, 'srcset')]) {
     const ref = raw.split(' ')[0];
     if (!ref || ref[0] === '#' || /^(https?:|mailto:|tel:|data:)/.test(ref)) continue;
+    // /account/* is the accounts app, served by a rewrite in vercel.json, not a file here
+    if (/^\/account(\/|$)/.test(ref)) continue;
     if (!resolves(ref)) fail('missing file: ' + ref);
   }
   for (const h of attrs(html, 'href')) {

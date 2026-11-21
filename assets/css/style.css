@@ -4468,8 +4468,25 @@ body.is-locked { overflow: hidden; }
    the drawer, the footer and every route page, and the business has moved
    its weight to WhatsApp and the phone. Measured at 1024–1440 on home,
    /legal, /business and a route page. */
-@media (min-width: 1024px) and (max-width: 1359px) {
-  .nav > a[href$="#calculator"] { display: none; }
+/* (Nov 22) The calculator and FAQ links left the menu altogether, so the
+   rule that hid the calculator link in this band is gone with them. */
+
+/* Client login (/account, the business-accounts app). A quiet ghost button
+   beside the WhatsApp one: an icon in the same circle as the phone button
+   on phones and in the tight 1024-1279 band, icon + label from 1280 up.
+   The orange button stays the one loud thing in the header. */
+.hdr-login .hdr-login__t { display: none; }
+@media (min-width: 1280px) {
+  .header .hdr-login {
+    inline-size: auto;
+    gap: 0.45rem;
+    padding-inline: 1.05rem 1.15rem;
+    border-radius: var(--r-pill);
+    font-size: 0.92rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .header .hdr-login .hdr-login__t { display: inline; }
 }
 
 /* -- /business benefits in the home page's notch-tab cards (§16F) --------
