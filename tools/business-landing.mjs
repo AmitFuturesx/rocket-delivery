@@ -99,7 +99,7 @@ const SECTORS = [
 
 const FAQ = [
   ['מי יכול לפתוח חשבון עסקי?',
-   'כל עסק ששולח באופן קבוע: משרד, מרפאה, מעון, חנות או מחסן. אין מינימום משלוחים בחודש — גם עסק ששולח כמה פעמים בחודש מקבל חשבון.'],
+   'כל עסק ששולח באופן קבוע: משרד, מרפאה, מעון, חנות או מחסן. אין מינימום משלוחים בחודש, וגם עסק ששולח כמה פעמים בחודש מקבל חשבון.'],
   ['איך מזמינים משלוח על החשבון?',
    'בדיוק כמו היום: הודעה בוואטסאפ עם כתובת איסוף, כתובת מסירה ומה שולחים. אומרים שזה לחשבון, והמשלוח נרשם אצלכם ולא נגבה במקום.'],
   ['מה מופיע בפירוט החודשי?',
@@ -114,7 +114,7 @@ const FAQ = [
    delivery is added to the account. */
 const SAMPLE = {
   account: '1042',
-  biz: 'עסק לדוגמה · נתניה',
+  biz: 'עסק לדוגמה, נתניה',
   month: 'נובמבר',
   earlier: [
     ['03.11', 'נתניה ← בנימינה', 150],
@@ -139,7 +139,7 @@ export default function renderBusinessLanding(ctx) {
   const waText = 'היי, אני רוצה לפתוח חשבון עסקי ברוקט.\n\nשם העסק:\nאיש קשר:\nכמה משלוחים בחודש בערך:\nמאיפה שולחים בדרך כלל:\n';
   const wa = `https://wa.me/${WA}?text=` + encodeURIComponent(waText);
 
-  const title = 'חשבון עסקי למשלוחים — תשלום אחד בסוף החודש | רוקט משלוחים';
+  const title = 'חשבון עסקי למשלוחים, תשלום אחד בסוף החודש | רוקט משלוחים';
   const desc = 'חשבון עסקי ברוקט משלוחים: מזמינים בוואטסאפ, כל משלוח נרשם בחשבון, ומשלמים פעם אחת בסוף החודש עם פירוט מלא של כל משלוח. בלי מינימום משלוחים.';
 
   const rows = [...SAMPLE.earlier, ...SAMPLE.live];
@@ -173,7 +173,7 @@ export default function renderBusinessLanding(ctx) {
   const card = `      <figure class="lp-doc bz-doc" aria-labelledby="bz-doc-cap">
         <div class="lp-doc__toast" aria-hidden="true">
           <span class="lp-doc__toast-ic"><svg width="18" height="18"><use href="#i-whatsapp"></use></svg></span>
-          <span class="lp-doc__toast-t"><b>המשלוח נמסר · 14:05</b><span>נתניה ← בנימינה. נרשם בחשבון החודשי.</span></span>
+          <span class="lp-doc__toast-t"><b>המשלוח נמסר, 14:05</b><span>נתניה ← בנימינה. נרשם בחשבון החודשי.</span></span>
         </div>
         <div class="lp-doc__sheet">
           <span class="lp-doc__progress" aria-hidden="true"></span>
@@ -195,7 +195,7 @@ ${SAMPLE.live.map((r, i) => row(r, SAMPLE.earlier.length + i + 1, i + 1)).join('
           </ol>
 
           <div class="lp-doc__sign bz-total">
-            <span>סה״כ ${SAMPLE.month} · ${rows.length} משלוחים</span>
+            <span>סה״כ ${SAMPLE.month}: ${rows.length} משלוחים</span>
             <b>${nis(total)} <small>+ מע״מ</small></b>
           </div>
 
@@ -214,14 +214,14 @@ ${SAMPLE.live.map((r, i) => row(r, SAMPLE.earlier.length + i + 1, i + 1)).join('
     <div class="container container--wide lp-hero__grid">
 
       <div class="lp-hero__copy">
-        <p class="lp-eyebrow"><span><span class="lp-eyebrow__lead">חשבון עסקי<b aria-hidden="true"> · </b></span>לעסקים ששולחים באופן קבוע</span></p>
+        <p class="lp-eyebrow"><span>לעסקים ששולחים באופן קבוע</span></p>
 
         <h1 class="lp-h1" id="bz-title">
           <span>כל המשלוחים של העסק</span>
           <span>בחשבון <em>אחד</em>.</span>
         </h1>
 
-        <p class="lp-hero__sub">מזמינים בוואטסאפ כמו תמיד, כל משלוח נרשם בחשבון שלכם, ומשלמים פעם אחת בסוף החודש — עם פירוט מלא.</p>
+        <p class="lp-hero__sub">מזמינים בוואטסאפ כמו תמיד, כל משלוח נרשם בחשבון שלכם, ומשלמים פעם אחת בסוף החודש, עם פירוט מלא.</p>
 
         <div class="lp-hero__cta">
           <a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">
@@ -269,7 +269,7 @@ ${STEPS.map(([h, p], i) => `        <li class="rv-up">
       <div class="svc__layout">
         <div class="svc__head">
           <h2 class="svc__title" id="bz-why"><span class="tl">מה העסק שלכם</span><span class="tl">מרוויח <em>מזה</em>.</span></h2>
-          <p>חשבון עסקי לא משנה את המשלוח — הוא משנה את כל מה שמסביב לו: התשלום, הרישום, המחיר והקשר.</p>
+          <p>חשבון עסקי לא משנה את המשלוח. הוא משנה את כל מה שמסביב לו: התשלום, הרישום, המחיר והקשר.</p>
           <a class="btn btn--primary" href="${wa}" target="_blank" rel="noopener"><svg width="18" height="18" aria-hidden="true"><use href="#i-whatsapp"></use></svg>פתיחת חשבון עסקי</a>
         </div>
 
@@ -323,7 +323,7 @@ ${FAQ.map(([q, a]) => `        <details class="fq">
         <span>פותחים חשבון היום,</span>
         <span>והמשלוח הבא כבר <em>בחשבון</em>.</span>
       </h2>
-      <p class="lp-close__sub">שם העסק, איש קשר ובערך כמה משלוחים בחודש — זה כל מה שצריך כדי לפתוח.</p>
+      <p class="lp-close__sub">שם העסק, איש קשר ובערך כמה משלוחים בחודש. זה כל מה שצריך כדי לפתוח.</p>
       <div class="lp-close__cta">
         <a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">
           <svg width="20" height="20" aria-hidden="true"><use href="#i-whatsapp"></use></svg>פתיחת חשבון עסקי</a>

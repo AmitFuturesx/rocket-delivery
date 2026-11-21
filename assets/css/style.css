@@ -4501,3 +4501,6 @@ body.is-locked { overflow: hidden; }
 @keyframes bzDash { to { stroke-dashoffset: -18; } }
 @keyframes bzTick { 0%, 8% { opacity: 0.15; } 22%, 80% { opacity: 1; } 100% { opacity: 0.15; } }
 @keyframes bzDot  { 0%, 100% { transform: translateY(0); opacity: 0.55; } 40% { transform: translateY(-4px); opacity: 1; } }
+
+/* /business eyebrow: plain text, no rule before it */
+.bz .lp-eyebrow::before { display: none; }

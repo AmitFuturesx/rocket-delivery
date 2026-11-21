@@ -1448,10 +1448,11 @@ ${list.map(c => `                <li><a href="/${slug(c)}">${esc(c)}</a></li>`).
   const bizDir = path.join(ROOT, 'business');
   fs.mkdirSync(bizDir, { recursive: true });
   let bizFleet = lift('fleet2', 'צי הרכבים');
-  bizFleet = bizFleet.replace(FLEET_SUB, 'הרכבים והשליחים — שלנו, לא קבלן משנה. מעטפה יוצאת בקטנוע, ארגזים ברכב פרטי, וסחורה למחסן — במסחרית.');
+  bizFleet = bizFleet.replace(FLEET_SUB, 'הרכבים והשליחים שלנו, לא קבלן משנה. מעטפה יוצאת בקטנוע, ארגזים ברכב פרטי, וסחורה למחסן במסחרית.');
   fs.writeFileSync(path.join(bizDir, 'index.html'), renderBusinessLanding({
     shell, esc, SITE, WA, TEL, ver,
-    sections: { fleet: bizFleet, reviews },
+    /* the reviews sub-line without its dash; the quotes themselves stay as written */
+    sections: { fleet: bizFleet, reviews: reviews.replace('מגוגל — לא ערכנו', 'מגוגל, לא ערכנו') },
   }));
   console.log('דף החשבון העסקי /business נכתב.');
 }
