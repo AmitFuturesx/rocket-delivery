@@ -19,6 +19,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import EXTRA_SERVICES from './services-extra.mjs';
 import renderLegalLanding from './legal-landing.mjs';
+import renderBusinessLanding from './business-landing.mjs';
 
 /* fileURLToPath, not url.pathname — this machine's home directory is Hebrew and
    pathname hands back the percent-encoded form, which fs cannot open. */
@@ -446,6 +447,7 @@ ${icons ? '\n  ' + icons : ''}
         <a href="/">ראשי</a>
         ${servicesMenu()}
         <a href="/legal"${url === SITE + '/legal' ? ' class="is-active" aria-current="page"' : ''}>מסירה משפטית</a>
+        <a href="/business"${url === SITE + '/business' ? ' class="is-active" aria-current="page"' : ''}>חשבון עסקי</a>
         <a href="/#calculator">מחשבון מחיר</a>
         ${megaMenu(BUILT)}
         <a href="/#faq">שאלות ותשובות</a>
@@ -1439,6 +1441,19 @@ ${list.map(c => `                <li><a href="/${slug(c)}">${esc(c)}</a></li>`).
     sections: { fleet, reviews },
   }));
   console.log('דף הנחיתה /legal נכתב.');
+
+  /* /business — the business-account landing page. Same lift, its own fleet
+     sub-line: the home one points at the calculator, which this page does
+     not carry either. */
+  const bizDir = path.join(ROOT, 'business');
+  fs.mkdirSync(bizDir, { recursive: true });
+  let bizFleet = lift('fleet2', 'צי הרכבים');
+  bizFleet = bizFleet.replace(FLEET_SUB, 'הרכבים והשליחים — שלנו, לא קבלן משנה. מעטפה יוצאת בקטנוע, ארגזים ברכב פרטי, וסחורה למחסן — במסחרית.');
+  fs.writeFileSync(path.join(bizDir, 'index.html'), renderBusinessLanding({
+    shell, esc, SITE, WA, TEL, ver,
+    sections: { fleet: bizFleet, reviews },
+  }));
+  console.log('דף החשבון העסקי /business נכתב.');
 }
 
 const hubDir = path.join(ROOT, 'אזורי-שירות');
@@ -1451,6 +1466,7 @@ const entries = [
   { loc: SITE + '/', pri: '1.0', freq: 'weekly' },
   { loc: SITE + '/אזורי-שירות', pri: '0.9', freq: 'monthly' },
   { loc: SITE + '/legal', pri: '0.9', freq: 'monthly' },
+  { loc: SITE + '/business', pri: '0.9', freq: 'monthly' },
   ...SERVICES.map(sv => ({ loc: SITE + '/' + sv.s, pri: '0.9', freq: 'monthly' })),
   ...routePairs.map(([a, b]) => ({ loc: SITE + '/' + routeSlug(a, b), pri: '0.9', freq: 'monthly' })),
   ...legalTargets.map(n => ({ loc: SITE + '/' + legalSlug(n), pri: '0.9', freq: 'monthly' })),

@@ -15,7 +15,7 @@ const ROOT = path.resolve(process.argv[2] || '.');
 /* legal/index.html is generated, but it is the only generated page with its
    own markup and its own icon set — the other 359 share one template, so if
    that template is sound they all are. This one can break on its own. */
-const PAGES = ['index.html', 'privacy.html', '404.html', 'legal/index.html'];
+const PAGES = ['index.html', 'privacy.html', '404.html', 'legal/index.html', 'business/index.html'];
 const CSS = 'assets/css/style.css';
 
 let fails = 0, warns = 0;
